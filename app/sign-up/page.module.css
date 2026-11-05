@@ -1,0 +1,153 @@
+
+.container {
+  min-height: 100vh;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f4efe8;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #4d382b;
+}
+
+.card {
+  width: 100%;
+  max-width: 480px;
+  padding: 36px;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 8px 35px rgba(0, 0, 0, 0.07);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.header h1 {
+  color: #12314d;
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.header p {
+  color: #777;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.card form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.card input {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid #ddd5cb;
+  border-radius: 9px;
+  font-size: 14px;
+  outline: none;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.card input:focus {
+  border-color: #12314d;
+}
+
+.passwordBox {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd5cb;
+  border-radius: 9px;
+  padding-right: 10px;
+}
+
+.passwordBox input {
+  border: none;
+}
+
+.passwordBox button {
+  border: none;
+  background: none;
+  color: #12314d;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.requirements {
+  padding: 14px;
+  background: #f8f6f2;
+  border-radius: 10px;
+  margin: 5px 0;
+}
+
+.requirements p {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 10px;
+}
+
+.requirements div {
+  display: flex;
+  gap: 9px;
+  font-size: 12px;
+  margin: 8px 0;
+}
+
+.valid {
+  color: #21834b;
+  font-size: 12px;
+}
+
+.invalid {
+  color: #d34c43;
+  font-size: 12px;
+}
+
+.submit {
+  margin-top: 12px;
+  padding: 15px;
+  background: #12314d;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.submit:disabled {
+  background: #a5adb5;
+  cursor: not-allowed;
+}
+
+.login {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+}
+
+.login a {
+  color: #12314d;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+@media (max-width: 520px) {
+  .container {
+    padding: 20px 12px;
+  }
+
+  .card {
+    padding: 24px 18px;
+  }
+}

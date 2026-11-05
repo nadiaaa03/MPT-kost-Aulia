@@ -77,7 +77,7 @@ export default function Home() {
             <a href="#fasilitas">Fasilitas</a>
           </nav>
           <div className={styles.auth}>
-            <Link href="/signup" className={styles.btnSolid}><Icon name="user" size={20} /> Sign Up</Link>
+            <Link href="/sign-up" className={styles.btnSolid}><Icon name="user" size={20} /> Sign Up</Link>
             <Link href="/login" className={styles.btnOutline}><Icon name="login" size={20} /> Login</Link>
           </div>
         </div>
