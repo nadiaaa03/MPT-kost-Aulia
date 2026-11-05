@@ -1,7 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Poppins, Belanosima } from "next/font/google";
 import styles from "./page.module.css";
-   import Icon from "./Icons";
+   import Icon from "./icons";
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "700"] });
 const belanosima = Belanosima({ subsets: ["latin"], weight: ["400", "700"] });
@@ -51,7 +52,11 @@ const kontak = [
 function Brand() {
   return (
     <Link href="/" className={styles.brand}>
-      <span className={styles.logo} aria-hidden="true" />
+      <img
+        src="/image/logo-kost-aulia.png"
+        alt="Logo Kost Aulia"
+        className={styles.logo}
+      />
       <span className={`${styles.brandName} ${belanosima.className}`}>
         Kost Aulia
       </span>
@@ -121,20 +126,33 @@ export default function Home() {
               tempat terbaik untukmu
             </p>
           </div>
-          <div className={styles.aboutImg} role="img" aria-label="Lingkungan Kost Aulia" />
+
+          <div className={styles.aboutImg}>
+            <Image
+              src="/image/kost-tampak-luar.png"
+              alt="Tampak depan Kost Aulia"
+              fill
+              priority
+              sizes="(max-width: 900px) 100vw, 50vw"
+              className={styles.aboutPhoto}
+            />
+          </div>
         </section>
 
+        
         {/* LOKASI */}
         <section className={styles.location}>
           <div className={styles.locationInner}>
             <div className={styles.locationText}>
               <span className={styles.pillDark}>Lokasi Strategis</span>
               <h2 className={styles.h2}>Dekat Kemana Saja</h2>
+
               <p className={styles.body}>
                 Berlokasi di kawasan yang mudah dijangkau, Kost Aulia memberikan akses praktis ke
                 berbagai fasilitas penunjang kehidupan sehari-hari, seperti pusat perbelanjaan,
                 laundry, tempat ibadah, institusi pendidikan, dan area perkantoran.
               </p>
+
               <ul className={styles.tiles}>
                 {tempat.map((t) => (
                   <li key={t.nama} className={styles[t.warna]}>
@@ -143,18 +161,32 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
-              <a href={MAPS} target="_blank" rel="noreferrer" className={styles.btnPill}>
-                Lihat Peta <Icon name="arrow" size={20} />
-              </a>
             </div>
-            <div className={styles.mapBox} role="img" aria-label="Peta lokasi Kost Aulia">
-              <div className={styles.pin}>
-                <span className={styles.pinDot} />
-                <span className={styles.pinLabel}>Kost Aulia</span>
+
+            <div className={styles.locationVisual}>
+              <div
+                className={styles.mapBox}
+                role="img"
+                aria-label="Peta lokasi Kost Aulia"
+              >
+                <div className={styles.pin}>
+                  <span className={styles.pinDot} />
+                    <span className={styles.pinLabel}>Kost Aulia</span>
+                  </div>
+                </div>
+
+                <a
+                  href={MAPS}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={styles.btnPill}
+                >
+                  Lihat Peta <Icon name="arrow" size={20} />
+                </a>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+
 
         {/* FAQ + KONTAK */}
         <section id="kontak" className={styles.info}>
