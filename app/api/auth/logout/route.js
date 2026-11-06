@@ -1,11 +1,19 @@
+
+import { NextResponse } from "next/server";
+
 export async function POST() {
-  return Response.json(
-    { message: 'Logout berhasil' },
-    {
-      headers: {
-        // Menghapus cookie token (kalau nanti token disimpan di cookie)
-        'Set-Cookie': 'token=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax',
-      },
-    }
-  );
+  const response = NextResponse.json({
+    success: true,
+    message: "Logout berhasil",
+  });
+
+  response.cookies.set("token", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0,
+  });
+
+  return response;
 }

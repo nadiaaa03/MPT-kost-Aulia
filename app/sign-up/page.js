@@ -9,6 +9,7 @@ export default function RegisterPage() {
     nama: "",
     gmail: "",
     no_telp: "",
+    kode_unik: "",
     password: "",
     confirmPassword: "",
   });
@@ -86,6 +87,7 @@ const handleSubmit = async (e) => {
         gmail: form.gmail,
         no_telp: form.no_telp,
         password: form.password,
+        kode_unik: form.kode_unik,
       }),
     });
 
@@ -146,6 +148,14 @@ const handleSubmit = async (e) => {
             onChange={handleChange}
             placeholder="Enter your phone number"
             required
+          />
+          <label>Invitation Code</label>
+          <input
+          name="kode_unik"
+          value={form.kode_unik || ""}
+          onChange={handleChange}
+          placeholder="Enter your invitation code"
+          required
           />
 
           <label>Password</label>
