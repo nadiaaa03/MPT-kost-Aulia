@@ -1,0 +1,467 @@
+
+/* =================================
+   GLOBAL
+================================= */
+
+.page {
+  min-height: 100vh;
+  background: #fbf6f0;
+  color: #51392a;
+  font-family: var(--font-poppins), sans-serif;
+}
+
+.page * {
+  box-sizing: border-box;
+}
+
+/* =================================
+   HEADER
+================================= */
+
+.header {
+  min-height: 80px;
+  padding: 10px 11.5%;
+  background: #f6eade;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  color: #24434a;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.logo {
+  width: 65px;
+  height: 45px;
+  object-fit: contain;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.nav a {
+  color: #002446;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.navButtons {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.signUp,
+.loginButton {
+  min-width: 100px;
+  height: 38px;
+  padding: 0 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.signUp {
+  background: #002446;
+  color: white;
+}
+
+.loginButton {
+  border: 1.5px solid #002446;
+  background: white;
+  color: #002446;
+}
+
+/* =================================
+   HERO
+================================= */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+
+  min-height: 770px;
+  padding: 95px 7% 100px;
+
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(251, 246, 240, 0.35) 0%,
+      rgba(251, 246, 240, 0.55) 45%,
+      rgba(251, 246, 240, 0.85) 75%,
+      #fbf6f0 100%
+    ),
+    url("/image/kost-tampak-dalam.png");
+
+  background-position: center top;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  text-align: center;
+}
+
+.heroTitle {
+  margin: 0;
+
+  color: #51392a;
+  font-family: var(--font-belanosima), sans-serif;
+  font-size: clamp(38px, 5vw, 54px);
+  font-weight: 700;
+}
+
+.tagline {
+  margin: 12px 0 80px;
+
+  color: #51392a;
+  font-size: 22px;
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* =================================
+   LOGIN CARD
+================================= */
+
+.loginCard {
+  width: min(710px, 100%);
+  min-height: 365px;
+
+  margin: 0 auto;
+  padding: 45px 70px 30px;
+
+  background: #f6eade;
+  border: 8px solid #fbf6f0;
+  border-radius: 25px;
+
+  text-align: center;
+}
+
+.formTitle {
+  margin: 0 0 7px;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.formDescription {
+  margin: 0 0 28px;
+
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.form {
+  width: min(412px, 100%);
+  margin: 0 auto;
+}
+
+.fields {
+  display: grid;
+  gap: 17px;
+}
+
+.field {
+  display: grid;
+  gap: 5px;
+  text-align: left;
+}
+
+.field label {
+  padding-left: 8px;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.inputWrap {
+  height: 39px;
+
+  display: flex;
+  align-items: center;
+
+  background: white;
+  border: 1.5px solid #002446;
+  border-radius: 9px;
+}
+
+.inputIcon {
+  width: 45px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #002446;
+  font-size: 17px;
+}
+
+.inputWrap input {
+  width: 100%;
+  height: 100%;
+
+  padding: 0 10px 0 5px;
+
+  border: none;
+  outline: none;
+  background: transparent;
+
+  color: #51392a;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11px;
+}
+
+.inputWrap input::placeholder {
+  color: #a6a6a6;
+}
+
+.submitButton {
+  min-width: 100px;
+  height: 38px;
+
+  margin-top: 40px;
+  padding: 0 18px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #002446;
+  color: white;
+
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+/* =================================
+   CONTACT
+================================= */
+
+.contact {
+  position: relative;
+  isolation: isolate;
+
+  min-height: 620px;
+  padding: 100px 0;
+
+  background-image:
+    linear-gradient(
+      to bottom,
+      #fbf6f0 0%,
+      rgba(251, 246, 240, 0.88) 12%,
+      rgba(251, 246, 240, 0.68) 45%,
+      rgba(251, 246, 240, 0.58) 100%
+    ),
+    url("/image/kost-tampak-luar.png");
+
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  display: flex;
+  align-items: center;
+}
+
+.contactContent {
+  width: min(480px, 75%);
+  margin-left: 27%;
+}
+
+.contactTitle {
+  margin: 0 0 5px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.contactDescription {
+  margin: 0 0 28px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.contactList {
+  display: grid;
+  gap: 17px;
+  margin-bottom: 28px;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  font-size: 13px;
+}
+
+.contactIcon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background: #83573b;
+  color: white;
+  font-size: 18px;
+}
+
+.whatsappButton {
+  width: 181px;
+  height: 38px;
+  padding: 0 17px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-radius: 25px;
+  background: #002446;
+  color: white;
+
+  text-decoration: none;
+  font-size: 11px;
+}
+
+/* =================================
+   FOOTER
+================================= */
+
+.footer {
+  min-height: 85px;
+  padding: 15px 11.5%;
+
+  background: #f6eade;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.footerBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  color: #24434a;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.footerTagline {
+  color: #002446;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* =================================
+   RESPONSIVE
+================================= */
+
+@media (max-width: 800px) {
+  .header {
+    padding: 15px 5%;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav {
+    gap: 20px;
+  }
+
+  .navButtons {
+    gap: 10px;
+  }
+
+  .hero {
+    min-height: auto;
+    padding: 75px 5% 80px;
+  }
+
+  .heroTitle {
+    font-size: clamp(32px, 7vw, 48px);
+  }
+
+  .tagline {
+    margin-bottom: 50px;
+    font-size: 18px;
+  }
+
+  .loginCard {
+    min-height: auto;
+    padding: 40px 25px;
+  }
+
+  .contact {
+    min-height: 500px;
+    padding: 80px 0;
+  }
+
+  .contactContent {
+    width: 75%;
+    margin: 0 auto;
+  }
+
+  .footer {
+    padding: 20px 5%;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand {
+    font-size: 18px;
+  }
+
+  .nav {
+    gap: 15px;
+  }
+
+  .nav a {
+    font-size: 11px;
+  }
+
+  .signUp,
+  .loginButton {
+    min-width: 85px;
+  }
+
+  .loginCard {
+    padding: 35px 18px;
+    border-width: 6px;
+  }
+
+  .contactContent {
+    width: 85%;
+  }
+
+  .footer {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+}

@@ -3,6 +3,21 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Poppins, Belanosima } from "next/font/google";
+import Image from "next/image";
+import styles from "./login.module.css";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-poppins",
+});
+
+const belanosima = Belanosima({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-belanosima",
+});
 
 export default function LoginPage() {
   const router = useRouter();
@@ -51,110 +66,185 @@ export default function LoginPage() {
   };
 
   return (
-    <main style={{
-      minHeight: "100vh",
-      display: "grid",
-      placeItems: "center",
-      background: "#f4efe8",
-      color: "#1d2a39",
-      fontFamily: "Arial, Helvetica, sans-serif",
-    }}>
-      <div style={{
-        width: "min(420px, 90vw)",
-        background: "#f8f3ee",
-        border: "1px solid rgba(17, 50, 82, 0.08)",
-        borderRadius: "24px",
-        padding: "32px 28px",
-        boxShadow: "0 20px 40px rgba(44, 34, 28, 0.08)",
-      }}>
-        <h1 style={{ margin: "0 0 12px", fontSize: "2rem" }}>
-          Login
+
+    <main
+      className={`${styles.page} ${poppins.variable} ${belanosima.variable}`}
+    >
+      {/* HEADER */}
+      <header className={styles.header}>
+        <div className={styles.brand}>
+          <Image
+            src="/image/logo-kost-aulia.png"
+            alt="Logo Kost Aulia"
+            width={65}
+            height={45}
+            className={styles.logo}
+          />
+          <span>Kost Aulia</span>
+        </div>
+
+        <nav className={styles.nav}>
+          <a href="/">Beranda</a>
+          <a href="#contact">Kontak</a>
+          <a href="/facilities">Fasilitas</a>
+        </nav>
+
+        <div className={styles.navButtons}>
+          <a href="/signup" className={styles.signUp}>
+            Daftar
+          </a>
+          <a href="/login" className={styles.loginButton}>
+            Login
+          </a>
+        </div>
+      </header>
+
+      {/* HERO DAN FORM LOGIN */}
+      <section className={styles.hero}>
+        <h1 className={styles.heroTitle}>
+          Selamat Datang di Kost Aulia
         </h1>
 
-        <p style={{
-          margin: "0 0 24px",
-          color: "#574d43",
-          lineHeight: 1.7,
-        }}>
-          Masuk untuk melihat status pemesanan dan mengelola akun Anda.
+        <p className={styles.tagline}>
+          Kost Pilihan Terbaikmu.
         </p>
 
-        <form onSubmit={handleLogin} style={{
-          display: "grid",
-          gap: "14px",
-        }}>
-          <input
-            type="email"
-            value={gmail}
-            onChange={(e) => setGmail(e.target.value)}
-            placeholder="Email Gmail"
-            required
-            style={{
-              padding: "14px 16px",
-              borderRadius: "12px",
-              border: "1px solid #d6c9bb",
-              fontSize: "1rem",
-            }}
-          />
+        <div className={styles.loginCard}>
+          <h2 className={styles.formTitle}>
+            Masuk untuk Melanjutkan
+          </h2>
 
-          <div style={{ display: "flex", gap: "8px" }}>
-            <input
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              required
-              style={{
-                flex: 1,
-                minWidth: 0,
-                padding: "14px 16px",
-                borderRadius: "12px",
-                border: "1px solid #d6c9bb",
-                fontSize: "1rem",
-              }}
-            />
+          <p className={styles.formDescription}>
+            *Gunakan Email dan Password yang Sudah Terdaftar
+          </p>
+
+          <form className={styles.form} onSubmit={handleLogin}>
+            <div className={styles.fields}>
+              <div className={styles.field}>
+                <label htmlFor="email">Email</label>
+
+                <div className={styles.inputWrap}>
+                  <span className={styles.inputIcon}>✉</span>
+                  <input
+                    id="email"
+                    type="email"
+                    value={gmail}
+                    onChange={(e) => setGmail(e.target.value)}
+                    placeholder="Email"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className={styles.field}>
+                <label htmlFor="password">Password</label>
+
+                <div className={styles.inputWrap}>
+                  <span className={styles.inputIcon}>🔒</span>
+                  <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                    required
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{
+                      border: "none",
+                      background: "transparent",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {message && (
+              <p
+                role="alert"
+                style={{
+                  color: message.startsWith("Login berhasil")
+                    ? "green"
+                    : "#c0392b",
+                  fontSize: "14px",
+                }}
+              >
+                {message}
+              </p>
+            )}
 
             <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
+              type="submit"
+              disabled={loading}
+              className={styles.submitButton}
             >
-              {showPassword ? "Hide" : "Show"}
+              {loading ? "Memproses..." : "Konfirmasi"}
             </button>
+          </form>
+        </div>
+      </section>
+
+      {/* CONTACT */}
+      <section id="contact" className={styles.contact}>
+        <div className={styles.contactContent}>
+          <h2 className={styles.contactTitle}>Kontak Kami</h2>
+
+          <p className={styles.contactDescription}>
+            Jika ada pertanyaan lebih lanjut, jangan ragu untuk
+            menghubungi kami.
+          </p>
+
+          <div className={styles.contactList}>
+            <div className={styles.contactItem}>
+              <span className={styles.contactIcon}>☎</span>
+              <span>0812 - 5921 - 5140</span>
+            </div>
+
+            <div className={styles.contactItem}>
+              <span className={styles.contactIcon}>◎</span>
+              <span>@itsaulia.kost</span>
+            </div>
+
+            <div className={styles.contactItem}>
+              <span className={styles.contactIcon}>♪</span>
+              <span>@auliakost.gresik</span>
+            </div>
           </div>
 
-          {message && (
-            <p
-              role="alert"
-              style={{
-                color: message.startsWith("Login berhasil")
-                  ? "green"
-                  : "#c0392b",
-                fontSize: "14px",
-              }}
-            >
-              {message}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              marginTop: "8px",
-              padding: "14px 18px",
-              border: "none",
-              borderRadius: "999px",
-              background: "#12314d",
-              color: "#fff",
-              fontSize: "1rem",
-              fontWeight: 700,
-              cursor: loading ? "not-allowed" : "pointer",
-            }}
+          <a
+            href="https://wa.me/6281259215140"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.whatsappButton}
           >
-            {loading ? "Memproses..." : "Masuk"}
-          </button>
-        </form>
-      </div>
+            Hubungi Whatsapp <span>→</span>
+          </a>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className={styles.footer}>
+        <div className={styles.footerBrand}>
+          <Image
+            src="/image/logo-kost-aulia.png"
+            alt="Logo Kost Aulia"
+            width={65}
+            height={45}
+            className={styles.logo}
+          />
+          <span>Kost Aulia</span>
+        </div>
+
+        <p className={styles.footerTagline}>
+          Kost Pilihan Terbaikmu.
+        </p>
+      </footer>
     </main>
   );
 }
