@@ -1,65 +1,53 @@
-import Link from "next/link";
+import InteractiveImageAccordion from "./interactive-image-accordion";
+import SiteHeader from "./site-header";
 import Image from "next/image";
-import { Poppins, Belanosima } from "next/font/google";
+import ScrollReveal from "@/components/ui/scroll-reveal";
+import Link from "next/link";
+import { Poppins, Caveat } from "next/font/google";
 import styles from "./page.module.css";
-   import Icon from "./icons";
+import Icon from "./icons";
 
-const poppins = Poppins({ subsets: ["latin"], weight: ["400", "700"] });
-const belanosima = Belanosima({ subsets: ["latin"], weight: ["400", "700"] });
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const caveat = Caveat({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
 const WA = "https://wa.me/6281259215140";
+
 const MAPS =
   "https://www.google.com/maps/search/?api=1&query=Jl.+Mawar+No.14+Bp.+Wetan+Gresik";
-
-const keunggulan = [
-  { icon: "bed", text: "Kamar Nyaman dan Bersih" },
-  { icon: "shield", text: "Keamanan 24 Jam" },
-  { icon: "wifi", text: "WiFi Gratis" },
-  { icon: "pin", text: "Lokasi Strategis" },
-  { icon: "plant", text: "Lingkungan Asri" },
-];
-
-const tempat = [
-  { icon: "shirt", nama: "Laundry", warna: "brown" },
-  { icon: "cart", nama: "Supermarket", warna: "navy" },
-  { icon: "trees", nama: "Alun-alun", warna: "brown" },
-  { icon: "mosque", nama: "Masjid", warna: "navy" },
-  { icon: "course", nama: "Sekolah", warna: "brown" },
-  { icon: "office", nama: "Perkantoran", warna: "navy" },
-];
 
 const faq = [
   {
     q: "Apakah bisa sewa harian?",
-    a: "Bisa. Selain sewa bulanan, kami juga menyediakan sewa harian untuk kamu yang hanya perlu menginap sementara. Silahkan cek ketersediaan kamar dan tarif harian di halaman info kost.",
+    a: "Bisa. Selain sewa bulanan, kami juga menyediakan sewa harian untuk kamu yang hanya perlu menginap sementara. Silakan cek informasi lebih lanjut pada bagian Fasilitas.",
   },
   {
     q: "Bagaimana cara melakukan pesanan?",
-    a: "Klik tombol “Booking Sekarang” di bagian paling bawah Beranda untuk melakukan pesanan.",
+    a: "Untuk pemesanan bisa menghubungi kami melalui WhatsApp yang tertera di daftar kontak.",
   },
   {
     q: "Bagaimana jika kita memiliki pertanyaan lebih lanjut?",
-    a: "Jika memiliki pertanyaan lebih lanjut, bisa menghubungi kontak yang tertera.",
+    a: "Jika memiliki pertanyaan lebih lanjut, kamu bisa menghubungi kontak yang tertera.",
   },
-];
-
-const kontak = [
-  { label: "0812 - 5921 - 5140", href: WA, icon: "phone" },
-  { label: "@itsaulia.kost", href: "https://instagram.com/itsaulia.kost", icon: "instagram" },
-  { label: "@auliakost.gresik", href: "https://tiktok.com/@auliakost.gresik", icon: "tiktok" },
 ];
 
 function Brand() {
   return (
-    <Link href="/" className={styles.brand}>
-      <img
+    <Link href="/" className={styles.brand} aria-label="Kost Aulia">
+      <Image
         src="/image/logo-kost-aulia.png"
         alt="Logo Kost Aulia"
+        width={137}
+        height={81}
         className={styles.logo}
+        priority
       />
-      <span className={`${styles.brandName} ${belanosima.className}`}>
-        Kost Aulia
-      </span>
     </Link>
   );
 }
@@ -67,183 +55,255 @@ function Brand() {
 export default function Home() {
   return (
     <div className={`${styles.page} ${poppins.className}`}>
-      {/* HEADER */}
-      <header className={styles.header}>
-        <div className={styles.headerInner}>
-          <Brand />
-          <nav className={styles.nav} aria-label="Navigasi utama">
-            <a href="#beranda">Beranda</a>
-            <a href="#kontak">Kontak</a>
-            <a href="#fasilitas">Fasilitas</a>
-          </nav>
-          <div className={styles.auth}>
-            <Link href="/sign-up" className={styles.btnSolid}><Icon name="user" size={20} /> Sign Up</Link>
-            <Link href="/login" className={styles.btnOutline}><Icon name="login" size={20} /> Login</Link>
-          </div>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main>
         {/* HERO */}
         <section id="beranda" className={styles.hero}>
-          <div className={styles.heroCard}>
-            <div className={styles.heroText}>
-              <p className={styles.address}><Icon name="pin" size={18} /> Jl. Mawar No.14 Bp.Wetan, Gresik</p>
-              <h1 className={`${styles.heroTitle} ${belanosima.className}`}>
-                Kost Pilihan Terbaikmu.
-              </h1>
-              <p className={styles.heroSub}>
-                Kost khusus Putri dengan fasilitas lengkap, untuk hidup yang lebih tenang.
-              </p>
-              <a href="#booking" className={styles.btnPill}>
-                Lihat Ketersediaan Kamar <Icon name="arrow" size={20} />
-              </a>
-            </div>
-            <div className={styles.heroImg} role="img" aria-label="Halaman depan Kost Aulia" />
+          <div className={styles.heroOverlay}>
+            <ScrollReveal className={styles.heroReveal}>
+              <div className={styles.heroContent}>
+                <h1 className={styles.heroTitle}>
+                  KOST PILIHAN
+                </h1>
+
+                <p className={`${styles.heroScript} ${caveat.className}`}>
+                  Terbaikmu.
+                </p>
+
+                <p className={styles.heroSub}>
+                  Kost khusus putri yang terletak di pusat kota Gresik
+                  dengan fasilitas lengkap, untuk hidup yang lebih tenang.
+                </p>
+
+                <Link href="#fasilitas" className={styles.heroButton}>
+                  Lihat Ketersediaan Kamar
+                  <Icon name="arrow" size={18} />
+                </Link>
+              </div>
+            </ScrollReveal>
           </div>
         </section>
 
-        {/* KEUNGGULAN */}
-        <section id="fasilitas" className={styles.strip}>
-          <ul className={styles.stripList}>
-            {keunggulan.map((k) => (
-              <li key={k.text}>
-                <Icon name={k.icon} size={40} />
-                {k.text}
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        {/* TENTANG */}
-        <section className={styles.about}>
+        {/* TENTANG KOST AULIA */}
+        <ScrollReveal>
+        <section id="fasilitas" className={styles.about}>
           <div className={styles.aboutText}>
-            <span className={styles.pillLight}>Tentang Kost Aulia</span>
-            <h2 className={styles.h2}>Lebih dari Sekadar Kost</h2>
+            <span className={styles.sectionBadge}>
+              Tentang Kost Aulia
+            </span>
+
+            <h2 className={styles.sectionTitle}>
+              Lebih dari Sekadar Kost
+            </h2>
+
             <p className={styles.body}>
-              Kost Aulia hadir untuk memberikan tempat tinggal yang nyaman, aman, dan strategis.
-              Dengan fasilitas lengkap dan lingkungan yang kondusif, kami percaya ini adalah
-              tempat terbaik untukmu
+              Kost Aulia hadir untuk memberikan tempat tinggal yang
+              nyaman, aman, dan strategis. Dengan fasilitas lengkap dan
+              lingkungan yang kondusif, kami percaya ini adalah tempat
+              terbaik untukmu.
             </p>
+
+            <Link href="#fasilitas" className={styles.blueButton}>
+              Lihat Fasilitas Lengkap
+              <Icon name="arrow" size={18} />
+            </Link>
           </div>
 
-          <div className={styles.aboutImg}>
-            <Image
-              src="/image/kost-tampak-luar.png"
-              alt="Tampak depan Kost Aulia"
-              fill
-              priority
-              sizes="(max-width: 900px) 100vw, 50vw"
-              className={styles.aboutPhoto}
-            />
+          <div className={styles.aboutAccordion}>
+            <InteractiveImageAccordion />
           </div>
         </section>
+        </ScrollReveal>
 
-        
         {/* LOKASI */}
+        <ScrollReveal>
         <section className={styles.location}>
           <div className={styles.locationInner}>
             <div className={styles.locationText}>
-              <span className={styles.pillDark}>Lokasi Strategis</span>
-              <h2 className={styles.h2}>Dekat Kemana Saja</h2>
+              <span className={styles.sectionBadge}>
+                Lokasi Strategis
+              </span>
+
+              <h2 className={styles.sectionTitle}>
+                Dekat Kemana Saja
+              </h2>
 
               <p className={styles.body}>
-                Berlokasi di kawasan yang mudah dijangkau, Kost Aulia memberikan akses praktis ke
-                berbagai fasilitas penunjang kehidupan sehari-hari, seperti pusat perbelanjaan,
-                laundry, tempat ibadah, institusi pendidikan, dan area perkantoran.
+                Berlokasi di kawasan yang mudah dijangkau, Kost Aulia
+                memberikan akses praktis ke berbagai fasilitas penunjang
+                kehidupan sehari-hari, seperti pusat perbelanjaan,
+                laundry, tempat ibadah, institusi pendidikan, dan area
+                perkantoran.
               </p>
 
-              <ul className={styles.tiles}>
-                {tempat.map((t) => (
-                  <li key={t.nama} className={styles[t.warna]}>
-                    <Icon name={t.icon} size={36} />
-                    {t.nama}
-                  </li>
-                ))}
-              </ul>
+              <a
+                href={MAPS}
+                target="_blank"
+                rel="noreferrer"
+                className={styles.blueButton}
+              >
+                Buka Rute Google Maps
+                <Icon name="arrow" size={18} />
+              </a>
             </div>
 
-            <div className={styles.locationVisual}>
-              <div
-                className={styles.mapBox}
-                role="img"
-                aria-label="Peta lokasi Kost Aulia"
-              >
-                <div className={styles.pin}>
-                  <span className={styles.pinDot} />
-                    <span className={styles.pinLabel}>Kost Aulia</span>
-                  </div>
-                </div>
+            <div className={styles.mapCard}>
+              <div className={styles.mapImage}>
+                <iframe
+                  title="Peta lokasi Kost Aulia"
+                  src="https://maps.google.com/maps?q=Jl.%20Mawar%20No.14%20Bp.%20Wetan%2C%20Gresik&output=embed"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </div>
 
-                <a
-                  href={MAPS}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={styles.btnPill}
-                >
-                  Lihat Peta <Icon name="arrow" size={20} />
-                </a>
+              <div className={styles.mapCaption}>
+                <strong>Kost Aulia</strong>
+                <span>Jl. Mawar No.14 Bp.Wetan, Gresik</span>
               </div>
             </div>
-          </section>
+          </div>
+        </section>
+        </ScrollReveal>
 
-
-        {/* FAQ + KONTAK */}
-        <section id="kontak" className={styles.info}>
+        {/* FAQ */}
+        <ScrollReveal>
+        <section id="kontak" className={styles.faqSection}>
           <div className={styles.faqBox}>
-            <h2 className={styles.h2}>Pertanyaan Yang Sering Diajukan</h2>
+            <span className={styles.faqLabel}>FAQ</span>
+
+            <h2 className={styles.sectionTitle}>
+              Pertanyaan Yang Sering Diajukan
+            </h2>
+
             <div className={styles.faqList}>
-              {faq.map((f) => (
-                <details key={f.q} className={styles.faqItem} open>
-                  <summary>{f.q}</summary>
-                  <p>{f.a}</p>
+              {faq.map((item) => (
+                <details
+                  key={item.q}
+                  className={styles.faqItem}
+                  open
+                >
+                  <summary>
+                    <span>{item.q}</span>
+                    <span className={styles.faqArrow}>&gt;</span>
+                  </summary>
+
+                  <p>{item.a}</p>
                 </details>
               ))}
             </div>
           </div>
-          <div className={styles.contactBox}>
-            <h2 className={styles.h2}>Kontak Kami</h2>
-            <p className={styles.body}>
-              Jika ada pertanyaan lebih lanjut, jangan ragu untuk menghubungi kami.
-            </p>
-            <ul className={styles.contactList}>
-              {kontak.map((c) => (
-                <li key={c.label}>
-                  <a href={c.href} target="_blank" rel="noreferrer">
-                    <span className={styles.contactIcon}><Icon name={c.icon} size={22} /></span>
-                    {c.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <a href={WA} target="_blank" rel="noreferrer" className={styles.btnPill}>
-              Hubungi Whatsapp <Icon name="arrow" size={20} />
-            </a>
-          </div>
         </section>
+        </ScrollReveal>
 
-        {/* CTA BOOKING */}
-        <section id="booking" className={styles.cta}>
+        {/* CTA */}
+        <ScrollReveal>
+        <section className={styles.cta}>
           <div className={styles.ctaInner}>
-            <h2 className={styles.h2Center}>Mulai Cerita Barumu Bersama Kost Aulia!</h2>
+            <h2 className={caveat.className}>
+              Siap Memulai
+              <br />
+              Cerita Baru?
+            </h2>
+
             <p className={styles.ctaText}>
-              Jangan lewatkan kesempatan untuk menikmati hunian nyaman dan lokasi strategis bersama
-              Kost Aulia.
+              Jangan lewatkan kesempatan untuk menikmati hunian nyaman
+              dan lokasi strategis bersama Kost Aulia. Hubungi kami dan
+              temukan hunian yang tepat untukmu!
             </p>
-            <a href={WA} target="_blank" rel="noreferrer" className={styles.btnBig}>
-              Booking Sekarang <Icon name="arrow" size={20} />
+
+            <a
+              href={WA}
+              target="_blank"
+              rel="noreferrer"
+              className={styles.whatsappButton}
+            >
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M20.5 11.7a8.7 8.7 0 0 1-12.9 7.6L3 20.5l1.3-4.4a8.7 8.7 0 1 1 16.2-4.4Z"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M8.5 8.2c.2-.4.4-.4.7-.4h.5c.2 0 .4.1.5.4l.7 1.6c.1.2.1.4-.1.6l-.5.6c-.2.2-.2.3-.1.5.5.9 1.2 1.6 2.1 2.1.2.1.4.1.5-.1l.7-.8c.2-.2.4-.2.6-.1l1.6.8c.3.1.4.3.4.5 0 .3-.2 1.1-.7 1.5-.5.4-1.1.6-1.8.5-1-.1-2.2-.7-3.5-1.8-1.1-1-2-2.3-2.2-3.3-.2-.9.1-1.7.6-2.3Z"
+                  fill="currentColor"
+                />
+              </svg>
+              WhatsApp Kami
             </a>
           </div>
-        </section>
-      </main>
 
-      {/* FOOTER */}
-      <footer className={styles.footer}>
-        <div className={styles.footerInner}>
-          <Brand />
-          <p className={styles.footerTag}>Kost Pilihan Terbaikmu.</p>
-        </div>
-      </footer>
+          {/* FOOTER */}
+          <footer id="footer" className={styles.footer}>
+            <div className={styles.footerInner}>
+              <div className={styles.footerBrand}>
+                <div className={styles.footerLogo}>
+                  <Brand />
+                </div>
+
+                <p>
+                  Kost khusus putri yang terletak di pusat kota Gresik
+                  dengan fasilitas lengkap, untuk hidup yang lebih tenang.
+                </p>
+              </div>
+
+              <div className={styles.footerColumn}>
+                <h3>LINK</h3>
+                <a href="#beranda">Beranda</a>
+                <a href="#fasilitas">Fasilitas</a>
+                <a href="#kontak">FAQ</a>
+              </div>
+
+              <div className={styles.footerColumn}>
+                <h3>KONTAK</h3>
+                <a href={WA} target="_blank" rel="noreferrer">
+                  0812 - 5921 - 5140
+                </a>
+
+                <div className={styles.socialLinks}>
+                  <a
+                    href="https://instagram.com/itsaulia.kost"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Instagram Kost Aulia"
+                  >
+                    <Icon name="instagram" size={21} />
+                  </a>
+
+                  <a
+                    href="https://tiktok.com/@auliakost.gresik"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="TikTok Kost Aulia"
+                  >
+                    <Icon name="tiktok" size={21} />
+                  </a>
+                </div>
+              </div>
+
+              <div className={styles.footerColumn}>
+                <h3>LOKASI</h3>
+                <p>
+                  Jl. Mawar No.14
+                  <br />
+                  Bp.Wetan, Gresik
+                </p>
+              </div>
+            </div>
+          </footer>
+        </section>
+        </ScrollReveal>
+      </main>
     </div>
   );
 }

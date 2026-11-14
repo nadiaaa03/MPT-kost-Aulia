@@ -1,153 +1,278 @@
+/* =================================
+   SIGN UP FORM
+================================= */
 
-.container {
-  min-height: 100vh;
-  padding: 40px 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #f4efe8;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #4d382b;
-}
-
-.card {
+.signupForm {
   width: 100%;
-  max-width: 480px;
-  padding: 36px;
-  border-radius: 22px;
-  background: #fff;
-  box-shadow: 0 8px 35px rgba(0, 0, 0, 0.07);
-}
-
-.header {
-  text-align: center;
-  margin-bottom: 28px;
-}
-
-.header h1 {
-  color: #12314d;
-  font-size: 30px;
-  margin-bottom: 10px;
-}
-
-.header p {
-  color: #777;
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.card form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 17px;
+  margin-top: 42px;
 }
 
-.card label {
-  font-size: 14px;
-  font-weight: 600;
-  margin-top: 8px;
-}
-
-.card input {
+.field {
   width: 100%;
-  padding: 13px 14px;
-  border: 1px solid #ddd5cb;
-  border-radius: 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.field label {
+  padding-left: 13px;
+  color: #171717;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 14px;
-  outline: none;
-  background: #fff;
-  box-sizing: border-box;
+  font-weight: 400;
 }
 
-.card input:focus {
-  border-color: #12314d;
-}
+/* =================================
+   INPUT
+================================= */
 
-.passwordBox {
+.inputWrap {
+  width: 100%;
+  min-height: 52px;
   display: flex;
   align-items: center;
-  border: 1px solid #ddd5cb;
-  border-radius: 9px;
-  padding-right: 10px;
+  border: 2px solid #002446;
+  border-radius: 12px;
+  background: #f6eade;
+  overflow: hidden;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.passwordBox input {
-  border: none;
+.inputWrap:focus-within {
+  border-color: #002446;
+  box-shadow: 0 0 0 3px rgba(0, 36, 70, 0.08);
 }
 
-.passwordBox button {
+.inputIcon {
+  width: 55px;
+  height: 50px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #002446;
+}
+
+.inputIcon svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+.inputWrap input {
+  width: 100%;
+  min-width: 0;
+  height: 48px;
+  padding: 0 12px 0 5px;
   border: none;
-  background: none;
-  color: #12314d;
+  outline: none;
+  background: transparent;
+  color: #51392a;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 14px;
+}
+
+.inputWrap input::placeholder {
+  color: rgba(0, 0, 0, 0.35);
+  opacity: 1;
+}
+
+.inputWrap input:focus {
+  outline: none;
+}
+
+/* =================================
+   PASSWORD TOGGLE
+================================= */
+
+.passwordToggle {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  margin-right: 7px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #002446;
   cursor: pointer;
-  font-size: 12px;
+  transition: background-color 0.2s ease;
 }
+
+.passwordToggle svg {
+  width: 21px;
+  height: 21px;
+  display: block;
+}
+
+.passwordToggle:hover {
+  background: rgba(0, 36, 70, 0.08);
+}
+
+.passwordToggle:focus-visible {
+  outline: 2px solid #002446;
+  outline-offset: 2px;
+}
+
+/* =================================
+   PASSWORD REQUIREMENTS
+================================= */
 
 .requirements {
-  padding: 14px;
-  background: #f8f6f2;
-  border-radius: 10px;
-  margin: 5px 0;
+  margin: 9px 13px 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.requirements p {
+.requirementsTitle {
+  margin: 0 0 2px;
+  color: #002446;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 13px;
   font-weight: 700;
-  margin: 0 0 10px;
 }
 
-.requirements div {
+.requirementValid,
+.requirementInvalid {
   display: flex;
+  align-items: center;
   gap: 9px;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 12px;
-  margin: 8px 0;
+  line-height: 1.5;
+  transition: color 0.2s ease;
 }
 
-.valid {
+.requirementValid {
   color: #21834b;
-  font-size: 12px;
 }
 
-.invalid {
+.requirementInvalid {
   color: #d34c43;
+}
+
+.requirementValid span,
+.requirementInvalid span {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* =================================
+   CONFIRM PASSWORD
+================================= */
+
+.matchSuccess,
+.matchError {
+  margin: 2px 13px 0;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 12px;
 }
 
-.submit {
-  margin-top: 12px;
-  padding: 15px;
-  background: #12314d;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-weight: 700;
-  cursor: pointer;
+.matchSuccess {
+  color: #21834b;
 }
 
-.submit:disabled {
-  background: #a5adb5;
-  cursor: not-allowed;
+.matchError {
+  color: #d34c43;
 }
+
+/* =================================
+   MESSAGE
+================================= */
+
+.messageSuccess,
+.messageError {
+  margin: 0;
+  padding: 11px 14px;
+  border-radius: 8px;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.messageSuccess {
+  color: #21834b;
+  background: #edf8f0;
+}
+
+.messageError {
+  color: #d34c43;
+  background: #fff0ee;
+}
+
+/* =================================
+   LOGIN LINK
+================================= */
 
 .login {
-  margin-top: 24px;
+  margin: 25px 0 0;
   text-align: center;
+  color: #666666;
+  font-family: var(--font-poppins), sans-serif;
   font-size: 13px;
-  color: #666;
 }
 
 .login a {
-  color: #12314d;
+  color: #002446;
   font-weight: 700;
   text-decoration: none;
 }
 
-@media (max-width: 520px) {
-  .container {
-    padding: 20px 12px;
+.login a:hover {
+  text-decoration: underline;
+}
+
+/* =================================
+   RESPONSIVE
+================================= */
+
+@media (max-width: 800px) {
+  .signupForm {
+    margin-top: 30px;
+    gap: 15px;
   }
 
-  .card {
-    padding: 24px 18px;
+  .field label {
+    font-size: 13px;
+  }
+
+  .inputWrap {
+    min-height: 50px;
+  }
+
+  .inputWrap input {
+    height: 46px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .requirements {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+
+  .requirementValid,
+  .requirementInvalid {
+    font-size: 11px;
+  }
+
+  .login {
+    font-size: 12px;
   }
 }

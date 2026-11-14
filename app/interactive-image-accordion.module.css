@@ -1,0 +1,186 @@
+
+.accordion {
+  width: 100%;
+  height: 470px;
+  display: flex;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.panel {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+
+  border: none;
+  border-radius: 20px;
+  background: #d9d9d9;
+  cursor: pointer;
+
+  transition:
+    flex 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    border-radius 0.35s ease;
+}
+
+.panel.active {
+  flex: 4.5;
+}
+
+.panelImage {
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.7s ease;
+}
+
+.panel:hover .panelImage,
+.panel.active .panelImage {
+  transform: scale(1.04);
+}
+
+.panelOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+
+  background: linear-gradient(
+    to top,
+    rgba(0, 20, 40, 0.75) 0%,
+    rgba(0, 20, 40, 0.12) 55%,
+    rgba(0, 20, 40, 0.05) 100%
+  );
+}
+
+.panelNumber {
+  position: absolute;
+  z-index: 2;
+  top: 20px;
+  left: 18px;
+
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.panel.active .panelNumber {
+  opacity: 1;
+}
+
+.panelTitle {
+  position: absolute;
+  z-index: 2;
+  bottom: 25px;
+  left: 20px;
+  color: white;
+  font-family: var(--font-poppins), sans-serif;
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  text-align: left;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+
+.panel.active .panelTitle {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Panel tidak aktif: judul tetap terlihat vertikal */
+.panel:not(.active) .panelTitle {
+  left: 50%;
+  bottom: 25px;
+
+  opacity: 1;
+  transform: translateX(-50%) rotate(180deg);
+  writing-mode: vertical-rl;
+  font-size: 13px;
+}
+
+/* Efek fokus keyboard */
+.panel:focus-visible {
+  outline: 3px solid #afc7ec;
+  outline-offset: 3px;
+}
+
+/* TABLET */
+@media (max-width: 900px) {
+  .accordion {
+    height: 400px;
+    gap: 9px;
+  }
+
+  .panel {
+    border-radius: 16px;
+  }
+
+  .panel.active {
+    flex: 3.5;
+  }
+
+  .panelTitle {
+    font-size: 14px;
+  }
+
+  .panel:not(.active) .panelTitle {
+    font-size: 11px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .accordion {
+    height: 510px;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .panel {
+    width: 100%;
+    min-height: 0;
+    flex: 1;
+    border-radius: 14px;
+  }
+
+  .panel.active {
+    flex: 4;
+  }
+
+  .panelNumber {
+    top: 12px;
+    left: 14px;
+    font-size: 11px;
+  }
+
+  .panelTitle {
+    bottom: 15px;
+    left: 15px;
+    font-size: 14px;
+  }
+
+  .panel:not(.active) .panelTitle {
+    left: 15px;
+    bottom: 50%;
+    transform: translateY(50%);
+    writing-mode: horizontal-tb;
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .panelImage,
+  .panelTitle,
+  .panelNumber {
+    transition: none;
+  }
+}
