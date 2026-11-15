@@ -55,9 +55,10 @@ export async function GET(request) {
         digunakan_oleh,
         created_at,
         used_at
-       FROM kode_undangan
-       WHERE id_pemilik = ?
-       ORDER BY created_at DESC`,
+      FROM kode_undangan
+      WHERE id_pemilik = ?
+      AND status = 'aktif'
+      ORDER BY created_at DESC`,
       [owner.id_user]
     );
 
@@ -162,17 +163,26 @@ export async function POST(request) {
       );
     }
 
-    const parsedDate = new Date(`${tanggal_masuk}T00:00:00`);
+    const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+    const isDateFormatValid = datePattern.test(tanggal_masuk);
+
+    let parsedDate = null;
+
+    if (isDateFormatValid) {
+      const [year, month, day] = tanggal_masuk.split("-").map(Number);
+
+      parsedDate = new Date(year, month - 1, day);
+    }
 
     if (
-      Number.isNaN(parsedDate.getTime()) ||
-      parsedDate.toISOString().slice(0, 10) !== tanggal_masuk
+      !isDateFormatValid ||
+      !parsedDate ||
+      parsedDate.getFullYear() !== Number(tanggal_masuk.split("-")[0]) ||
+      parsedDate.getMonth() + 1 !== Number(tanggal_masuk.split("-")[1]) ||
+      parsedDate.getDate() !== Number(tanggal_masuk.split("-")[2])
     ) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Tanggal masuk tidak valid.",
-        },
+      return Response.json(
+        { message: "Tanggal masuk tidak valid." },
         { status: 400 }
       );
     }

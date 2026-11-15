@@ -39,6 +39,18 @@ export default function SiteHeader({ variant = "default" }) {
     }
   };
 
+  // Mengembalikan scroll ke hero halaman Fasilitas
+  const handleFacilitiesClick = (e) => {
+    if (pathname === "/facilities") {
+      e.preventDefault();
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <header
       className={`${styles.header} ${
@@ -72,7 +84,10 @@ export default function SiteHeader({ variant = "default" }) {
             Kontak
           </Link>
 
-          <Link href="/facilities">
+          <Link
+            href="/facilities"
+            onClick={handleFacilitiesClick}
+          >
             Fasilitas
           </Link>
 
