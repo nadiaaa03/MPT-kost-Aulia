@@ -191,6 +191,19 @@
   font-weight: 500;
 }
 
+/* MENGATUR WARNA AUTOFILL CHROME */
+
+.page input:-webkit-autofill,
+.page input:-webkit-autofill:hover,
+.page input:-webkit-autofill:focus,
+.page input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #f6ebde inset !important;
+  box-shadow: 0 0 0 1000px #f6ebde inset !important;
+  -webkit-text-fill-color: #51392a !important;
+  caret-color: #51392a;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
 /* =================================
    FORM
 ================================= */

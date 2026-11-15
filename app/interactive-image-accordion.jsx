@@ -12,8 +12,7 @@ const accordionItems = [
   },
   {
     title: "Fasilitas Lengkap",
-    image: "/image/fasilitas-crop.png",
-    objectPosition: "right center",
+    image: "/image/dapur-full.png",
   },
   {
     title: "Lingkungan Aman & Nyaman",
@@ -52,14 +51,14 @@ export default function InteractiveImageAccordion() {
             aria-pressed={isActive}
           >
             <Image
-                src={item.image}
-                alt={item.title}
-                fill
-                sizes="(max-width: 600px) 100vw, 60vw"
-                className={styles.panelImage}
-                style={{
-                    objectPosition: item.objectPosition || "center",
-                }}
+              src={item.image}
+              alt={item.title}
+              fill
+              sizes="(max-width: 600px) 100vw, 60vw"
+              className={styles.panelImage}
+              style={{
+                objectPosition: item.objectPosition || "center",
+              }}
             />
 
             <span className={styles.panelOverlay} />

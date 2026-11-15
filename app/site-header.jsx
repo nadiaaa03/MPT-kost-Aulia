@@ -18,21 +18,40 @@ export default function SiteHeader({ variant = "default" }) {
     };
 
     handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
+  const handleHomeClick = (e) => {
+    if (pathname === "/") {
+      e.preventDefault();
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  };
+
   return (
     <header
-        className={`${styles.header} ${
-            isScrolled || variant === "solid" ? styles.scrolled : ""
-        }`}
+      className={`${styles.header} ${
+        isScrolled || variant === "solid" ? styles.scrolled : ""
+      }`}
     >
       <div className={styles.headerInner}>
-        <Link href="/" className={styles.brand} aria-label="Kost Aulia">
+        {/* Logo */}
+        <Link
+          href="/"
+          className={styles.brand}
+          aria-label="Kost Aulia"
+        >
           <Image
             src="/image/logo-kost-aulia.png"
             alt="Logo Kost Aulia"
@@ -43,27 +62,26 @@ export default function SiteHeader({ variant = "default" }) {
           />
         </Link>
 
+        {/* Navigasi */}
         <nav className={styles.nav} aria-label="Navigasi utama">
-            <a
-                href="/#beranda"
-                onClick={(e) => {
-                    if (pathname === "/") {
-                    e.preventDefault();
-                    window.scrollTo({
-                        top: 0,
-                        behavior: "smooth",
-                    });
-                    }
-                }}
-                >
-                Beranda
-                </a>
-                
-            <a href="#footer">Kontak</a>
-            <Link href="/#fasilitas">Fasilitas</Link>
-            <Link href="/ulasan">Ulasan</Link>
+          <Link href="/#beranda" onClick={handleHomeClick}>
+            Beranda
+          </Link>
+
+          <Link href="/#footer">
+            Kontak
+          </Link>
+
+          <Link href="/facilities">
+            Fasilitas
+          </Link>
+
+          <Link href="/ulasan">
+            Ulasan
+          </Link>
         </nav>
 
+        {/* Tombol Login dan Sign Up */}
         <div className={styles.auth}>
           <Link href="/sign-up" className={styles.btnSolid}>
             <Icon name="user" size={17} />

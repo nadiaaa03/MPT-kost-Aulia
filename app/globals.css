@@ -51,3 +51,16 @@ a {
 html {
   scroll-behavior: smooth;
 }
+
+
+html,
+body {
+  font-family: var(--font-poppins), sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}

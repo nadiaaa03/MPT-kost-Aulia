@@ -36,10 +36,7 @@
   padding: 0;
 }
 
-/* =========================================
-   HEADER
-========================================= */
-
+/* HEADER */
 .header {
   width: 100%;
   height: 88px;
@@ -123,16 +120,12 @@
   opacity: 0.85;
 }
 
-/* =========================================
-   HERO
-========================================= */
-
+/* HERO */
 .hero {
   width: 100%;
   height: 100vh;
   min-height: 600px;
   position: relative;
-
   background-image: url("/image/kost-tampak-dalam.png");
   background-size: cover;
   background-position: center top;
@@ -142,7 +135,14 @@
 .heroOverlay {
   width: 100%;
   height: 100%;
-  background: rgba(75, 96, 124, 0.68);
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(0, 36, 70, 0.82) 0%,
+      rgba(0, 36, 70, 0.72) 38%,
+      rgba(0, 36, 70, 0.52) 72%,
+      rgba(0, 36, 70, 0.42) 100%
+    );
   display: flex;
   justify-content: center;
   align-items: center;
@@ -169,6 +169,7 @@
 
 .heroScript {
   margin: -4px 0 22px;
+  color: #e6bd9d;
   font-size: 90px;
   line-height: 1.15;
   font-weight: 600;
@@ -195,15 +196,16 @@
   justify-content: center;
   gap: 14px;
   border-radius: 60px;
-  background: var(--cream);
-  color: var(--navy) !important;
+  background: #c28c67;
+  color: var(--white) !important;
   font-size: 15px;
   font-weight: 600;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, filter 0.2s ease;
 }
 
 .heroButton:hover {
   transform: translateY(-3px);
+  filter: brightness(1.05);
 }
 
 .heroReveal {
@@ -212,10 +214,7 @@
   justify-content: center;
 }
 
-/* =========================================
-   ABOUT / LEBIH DARI SEKADAR KOST
-========================================= */
-
+/* ABOUT / LEBIH DARI SEKADAR KOST */
 .about {
   width: min(1140px, calc(100% - 48px));
   min-height: 680px;
@@ -294,10 +293,7 @@
   justify-content: center;
 }
 
-/* =========================================
-   LOCATION
-========================================= */
-
+/* LOCATION */
 .location {
   width: 100%;
   background: var(--cream-light);
@@ -334,11 +330,9 @@
   background: var(--white);
   border-radius: 22px;
   overflow: hidden;
-
   box-shadow:
     0 12px 30px rgba(0, 36, 70, 0.12),
     0 4px 10px rgba(0, 36, 70, 0.06);
-
   transition:
     transform 0.35s ease,
     box-shadow 0.35s ease;
@@ -346,7 +340,6 @@
 
 .mapCard:hover {
   transform: translateY(-8px);
-
   box-shadow:
     0 22px 42px rgba(0, 36, 70, 0.18),
     0 8px 16px rgba(0, 36, 70, 0.08);
@@ -382,10 +375,7 @@
   font-weight: 700;
 }
 
-/* =========================================
-   FAQ
-========================================= */
-
+/* FAQ */
 .faqSection {
   width: min(1140px, calc(100% - 48px));
   margin: 0 auto;
@@ -423,10 +413,7 @@
   overflow: hidden;
   background: var(--white);
   border-radius: 18px;
-
-  box-shadow:
-    0 5px 14px rgba(0, 36, 70, 0.08);
-
+  box-shadow: 0 5px 14px rgba(0, 36, 70, 0.08);
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
@@ -434,9 +421,7 @@
 
 .faqItem:hover {
   transform: translateY(-5px);
-
-  box-shadow:
-    0 14px 26px rgba(0, 36, 70, 0.15);
+  box-shadow: 0 14px 26px rgba(0, 36, 70, 0.15);
 }
 
 .faqItem summary {
@@ -460,12 +445,10 @@
   box-shadow: 0 14px 26px rgba(0, 36, 70, 0.15);
 }
 
-/* Ketika jawaban terbuka */
 .faqItem[open] summary {
   border-radius: 18px 18px 0 0;
 }
 
-/* Ketika jawaban tertutup */
 .faqItem:not([open]) summary {
   border-radius: 18px;
 }
@@ -492,10 +475,7 @@
   line-height: 1.6;
 }
 
-/* =========================================
-   CTA
-========================================= */
-
+/* CTA */
 .cta {
   width: 100%;
   background:
@@ -506,7 +486,6 @@
       rgba(27, 49, 75, 0) 65%
     ),
     #002446;
-
   color: var(--white);
 }
 
@@ -560,10 +539,7 @@
   filter: brightness(1.05);
 }
 
-/* =========================================
-   FOOTER
-========================================= */
-
+/* FOOTER */
 .footer {
   width: 100%;
   background: #002446;
@@ -575,11 +551,9 @@
   min-height: 300px;
   margin: 0 auto;
   padding: 55px 0 45px;
-
   display: grid;
   grid-template-columns: 1.6fr 0.8fr 1fr 0.9fr;
   column-gap: 55px;
-
   align-items: start;
 }
 
@@ -623,7 +597,7 @@
 
 .footerColumn h3 {
   margin: 0 0 8px;
-  color: #F6EADE;
+  color: #f6eade;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.03em;
@@ -655,10 +629,7 @@
   color: var(--white);
 }
 
-/* =========================================
-   RESPONSIVE - TABLET
-========================================= */
-
+/* RESPONSIVE - TABLET */
 @media (max-width: 900px) {
   .header {
     height: 76px;
@@ -691,8 +662,8 @@
   }
 
   .hero {
-  height: 100vh;
-  min-height: 560px;
+    height: 100vh;
+    min-height: 560px;
   }
 
   .about {
@@ -722,7 +693,7 @@
   }
 
   .faqBox {
-    padding: 35px 35px;
+    padding: 35px;
   }
 
   .footerInner {
@@ -731,10 +702,7 @@
   }
 }
 
-/* =========================================
-   RESPONSIVE - MOBILE
-========================================= */
-
+/* RESPONSIVE - MOBILE */
 @media (max-width: 600px) {
   .header {
     height: auto;

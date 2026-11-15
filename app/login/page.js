@@ -8,6 +8,7 @@ import SiteHeader from "../site-header";
 import Icon from "../icons";
 import styles from "./login.module.css";
 import { Poppins, Caveat } from "next/font/google";
+import { useRouter } from "next/navigation";
 
 const caveat = Caveat({
   subsets: ["latin"],
@@ -43,6 +44,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -63,13 +65,29 @@ export default function LoginPage() {
         }),
       });
 
-      const result = await response.json();
+      const rawResponse = await response.text();
+
+      console.log("STATUS API:", response.status);
+      console.log("RESPONS API:", rawResponse);
+
+      let result;
+
+      try {
+        result = JSON.parse(rawResponse);
+      } catch (error) {
+        throw new Error(
+          `Respons API tidak valid. Status: ${response.status}. Periksa Console dan terminal.`
+        );
+      }
 
       if (!response.ok) {
         throw new Error(result.message || "Login gagal.");
       }
 
       setMessage("Login berhasil! Selamat datang, " + result.user.nama);
+      if (result.user.role === "pemilik") {
+        router.push("/owner/invitation-codes");
+      }
 
       // Pengalihan dashboard dapat ditambahkan
       // setelah halaman dashboard tersedia.

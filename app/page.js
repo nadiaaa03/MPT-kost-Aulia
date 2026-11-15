@@ -1,3 +1,4 @@
+
 import InteractiveImageAccordion from "./interactive-image-accordion";
 import SiteHeader from "./site-header";
 import Image from "next/image";
@@ -76,7 +77,10 @@ export default function Home() {
                   dengan fasilitas lengkap, untuk hidup yang lebih tenang.
                 </p>
 
-                <Link href="#fasilitas" className={styles.heroButton}>
+                <Link
+                  href="/facilities#tipe-kamar"
+                  className={styles.heroButton}
+                >
                   Lihat Ketersediaan Kamar
                   <Icon name="arrow" size={18} />
                 </Link>
@@ -87,221 +91,224 @@ export default function Home() {
 
         {/* TENTANG KOST AULIA */}
         <ScrollReveal>
-        <section id="fasilitas" className={styles.about}>
-          <div className={styles.aboutText}>
-            <span className={styles.sectionBadge}>
-              Tentang Kost Aulia
-            </span>
+          <section id="fasilitas" className={styles.about}>
+            <div className={styles.aboutText}>
+              <span className={styles.sectionBadge}>
+                Tentang Kost Aulia
+              </span>
 
-            <h2 className={styles.sectionTitle}>
-              Lebih dari Sekadar Kost
-            </h2>
+              <h2 className={styles.sectionTitle}>
+                Lebih dari Sekadar Kost
+              </h2>
 
-            <p className={styles.body}>
-              Kost Aulia hadir untuk memberikan tempat tinggal yang
-              nyaman, aman, dan strategis. Dengan fasilitas lengkap dan
-              lingkungan yang kondusif, kami percaya ini adalah tempat
-              terbaik untukmu.
-            </p>
+              <p className={styles.body}>
+                Kost Aulia hadir untuk memberikan tempat tinggal yang
+                nyaman, aman, dan strategis. Dengan fasilitas lengkap dan
+                lingkungan yang kondusif, kami percaya ini adalah tempat
+                terbaik untukmu.
+              </p>
 
-            <Link href="#fasilitas" className={styles.blueButton}>
-              Lihat Fasilitas Lengkap
-              <Icon name="arrow" size={18} />
-            </Link>
-          </div>
+              <Link
+                href="/facilities"
+                className={styles.blueButton}
+              >
+                Lihat Fasilitas Lengkap
+                <Icon name="arrow" size={18} />
+              </Link>
+            </div>
 
-          <div className={styles.aboutAccordion}>
-            <InteractiveImageAccordion />
-          </div>
-        </section>
+            <div className={styles.aboutAccordion}>
+              <InteractiveImageAccordion />
+            </div>
+          </section>
         </ScrollReveal>
 
         {/* LOKASI */}
         <ScrollReveal>
-        <section className={styles.location}>
-          <div className={styles.locationInner}>
-            <div className={styles.locationText}>
-              <span className={styles.sectionBadge}>
-                Lokasi Strategis
-              </span>
+          <section className={styles.location}>
+            <div className={styles.locationInner}>
+              <div className={styles.locationText}>
+                <span className={styles.sectionBadge}>
+                  Lokasi Strategis
+                </span>
 
-              <h2 className={styles.sectionTitle}>
-                Dekat Kemana Saja
-              </h2>
+                <h2 className={styles.sectionTitle}>
+                  Dekat Kemana Saja
+                </h2>
 
-              <p className={styles.body}>
-                Berlokasi di kawasan yang mudah dijangkau, Kost Aulia
-                memberikan akses praktis ke berbagai fasilitas penunjang
-                kehidupan sehari-hari, seperti pusat perbelanjaan,
-                laundry, tempat ibadah, institusi pendidikan, dan area
-                perkantoran.
-              </p>
+                <p className={styles.body}>
+                  Berlokasi di kawasan yang mudah dijangkau, Kost Aulia
+                  memberikan akses praktis ke berbagai fasilitas penunjang
+                  kehidupan sehari-hari, seperti pusat perbelanjaan,
+                  laundry, tempat ibadah, institusi pendidikan, dan area
+                  perkantoran.
+                </p>
 
-              <a
-                href={MAPS}
-                target="_blank"
-                rel="noreferrer"
-                className={styles.blueButton}
-              >
-                Buka Rute Google Maps
-                <Icon name="arrow" size={18} />
-              </a>
-            </div>
-
-            <div className={styles.mapCard}>
-              <div className={styles.mapImage}>
-                <iframe
-                  title="Peta lokasi Kost Aulia"
-                  src="https://maps.google.com/maps?q=Jl.%20Mawar%20No.14%20Bp.%20Wetan%2C%20Gresik&output=embed"
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
+                <a
+                  href={MAPS}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={styles.blueButton}
+                >
+                  Buka Rute Google Maps
+                  <Icon name="arrow" size={18} />
+                </a>
               </div>
 
-              <div className={styles.mapCaption}>
-                <strong>Kost Aulia</strong>
-                <span>Jl. Mawar No.14 Bp.Wetan, Gresik</span>
+              <div className={styles.mapCard}>
+                <div className={styles.mapImage}>
+                  <iframe
+                    title="Peta lokasi Kost Aulia"
+                    src="https://maps.google.com/maps?q=Jl.%20Mawar%20No.14%20Bp.%20Wetan%2C%20Gresik&output=embed"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+
+                <div className={styles.mapCaption}>
+                  <strong>Kost Aulia</strong>
+                  <span>Jl. Mawar No.14 Bp.Wetan, Gresik</span>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
         </ScrollReveal>
 
         {/* FAQ */}
         <ScrollReveal>
-        <section id="kontak" className={styles.faqSection}>
-          <div className={styles.faqBox}>
-            <span className={styles.faqLabel}>FAQ</span>
+          <section id="kontak" className={styles.faqSection}>
+            <div className={styles.faqBox}>
+              <span className={styles.faqLabel}>FAQ</span>
 
-            <h2 className={styles.sectionTitle}>
-              Pertanyaan Yang Sering Diajukan
-            </h2>
+              <h2 className={styles.sectionTitle}>
+                Pertanyaan Yang Sering Diajukan
+              </h2>
 
-            <div className={styles.faqList}>
-              {faq.map((item) => (
-                <details
-                  key={item.q}
-                  className={styles.faqItem}
-                  open
-                >
-                  <summary>
-                    <span>{item.q}</span>
-                    <span className={styles.faqArrow}>&gt;</span>
-                  </summary>
+              <div className={styles.faqList}>
+                {faq.map((item) => (
+                  <details
+                    key={item.q}
+                    className={styles.faqItem}
+                    open
+                  >
+                    <summary>
+                      <span>{item.q}</span>
+                      <span className={styles.faqArrow}>&gt;</span>
+                    </summary>
 
-                  <p>{item.a}</p>
-                </details>
-              ))}
+                    <p>{item.a}</p>
+                  </details>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
         </ScrollReveal>
 
         {/* CTA */}
         <ScrollReveal>
-        <section className={styles.cta}>
-          <div className={styles.ctaInner}>
-            <h2 className={caveat.className}>
-              Siap Memulai
-              <br />
-              Cerita Baru?
-            </h2>
+          <section className={styles.cta}>
+            <div className={styles.ctaInner}>
+              <h2 className={caveat.className}>
+                Siap Memulai
+                <br />
+                Cerita Baru?
+              </h2>
 
-            <p className={styles.ctaText}>
-              Jangan lewatkan kesempatan untuk menikmati hunian nyaman
-              dan lokasi strategis bersama Kost Aulia. Hubungi kami dan
-              temukan hunian yang tepat untukmu!
-            </p>
+              <p className={styles.ctaText}>
+                Jangan lewatkan kesempatan untuk menikmati hunian nyaman
+                dan lokasi strategis bersama Kost Aulia. Hubungi kami dan
+                temukan hunian yang tepat untukmu!
+              </p>
 
-            <a
-              href={WA}
-              target="_blank"
-              rel="noreferrer"
-              className={styles.whatsappButton}
-            >
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
+              <a
+                href={WA}
+                target="_blank"
+                rel="noreferrer"
+                className={styles.whatsappButton}
               >
-                <path
-                  d="M20.5 11.7a8.7 8.7 0 0 1-12.9 7.6L3 20.5l1.3-4.4a8.7 8.7 0 1 1 16.2-4.4Z"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M8.5 8.2c.2-.4.4-.4.7-.4h.5c.2 0 .4.1.5.4l.7 1.6c.1.2.1.4-.1.6l-.5.6c-.2.2-.2.3-.1.5.5.9 1.2 1.6 2.1 2.1.2.1.4.1.5-.1l.7-.8c.2-.2.4-.2.6-.1l1.6.8c.3.1.4.3.4.5 0 .3-.2 1.1-.7 1.5-.5.4-1.1.6-1.8.5-1-.1-2.2-.7-3.5-1.8-1.1-1-2-2.3-2.2-3.3-.2-.9.1-1.7.6-2.3Z"
-                  fill="currentColor"
-                />
-              </svg>
-              WhatsApp Kami
-            </a>
-          </div>
-
-          {/* FOOTER */}
-          <footer id="footer" className={styles.footer}>
-            <div className={styles.footerInner}>
-              <div className={styles.footerBrand}>
-                <div className={styles.footerLogo}>
-                  <Brand />
-                </div>
-
-                <p>
-                  Kost khusus putri yang terletak di pusat kota Gresik
-                  dengan fasilitas lengkap, untuk hidup yang lebih tenang.
-                </p>
-              </div>
-
-              <div className={styles.footerColumn}>
-                <h3>LINK</h3>
-                <a href="#beranda">Beranda</a>
-                <a href="#fasilitas">Fasilitas</a>
-                <a href="#kontak">FAQ</a>
-              </div>
-
-              <div className={styles.footerColumn}>
-                <h3>KONTAK</h3>
-                <a href={WA} target="_blank" rel="noreferrer">
-                  0812 - 5921 - 5140
-                </a>
-
-                <div className={styles.socialLinks}>
-                  <a
-                    href="https://instagram.com/itsaulia.kost"
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label="Instagram Kost Aulia"
-                  >
-                    <Icon name="instagram" size={21} />
-                  </a>
-
-                  <a
-                    href="https://tiktok.com/@auliakost.gresik"
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label="TikTok Kost Aulia"
-                  >
-                    <Icon name="tiktok" size={21} />
-                  </a>
-                </div>
-              </div>
-
-              <div className={styles.footerColumn}>
-                <h3>LOKASI</h3>
-                <p>
-                  Jl. Mawar No.14
-                  <br />
-                  Bp.Wetan, Gresik
-                </p>
-              </div>
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M20.5 11.7a8.7 8.7 0 0 1-12.9 7.6L3 20.5l1.3-4.4a8.7 8.7 0 1 1 16.2-4.4Z"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M8.5 8.2c.2-.4.4-.4.7-.4h.5c.2 0 .4.1.5.4l.7 1.6c.1.2.1.4-.1.6l-.5.6c-.2.2-.2.3-.1.5.5.9 1.2 1.6 2.1 2.1.2.1.4.1.5-.1l.7-.8c.2-.2.4-.2.6-.1l1.6.8c.3.1.4.3.4.5 0 .3-.2 1.1-.7 1.5-.5.4-1.1.6-1.8.5-1-.1-2.2-.7-3.5-1.8-1.1-1-2-2.3-2.2-3.3-.2-.9.1-1.7.6-2.3Z"
+                    fill="currentColor"
+                  />
+                </svg>
+                WhatsApp Kami
+              </a>
             </div>
-          </footer>
-        </section>
+
+            {/* FOOTER */}
+            <footer id="footer" className={styles.footer}>
+              <div className={styles.footerInner}>
+                <div className={styles.footerBrand}>
+                  <div className={styles.footerLogo}>
+                    <Brand />
+                  </div>
+
+                  <p>
+                    Kost khusus putri yang terletak di pusat kota Gresik
+                    dengan fasilitas lengkap, untuk hidup yang lebih tenang.
+                  </p>
+                </div>
+
+                <div className={styles.footerColumn}>
+                  <h3>LINK</h3>
+                  <Link href="/#beranda">Beranda</Link>
+                  <Link href="/facilities">Fasilitas</Link>
+                  <Link href="/#kontak">FAQ</Link>
+                </div>
+
+                <div className={styles.footerColumn}>
+                  <h3>KONTAK</h3>
+                  <a href={WA} target="_blank" rel="noreferrer">
+                    0812 - 5921 - 5140
+                  </a>
+
+                  <div className={styles.socialLinks}>
+                    <a
+                      href="https://instagram.com/itsaulia.kost"
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label="Instagram Kost Aulia"
+                    >
+                      <Icon name="instagram" size={21} />
+                    </a>
+
+                    <a
+                      href="https://tiktok.com/@auliakost.gresik"
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label="TikTok Kost Aulia"
+                    >
+                      <Icon name="tiktok" size={21} />
+                    </a>
+                  </div>
+                </div>
+
+                <div className={styles.footerColumn}>
+                  <h3>LOKASI</h3>
+                  <p>
+                    Jl. Mawar No.14
+                    <br />
+                    Bp.Wetan, Gresik
+                  </p>
+                </div>
+              </div>
+            </footer>
+          </section>
         </ScrollReveal>
       </main>
     </div>
