@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -56,6 +57,16 @@ export default function RegisterPage() {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
 
+  // Status validasi password
+  const [passwordTouched, setPasswordTouched] = useState(false);
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+
+  // =================================
+  // PASSWORD REQUIREMENTS
+  // Tetap divalidasi, tidak ditampilkan
+  // sebagai daftar pada halaman
+  // =================================
+
   const requirements = [
     {
       label: "Minimal 8 karakter",
@@ -83,8 +94,33 @@ export default function RegisterPage() {
     (item) => item.valid
   );
 
+  // Menghitung persyaratan yang belum terpenuhi
+  const failedRequirements = requirements.filter(
+    (item) => !item.valid
+  );
+
+  // Menentukan satu pesan error
+  const passwordError =
+    failedRequirements.length === 1
+      ? failedRequirements[0].label === "Minimal 8 karakter"
+        ? "Password minimal 8 karakter"
+        : `Password harus ${failedRequirements[0].label.toLowerCase()}`
+      : "Password belum cukup kuat";
+
+  // Error muncul setelah pengguna keluar
+  // dari kolom atau mencoba submit
+  const showPasswordError =
+    (passwordTouched || submitAttempted) &&
+    form.password.length > 0 &&
+    !passwordValid;
+
+  // Validasi konfirmasi password
   const passwordsMatch =
     form.password === form.confirmPassword;
+
+  // =================================
+  // HANDLE CHANGE
+  // =================================
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -98,20 +134,30 @@ export default function RegisterPage() {
     setMessageType("");
   };
 
+  // =================================
+  // HANDLE SUBMIT
+  // =================================
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setSubmitAttempted(true);
     setMessage("");
     setMessageType("");
 
+    // Cek password
     if (!passwordValid) {
-      setMessage(
-        "Password belum memenuhi semua persyaratan."
-      );
-      setMessageType("error");
+      setPasswordTouched(true);
+
+      if (!form.password) {
+        setMessage("Password wajib diisi.");
+        setMessageType("error");
+      }
+
       return;
     }
 
+    // Cek konfirmasi password
     if (!passwordsMatch) {
       setMessage("Konfirmasi password tidak cocok.");
       setMessageType("error");
@@ -161,12 +207,20 @@ export default function RegisterPage() {
     <main
       className={`${loginStyles.page} ${poppins.variable} ${caveat.variable}`}
     >
-      {/* HEADER */}
+      {/* =================================
+          HEADER
+      ================================= */}
+
       <SiteHeader variant="solid" />
 
-      {/* BAGIAN UTAMA */}
+      {/* =================================
+          BAGIAN UTAMA
+      ================================= */}
+
       <section className={loginStyles.loginSection}>
+
         {/* SISI KIRI */}
+
         <div className={loginStyles.welcomePanel}>
           <Image
             src="/image/kost-tampak-luar.png"
@@ -192,23 +246,24 @@ export default function RegisterPage() {
           </div>
         </div>
 
-        {/* SISI KANAN */}
+        {/* =================================
+            SISI KANAN - SIGN UP
+        ================================= */}
+
         <div className={loginStyles.formPanel}>
           <div className={loginStyles.loginContent}>
+
             <h2 className={loginStyles.formTitle}>
               Daftar Akun
             </h2>
-
-            <p className={loginStyles.formDescription}>
-              *Gunakan Kode Unik yang Sudah Diberikan oleh
-              Pemilik Kost
-            </p>
 
             <form
               className={styles.signupForm}
               onSubmit={handleSubmit}
             >
+
               {/* NAMA LENGKAP */}
+
               <div className={styles.field}>
                 <label htmlFor="nama">
                   Nama Lengkap
@@ -252,6 +307,7 @@ export default function RegisterPage() {
               </div>
 
               {/* NOMOR TELEPON */}
+
               <div className={styles.field}>
                 <label htmlFor="no_telp">
                   Nomor Telepon
@@ -286,6 +342,7 @@ export default function RegisterPage() {
               </div>
 
               {/* EMAIL */}
+
               <div className={styles.field}>
                 <label htmlFor="gmail">
                   Email
@@ -316,13 +373,20 @@ export default function RegisterPage() {
                 </div>
               </div>
 
-              {/* PASSWORD */}
+              {/* =================================
+                  PASSWORD
+              ================================= */}
+
               <div className={styles.field}>
                 <label htmlFor="password">
                   Password
                 </label>
 
-                <div className={styles.inputWrap}>
+                <div
+                  className={`${styles.inputWrap} ${
+                    showPasswordError ? styles.inputError : ""
+                  }`}
+                >
                   <span className={styles.inputIcon}>
                     <svg
                       viewBox="0 0 24 24"
@@ -339,8 +403,15 @@ export default function RegisterPage() {
                     name="password"
                     value={form.password}
                     onChange={handleChange}
+                    onBlur={() => setPasswordTouched(true)}
                     placeholder="Masukkan password"
                     autoComplete="new-password"
+                    aria-invalid={showPasswordError}
+                    aria-describedby={
+                      showPasswordError
+                        ? "password-error"
+                        : undefined
+                    }
                     required
                   />
 
@@ -360,31 +431,23 @@ export default function RegisterPage() {
                   </button>
                 </div>
 
-                {/* PASSWORD REQUIREMENTS */}
-                <div className={styles.requirements}>
-                  <p className={styles.requirementsTitle}>
-                    Password Requirements
-                  </p>
+                {/* NOTIFIKASI ERROR PASSWORD */}
 
-                  {requirements.map((item, index) => (
-                    <div
-                      key={index}
-                      className={
-                        item.valid
-                          ? styles.requirementValid
-                          : styles.requirementInvalid
-                      }
-                    >
-                      <span>
-                        {item.valid ? "✓" : "✕"}
-                      </span>
-                      {item.label}
-                    </div>
-                  ))}
-                </div>
+                {showPasswordError && (
+                  <p
+                    id="password-error"
+                    role="alert"
+                    className={styles.passwordError}
+                  >
+                    ✕ {passwordError}
+                  </p>
+                )}
               </div>
 
-              {/* KONFIRMASI PASSWORD */}
+              {/* =================================
+                  KONFIRMASI PASSWORD
+              ================================= */}
+
               <div className={styles.field}>
                 <label htmlFor="confirmPassword">
                   Konfirmasi Password
@@ -443,7 +506,10 @@ export default function RegisterPage() {
                 )}
               </div>
 
-              {/* KODE UNIK */}
+              {/* =================================
+                  KODE UNIK
+              ================================= */}
+
               <div className={styles.field}>
                 <label htmlFor="kode_unik">
                   Kode Unik
@@ -482,9 +548,18 @@ export default function RegisterPage() {
                     required
                   />
                 </div>
+
+                {/* KETERANGAN KODE UNIK */}
+
+                <p className={styles.kodeHint}>
+                  *Gunakan Kode Unik yang Sudah Diberikan oleh Pemilik Kost
+                </p>
               </div>
 
-              {/* PESAN */}
+              {/* =================================
+                  PESAN REGISTRASI
+              ================================= */}
+
               {message && (
                 <p
                   role="alert"
@@ -498,35 +573,39 @@ export default function RegisterPage() {
                 </p>
               )}
 
-              {/* TOMBOL KONFIRMASI */}
+              {/* =================================
+                  TOMBOL KONFIRMASI
+              ================================= */}
+
               <button
                 type="submit"
                 className={loginStyles.submitButton}
-                disabled={
-                  loading ||
-                  !passwordValid ||
-                  !form.confirmPassword ||
-                  !passwordsMatch
-                }
+                disabled={loading}
               >
                 {loading ? "Memproses..." : "Konfirmasi"}
               </button>
+
             </form>
 
             <p className={styles.login}>
               Sudah memiliki akun?{" "}
               <Link href="/login">Login</Link>
             </p>
+
           </div>
         </div>
       </section>
 
-      {/* FOOTER */}
+      {/* =================================
+          FOOTER
+      ================================= */}
+
       <footer
         id="footer"
         className={loginStyles.footer}
       >
         <div className={loginStyles.footerInner}>
+
           <div className={loginStyles.footerBrand}>
             <div className={loginStyles.footerLogo}>
               <Brand />
@@ -548,6 +627,7 @@ export default function RegisterPage() {
 
           <div className={loginStyles.footerColumn}>
             <h3>KONTAK</h3>
+
             <a
               href="https://wa.me/6281259215140"
               target="_blank"
@@ -585,11 +665,16 @@ export default function RegisterPage() {
               Bp.Wetan, Gresik
             </p>
           </div>
+
         </div>
       </footer>
     </main>
   );
 }
+
+// =================================
+// ICON SHOW / HIDE PASSWORD
+// =================================
 
 function EyeIcon({ visible }) {
   return visible ? (
