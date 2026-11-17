@@ -25,8 +25,8 @@ const MAPS =
 
 const faq = [
   {
-    q: "Apakah bisa sewa harian?",
-    a: "Bisa. Selain sewa bulanan, kami juga menyediakan sewa harian untuk kamu yang hanya perlu menginap sementara. Silakan cek informasi lebih lanjut pada bagian Fasilitas.",
+    q: "Kost ini di daerah mana?",
+    a: "Kost Aulia terletak di daerah Panglima Sudirman, Perumahan BP Wetan. Untuk lebih jelasnya, kamu bisa membuka rute lokasi melalui Google Maps.",
   },
   {
     q: "Bagaimana cara melakukan pesanan?",
