@@ -17,7 +17,12 @@ export default function SiteHeader({
 
   const pathname = usePathname();
 
-  // Status login berasal dari sistem autentikasi.
+  // =====================================
+  // STATUS LOGIN PENGGUNA
+  // =====================================
+
+  // Data user harus berasal dari sesi login
+  // yang sudah diverifikasi oleh backend.
   // Jika user tersedia, tampilkan Profile.
   const isLoggedIn = Boolean(user);
 
@@ -49,6 +54,7 @@ export default function SiteHeader({
     if (!menuOpen) return;
 
     const previousOverflow = document.body.style.overflow;
+
     document.body.style.overflow = "hidden";
 
     const handleKeyDown = (event) => {
@@ -57,18 +63,30 @@ export default function SiteHeader({
       }
     };
 
+    const handleResize = () => {
+      if (window.innerWidth > 600) {
+        setMenuOpen(false);
+      }
+    };
+
     window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("resize", handleResize);
 
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("resize", handleResize);
     };
   }, [menuOpen]);
 
-  // Tutup menu jika berpindah halaman
+  // Tutup menu ketika pindah halaman
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
+
+  const openMenu = () => {
+    setMenuOpen(true);
+  };
 
   const closeMenu = () => {
     setMenuOpen(false);
@@ -123,13 +141,15 @@ export default function SiteHeader({
       >
         <div className={styles.headerInner}>
 
-          {/* LOGO */}
+          {/* =====================================
+              LOGO DESKTOP
+              TETAP SEPERTI ASLINYA
+          ===================================== */}
 
           <Link
             href="/"
-            className={styles.brand}
+            className={`${styles.brand} ${styles.desktopBrand}`}
             aria-label="Kost Aulia"
-            onClick={handleHomeClick}
           >
             <Image
               src="/image/logo-kost-aulia.png"
@@ -140,6 +160,29 @@ export default function SiteHeader({
               priority
             />
           </Link>
+
+          {/* =====================================
+              LOGO MOBILE
+              KLIK UNTUK MEMBUKA MENU KIRI
+          ===================================== */}
+
+          <button
+            type="button"
+            className={styles.mobileLogoButton}
+            onClick={openMenu}
+            aria-label="Buka menu Kost Aulia"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-navigation"
+          >
+            <Image
+              src="/image/logo-kost-aulia.png"
+              alt=""
+              width={137}
+              height={81}
+              className={styles.logo}
+              priority
+            />
+          </button>
 
           {/* =====================================
               NAVIGASI DESKTOP
@@ -174,7 +217,9 @@ export default function SiteHeader({
           </nav>
 
           {/* =====================================
-              AKUN DESKTOP
+              SIGN UP / LOGIN / PROFILE
+              TETAP DI KANAN HEADER
+              DESKTOP DAN MOBILE
           ===================================== */}
 
           <div className={styles.auth}>
@@ -207,36 +252,11 @@ export default function SiteHeader({
             )}
           </div>
 
-          {/* =====================================
-              HAMBURGER KHUSUS MOBILE
-          ===================================== */}
-
-          <button
-            type="button"
-            className={styles.hamburger}
-            onClick={() => setMenuOpen(true)}
-            aria-label="Buka menu navigasi"
-            aria-expanded={menuOpen}
-            aria-controls="mobile-navigation"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M4 6H20M4 12H20M4 18H20" />
-            </svg>
-          </button>
-
         </div>
       </header>
 
       {/* =====================================
-          OVERLAY MOBILE
+          OVERLAY GELAP SAAT MENU TERBUKA
       ===================================== */}
 
       {menuOpen && (
@@ -250,7 +270,8 @@ export default function SiteHeader({
       )}
 
       {/* =====================================
-          MENU SAMPING MOBILE
+          SIDE MENU KHUSUS MOBILE
+          MUNCUL DARI SISI KIRI
       ===================================== */}
 
       <aside
@@ -258,30 +279,10 @@ export default function SiteHeader({
         className={`${styles.mobileMenu} ${
           menuOpen ? styles.mobileMenuOpen : ""
         }`}
-        aria-label="Menu navigasi mobile"
+        aria-label="Navigasi mobile Kost Aulia"
         aria-hidden={!menuOpen}
         inert={!menuOpen}
       >
-
-        {/* TOMBOL TUTUP */}
-
-        <button
-          type="button"
-          className={styles.mobileClose}
-          onClick={closeMenu}
-          aria-label="Tutup menu"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            aria-hidden="true"
-          >
-            <path d="M5 5L19 19M19 5L5 19" />
-          </svg>
-        </button>
 
         {/* =====================================
             BAGIAN ATAS MENU
@@ -289,78 +290,57 @@ export default function SiteHeader({
 
         <div className={styles.mobileTop}>
 
-          {/* JUDUL MENU */}
+          {/* LOGO ASLI DAN TOMBOL X */}
 
           <div className={styles.mobileMenuHeader}>
+
             <Image
               src="/image/logo-kost-aulia.png"
               alt="Logo Kost Aulia"
-              width={90}
-              height={54}
-              className={styles.mobileLogo}
+              width={137}
+              height={81}
+              className={styles.mobileMenuLogo}
             />
 
-            <h2>Menu</h2>
-          </div>
-
-          {/* =====================================
-              SIGN UP / LOGIN / PROFILE
-              POSISI PALING ATAS
-          ===================================== */}
-
-          <div className={styles.mobileAccount}>
-
-            {isLoggedIn ? (
-              <Link
-                href="/profile"
-                className={styles.mobileProfileButton}
-                onClick={closeMenu}
+            <button
+              type="button"
+              className={styles.mobileClose}
+              onClick={closeMenu}
+              aria-label="Tutup menu"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                aria-hidden="true"
               >
-                <Icon name="user" size={19} />
-                Profile
-              </Link>
-            ) : (
-              <div className={styles.mobileAuthButtons}>
-
-                <Link
-                  href="/sign-up"
-                  onClick={closeMenu}
-                  className={styles.mobileAuthButton}
-                >
-                  <Icon name="user" size={18} />
-                  Sign Up
-                </Link>
-
-                <Link
-                  href="/login"
-                  onClick={closeMenu}
-                  className={styles.mobileAuthButton}
-                >
-                  <Icon name="login" size={18} />
-                  Login
-                </Link>
-
-              </div>
-            )}
+                <path d="M5 5L19 19M19 5L5 19" />
+              </svg>
+            </button>
 
           </div>
 
+          {/* JUDUL MENU */}
+
+          <h2 className={styles.mobileTitle}>
+            Menu
+          </h2>
+
           {/* =====================================
-              NAVIGASI UTAMA MOBILE
+              NAVIGASI UTAMA
           ===================================== */}
 
           <nav
             className={styles.mobileNav}
-            aria-label="Navigasi mobile"
+            aria-label="Menu utama mobile"
           >
 
             <Link
               href="/#beranda"
               onClick={handleHomeClick}
             >
-              <span className={styles.mobileNavIcon}>
-                <Icon name="home" size={20} />
-              </span>
               Beranda
             </Link>
 
@@ -368,9 +348,6 @@ export default function SiteHeader({
               href="/#footer"
               onClick={closeMenu}
             >
-              <span className={styles.mobileNavIcon}>
-                <Icon name="phone" size={20} />
-              </span>
               Kontak
             </Link>
 
@@ -378,9 +355,6 @@ export default function SiteHeader({
               href="/facilities"
               onClick={handleFacilitiesClick}
             >
-              <span className={styles.mobileNavIcon}>
-                <Icon name="building" size={20} />
-              </span>
               Fasilitas
             </Link>
 
@@ -388,9 +362,6 @@ export default function SiteHeader({
               href="/ulasan"
               onClick={closeMenu}
             >
-              <span className={styles.mobileNavIcon}>
-                <Icon name="star" size={20} />
-              </span>
               Ulasan
             </Link>
 
@@ -399,33 +370,38 @@ export default function SiteHeader({
         </div>
 
         {/* =====================================
-            BAGIAN BAWAH WARNA BIRU
+            BAGIAN BAWAH
+            WARNA BIRU TUA
         ===================================== */}
 
         <div className={styles.mobileBottom}>
 
-          {/* LOGO DAN DESKRIPSI */}
+          {/* LOGO ASLI DAN DESKRIPSI */}
 
           <div className={styles.mobileBottomBrand}>
-            <div className={styles.mobileBottomLogo}>
-              <Image
-                src="/image/logo-kost-aulia.png"
-                alt="Kost Aulia"
-                width={95}
-                height={60}
-              />
-            </div>
+
+            <Image
+              src="/image/logo-kost-aulia.png"
+              alt="Kost Aulia"
+              width={137}
+              height={81}
+              className={styles.mobileBottomLogo}
+            />
 
             <p>
               Kost khusus putri yang terletak di pusat
               kota Gresik dengan fasilitas lengkap,
               untuk hidup yang lebih tenang.
             </p>
+
           </div>
 
-          {/* KONTAK */}
+          {/* =====================================
+              KONTAK
+          ===================================== */}
 
           <div className={styles.mobileBottomSection}>
+
             <h3>KONTAK</h3>
 
             <a
@@ -459,9 +435,12 @@ export default function SiteHeader({
             </div>
           </div>
 
-          {/* LOKASI */}
+          {/* =====================================
+              LOKASI
+          ===================================== */}
 
           <div className={styles.mobileBottomSection}>
+
             <h3>LOKASI</h3>
 
             <p>
@@ -469,6 +448,7 @@ export default function SiteHeader({
               <br />
               Bp.Wetan, Gresik
             </p>
+
           </div>
 
         </div>

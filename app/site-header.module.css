@@ -32,6 +32,10 @@
   align-items: center;
 }
 
+/* =====================================
+   LOGO ASLI
+===================================== */
+
 .brand {
   display: flex;
   align-items: center;
@@ -44,6 +48,16 @@
   height: 54px;
   object-fit: contain;
 }
+
+/* Logo tombol hanya muncul pada mobile */
+
+.mobileLogoButton {
+  display: none;
+}
+
+/* =====================================
+   NAVIGASI DESKTOP
+===================================== */
 
 .nav {
   display: flex;
@@ -62,6 +76,10 @@
 .nav a:hover {
   opacity: 0.7;
 }
+
+/* =====================================
+   TOMBOL AKUN
+===================================== */
 
 .auth {
   display: flex;
@@ -137,10 +155,10 @@
 }
 
 /* =====================================
-   SEMBUNYIKAN MENU MOBILE DI DESKTOP
+   MENU MOBILE TERSEMBUNYI
+   PADA DESKTOP
 ===================================== */
 
-.hamburger,
 .mobileMenu,
 .mobileOverlay {
   display: none;
@@ -151,6 +169,7 @@
 ===================================== */
 
 @media (max-width: 900px) {
+
   .headerInner {
     width: calc(100% - 36px);
   }
@@ -178,7 +197,9 @@
 
 @media (max-width: 600px) {
 
-  /* HEADER MOBILE */
+  /* =====================================
+     HEADER MOBILE
+  ===================================== */
 
   .header {
     height: 70px;
@@ -190,64 +211,101 @@
 
   .headerInner {
     width: calc(100% - 28px);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
   }
 
-  .logo {
+  /* =====================================
+     LOGO KIRI MOBILE
+     GAMBAR ASLI TANPA MENGUBAH BENTUK
+  ===================================== */
+
+  .desktopBrand {
+    display: none;
+  }
+
+  .mobileLogoButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 70px;
+    height: 50px;
+    flex-shrink: 0;
+
+    margin: 0;
+    padding: 0;
+
+    background: transparent;
+    border: none;
+    border-radius: 0;
+
+    cursor: pointer;
+  }
+
+  .mobileLogoButton .logo {
+    display: block;
+
     width: 70px;
     height: 45px;
+
+    object-fit: contain;
   }
 
-  /* HILANGKAN NAVIGASI DESKTOP */
+  .mobileLogoButton:focus-visible {
+    outline: 2px solid #002446;
+    outline-offset: 3px;
+  }
+
+  /* =====================================
+     NAVIGASI DESKTOP DISEMBUNYIKAN
+  ===================================== */
 
   .nav {
     display: none;
   }
 
-  .auth {
-    display: none;
-  }
-
   /* =====================================
-     TOMBOL HAMBURGER
+     SIGN UP DAN LOGIN TETAP DI KANAN
   ===================================== */
 
-  .hamburger {
-    width: 42px;
-    height: 42px;
-    padding: 8px;
-
+  .auth {
     display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 7px;
+    margin-left: auto;
+  }
+
+  .auth .btnSolid,
+  .auth .btnOutline {
+    height: 35px;
+    min-width: 0;
+
+    padding: 0 9px;
+
+    display: inline-flex;
     align-items: center;
     justify-content: center;
 
-    background: #002446;
-    border: none;
-    border-radius: 10px;
+    gap: 5px;
 
-    color: #ffffff;
-    cursor: pointer;
+    border-radius: 8px;
 
-    transition:
-      background-color 0.2s ease,
-      transform 0.2s ease;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
   }
 
-  .hamburger svg {
-    width: 24px;
-    height: 24px;
-  }
-
-  .hamburger:hover {
-    background: #16466f;
-  }
-
-  .hamburger:active {
-    transform: scale(0.95);
-  }
-
-  .hamburger:focus-visible {
-    outline: 3px solid #c59270;
-    outline-offset: 3px;
+  .auth .btnSolid svg,
+  .auth .btnOutline svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
   }
 
   /* =====================================
@@ -260,40 +318,48 @@
     z-index: 1001;
 
     display: block;
+
     width: 100%;
     height: 100%;
 
-    background: rgba(0, 0, 0, 0.5);
+    padding: 0;
+    margin: 0;
 
+    background: rgba(0, 0, 0, 0.5);
     border: none;
+
     cursor: pointer;
   }
 
   /* =====================================
-     PANEL MENU MOBILE
+     SIDEBAR MOBILE DARI KIRI
   ===================================== */
 
   .mobileMenu {
     position: fixed;
+
     top: 0;
-    right: 0;
+    left: 0;
+    right: auto;
+
     z-index: 1002;
 
     width: min(90vw, 420px);
+
     height: 100vh;
     height: 100dvh;
 
     display: flex;
     flex-direction: column;
 
+    background: #ffffff;
+
     overflow-y: auto;
     overscroll-behavior: contain;
 
-    background: #ffffff;
+    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.2);
 
-    box-shadow: -8px 0 30px rgba(0, 0, 0, 0.2);
-
-    transform: translateX(105%);
+    transform: translateX(-105%);
     visibility: hidden;
 
     transition:
@@ -307,23 +373,54 @@
   }
 
   /* =====================================
-     TOMBOL X
+     BAGIAN ATAS MENU
   ===================================== */
 
-  .mobileClose {
-    position: absolute;
-    top: 22px;
-    right: 20px;
-    z-index: 5;
+  .mobileTop {
+    width: 100%;
 
+    padding: 20px 24px 32px;
+
+    background: #ffffff;
+    color: #002446;
+  }
+
+  /* =====================================
+     LOGO DAN TOMBOL TUTUP
+  ===================================== */
+
+  .mobileMenuHeader {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+  }
+
+  .mobileMenuLogo {
+    display: block;
+
+    width: 90px;
+    height: 54px;
+
+    object-fit: contain;
+  }
+
+  .mobileClose {
     width: 40px;
     height: 40px;
+    flex-shrink: 0;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
+    padding: 0;
+
     background: #f6eade;
+
     border: none;
     border-radius: 10px;
 
@@ -342,99 +439,21 @@
   }
 
   /* =====================================
-     BAGIAN ATAS PUTIH / KREM
+     JUDUL MENU
   ===================================== */
 
-  .mobileTop {
-    width: 100%;
-    padding: 24px 24px 35px;
+  .mobileTitle {
+    margin: 28px 0 20px;
 
-    background: #ffffff;
-    color: #002446;
-  }
-
-  /* JUDUL MENU */
-
-  .mobileMenuHeader {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-
-    gap: 12px;
-    margin-bottom: 26px;
-  }
-
-  .mobileLogo {
-    width: 76px;
-    height: auto;
-    object-fit: contain;
-  }
-
-  .mobileMenuHeader h2 {
-    margin: 0;
     color: #002446;
 
     font-size: 23px;
     font-weight: 700;
+    line-height: 1.3;
   }
 
   /* =====================================
-     SIGN UP DAN LOGIN DI PALING ATAS
-  ===================================== */
-
-  .mobileAccount {
-    width: 100%;
-    margin-bottom: 25px;
-  }
-
-  .mobileAuthButtons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-
-  .mobileAuthButton,
-  .mobileProfileButton {
-    min-height: 46px;
-    padding: 10px 12px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-
-    background: #002446;
-    border: 2px solid #002446;
-    border-radius: 10px;
-
-    color: #ffffff !important;
-
-    font-size: 13px;
-    font-weight: 700;
-    text-align: center;
-    text-decoration: none;
-
-    transition:
-      background-color 0.2s ease,
-      transform 0.2s ease;
-  }
-
-  .mobileAuthButton:hover,
-  .mobileProfileButton:hover {
-    background: #16466f;
-  }
-
-  .mobileAuthButton:active,
-  .mobileProfileButton:active {
-    transform: scale(0.98);
-  }
-
-  .mobileProfileButton {
-    width: 100%;
-  }
-
-  /* =====================================
-     MENU NAVIGASI UTAMA
+     NAVIGASI MOBILE
   ===================================== */
 
   .mobileNav {
@@ -447,18 +466,21 @@
   }
 
   .mobileNav a {
-    min-height: 60px;
-    padding: 14px 8px;
+    width: 100%;
+    min-height: 58px;
 
     display: flex;
     align-items: center;
-    gap: 15px;
+
+    padding: 14px 10px;
 
     border-bottom: 1px solid #e7e0d9;
 
     color: #002446;
+
     font-size: 15px;
     font-weight: 600;
+
     text-decoration: none;
 
     transition:
@@ -468,17 +490,12 @@
 
   .mobileNav a:hover {
     background: #f6eade;
-    padding-left: 14px;
+    padding-left: 17px;
   }
 
-  .mobileNavIcon {
-    width: 25px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    color: #002446;
+  .mobileNav a:focus-visible {
+    outline: 2px solid #002446;
+    outline-offset: -2px;
   }
 
   /* =====================================
@@ -493,37 +510,30 @@
     flex-direction: column;
     gap: 30px;
 
-    padding: 35px 26px 40px;
+    padding: 35px 26px 42px;
 
     background: #002446;
     color: #ffffff;
   }
 
-  /* LOGO DAN DESKRIPSI */
+  /* =====================================
+     LOGO DAN DESKRIPSI
+  ===================================== */
 
   .mobileBottomBrand {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 18px;
+
+    gap: 20px;
   }
 
   .mobileBottomLogo {
-    width: 95px;
-    height: 95px;
+    display: block;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 90px;
+    height: 54px;
 
-    background: #f6eade;
-    border-radius: 50%;
-    overflow: hidden;
-  }
-
-  .mobileBottomLogo img {
-    width: 85px;
-    height: auto;
     object-fit: contain;
   }
 
@@ -531,16 +541,23 @@
     margin: 0;
 
     color: #ffffff;
+
     font-size: 13px;
+    font-weight: 400;
     line-height: 1.8;
   }
 
-  /* KONTAK DAN LOKASI */
+  /* =====================================
+     KONTAK DAN LOKASI
+  ===================================== */
 
   .mobileBottomSection {
+    width: 100%;
+
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+
     gap: 12px;
   }
 
@@ -548,6 +565,7 @@
     margin: 0;
 
     color: #ffffff;
+
     font-size: 15px;
     font-weight: 700;
     letter-spacing: 0.4px;
@@ -558,8 +576,11 @@
     margin: 0;
 
     color: #ffffff;
+
     font-size: 13px;
+    font-weight: 400;
     line-height: 1.8;
+
     text-decoration: none;
   }
 
@@ -574,8 +595,8 @@
   .mobileSocialLinks {
     display: flex;
     align-items: center;
-    gap: 13px;
 
+    gap: 13px;
     margin-top: 8px;
   }
 
@@ -593,32 +614,57 @@
     background: transparent;
     color: #ffffff;
 
+    text-decoration: none;
+
     transition: background-color 0.2s ease;
   }
 
   .mobileSocialLinks a:hover {
     background: rgba(255, 255, 255, 0.15);
   }
+
+  .mobileSocialLinks a:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 3px;
+  }
 }
 
 /* =====================================
-   LAYAR HP KECIL
+   MOBILE UKURAN KECIL
 ===================================== */
 
 @media (max-width: 380px) {
 
+  .headerInner {
+    width: calc(100% - 20px);
+    gap: 5px;
+  }
+
+  .mobileLogoButton {
+    width: 62px;
+  }
+
+  .mobileLogoButton .logo {
+    width: 62px;
+    height: 42px;
+  }
+
+  .auth {
+    gap: 5px;
+  }
+
+  .auth .btnSolid,
+  .auth .btnOutline {
+    height: 34px;
+    padding: 0 7px;
+
+    font-size: 10px;
+    gap: 4px;
+  }
+
   .mobileTop {
     padding-left: 18px;
     padding-right: 18px;
-  }
-
-  .mobileAuthButtons {
-    gap: 8px;
-  }
-
-  .mobileAuthButton {
-    font-size: 12px;
-    padding: 8px;
   }
 
   .mobileNav a {
@@ -638,15 +684,13 @@
 }
 
 /* =====================================
-   AKSESIBILITAS ANIMASI
+   REDUCED MOTION
 ===================================== */
 
 @media (prefers-reduced-motion: reduce) {
 
   .mobileMenu,
-  .hamburger,
-  .mobileAuthButton,
-  .mobileProfileButton {
+  .mobileNav a {
     transition: none;
   }
 }
