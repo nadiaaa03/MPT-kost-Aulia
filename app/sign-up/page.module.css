@@ -1,3 +1,4 @@
+
 /* =================================
    SIGN UP FORM
 ================================= */
@@ -123,53 +124,38 @@
 }
 
 /* =================================
-   PASSWORD REQUIREMENTS
+   PASSWORD ERROR VALIDATION
 ================================= */
 
-.requirements {
-  margin: 9px 13px 2px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+/* Border merah jika password tidak valid */
+
+.inputWrap.inputError,
+.inputWrap.inputError:focus-within {
+  border-color: #d34c43;
+  box-shadow: 0 0 0 3px rgba(211, 76, 67, 0.10);
 }
 
-.requirementsTitle {
-  margin: 0 0 2px;
-  color: #002446;
-  font-family: var(--font-poppins), sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-}
+/* Satu pesan kesalahan di bawah input */
 
-.requirementValid,
-.requirementInvalid {
-  display: flex;
-  align-items: center;
-  gap: 9px;
+.passwordError {
+  margin: 2px 13px 0;
+  color: #d34c43;
   font-family: var(--font-poppins), sans-serif;
   font-size: 12px;
   line-height: 1.5;
-  transition: color 0.2s ease;
 }
 
-.requirementValid {
-  color: #21834b;
-}
+/* =================================
+   KODE UNIK
+================================= */
 
-.requirementInvalid {
-  color: #d34c43;
-}
-
-.requirementValid span,
-.requirementInvalid span {
-  width: 15px;
-  height: 15px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 700;
+.kodeHint {
+  margin: 2px 13px 0;
+  color: #70594b;
+  font-family: var(--font-poppins), sans-serif;
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.5;
 }
 
 /* =================================
@@ -262,13 +248,10 @@
 }
 
 @media (max-width: 480px) {
-  .requirements {
+  .passwordError,
+  .kodeHint {
     margin-left: 8px;
     margin-right: 8px;
-  }
-
-  .requirementValid,
-  .requirementInvalid {
     font-size: 11px;
   }
 
