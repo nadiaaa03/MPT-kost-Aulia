@@ -17,13 +17,13 @@ export default function SiteHeader({
 
   const pathname = usePathname();
 
-  // Status login harus berasal dari sesi autentikasi
-  // user = null artinya belum login
+  // Status login berasal dari sistem autentikasi.
+  // Jika user tersedia, tampilkan Profile.
   const isLoggedIn = Boolean(user);
 
-  // =================================
+  // =====================================
   // HEADER SCROLL
-  // =================================
+  // =====================================
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,9 +41,9 @@ export default function SiteHeader({
     };
   }, []);
 
-  // =================================
+  // =====================================
   // MOBILE MENU
-  // =================================
+  // =====================================
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -65,7 +65,7 @@ export default function SiteHeader({
     };
   }, [menuOpen]);
 
-  // Tutup menu ketika berpindah halaman
+  // Tutup menu jika berpindah halaman
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
@@ -74,9 +74,9 @@ export default function SiteHeader({
     setMenuOpen(false);
   };
 
-  // =================================
+  // =====================================
   // NAVIGASI BERANDA
-  // =================================
+  // =====================================
 
   const handleHomeClick = (e) => {
     closeMenu();
@@ -91,9 +91,9 @@ export default function SiteHeader({
     }
   };
 
-  // =================================
+  // =====================================
   // NAVIGASI FASILITAS
-  // =================================
+  // =====================================
 
   const handleFacilitiesClick = (e) => {
     closeMenu();
@@ -108,6 +108,10 @@ export default function SiteHeader({
     }
   };
 
+  // =====================================
+  // TAMPILAN HEADER
+  // =====================================
+
   return (
     <>
       <header
@@ -115,13 +119,11 @@ export default function SiteHeader({
           isScrolled || variant === "solid"
             ? styles.scrolled
             : ""
-        } ${menuOpen ? styles.menuActive : ""}`}
+        }`}
       >
         <div className={styles.headerInner}>
 
-          {/* =================================
-              LOGO
-          ================================= */}
+          {/* LOGO */}
 
           <Link
             href="/"
@@ -139,9 +141,10 @@ export default function SiteHeader({
             />
           </Link>
 
-          {/* =================================
+          {/* =====================================
               NAVIGASI DESKTOP
-          ================================= */}
+              TIDAK DIUBAH
+          ===================================== */}
 
           <nav
             className={styles.nav}
@@ -170,12 +173,11 @@ export default function SiteHeader({
             </Link>
           </nav>
 
-          {/* =================================
-              TOMBOL AKUN DESKTOP
-          ================================= */}
+          {/* =====================================
+              AKUN DESKTOP
+          ===================================== */}
 
           <div className={styles.auth}>
-
             {isLoggedIn ? (
               <Link
                 href="/profile"
@@ -203,70 +205,53 @@ export default function SiteHeader({
                 </Link>
               </>
             )}
-
           </div>
 
-          {/* =================================
-              HAMBURGER MOBILE
-          ================================= */}
+          {/* =====================================
+              HAMBURGER KHUSUS MOBILE
+          ===================================== */}
 
           <button
             type="button"
             className={styles.hamburger}
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label={
-              menuOpen
-                ? "Tutup menu navigasi"
-                : "Buka menu navigasi"
-            }
+            onClick={() => setMenuOpen(true)}
+            aria-label="Buka menu navigasi"
             aria-expanded={menuOpen}
             aria-controls="mobile-navigation"
           >
-            {menuOpen ? (
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                aria-hidden="true"
-              >
-                <path d="M5 5L19 19M19 5L5 19" />
-              </svg>
-            ) : (
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                aria-hidden="true"
-              >
-                <path d="M4 6H20M4 12H20M4 18H20" />
-              </svg>
-            )}
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M4 6H20M4 12H20M4 18H20" />
+            </svg>
           </button>
 
         </div>
       </header>
 
-      {/* =================================
+      {/* =====================================
           OVERLAY MOBILE
-      ================================= */}
+      ===================================== */}
 
       {menuOpen && (
         <button
           type="button"
           className={styles.mobileOverlay}
           onClick={closeMenu}
-          aria-label="Tutup menu"
+          aria-label="Tutup menu navigasi"
           tabIndex={-1}
         />
       )}
 
-      {/* =================================
-          MOBILE SIDE MENU
-      ================================= */}
+      {/* =====================================
+          MENU SAMPING MOBILE
+      ===================================== */}
 
       <aside
         id="mobile-navigation"
@@ -277,130 +262,58 @@ export default function SiteHeader({
         aria-hidden={!menuOpen}
         inert={!menuOpen}
       >
-        <div className={styles.mobileMenuContent}>
-          <button
+
+        {/* TOMBOL TUTUP */}
+
+        <button
           type="button"
           className={styles.mobileClose}
           onClick={closeMenu}
           aria-label="Tutup menu"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            aria-hidden="true"
           >
-            ✕
-            </button>
+            <path d="M5 5L19 19M19 5L5 19" />
+          </svg>
+        </button>
 
-          {/* LOGO DAN DESKRIPSI */}
+        {/* =====================================
+            BAGIAN ATAS MENU
+        ===================================== */}
 
-          <div className={styles.mobileBrand}>
-            <div className={styles.mobileLogoCircle}>
-              <Image
-                src="/image/logo-kost-aulia.png"
-                alt="Kost Aulia"
-                width={100}
-                height={65}
-                className={styles.mobileLogo}
-              />
-            </div>
+        <div className={styles.mobileTop}>
 
-            <p className={styles.mobileDescription}>
-              Kost khusus putri yang terletak di pusat
-              kota Gresik dengan fasilitas lengkap,
-              untuk hidup yang lebih tenang.
-            </p>
+          {/* JUDUL MENU */}
+
+          <div className={styles.mobileMenuHeader}>
+            <Image
+              src="/image/logo-kost-aulia.png"
+              alt="Logo Kost Aulia"
+              width={90}
+              height={54}
+              className={styles.mobileLogo}
+            />
+
+            <h2>Menu</h2>
           </div>
 
-          {/* LINK DAN KONTAK */}
-
-          <div className={styles.mobileColumns}>
-
-            <div className={styles.mobileColumn}>
-              <h3>LINK</h3>
-
-              <Link
-                href="/#beranda"
-                onClick={handleHomeClick}
-              >
-                Beranda
-              </Link>
-
-              <Link
-                href="/facilities"
-                onClick={handleFacilitiesClick}
-              >
-                Fasilitas
-              </Link>
-
-              <Link
-                href="/ulasan"
-                onClick={closeMenu}
-              >
-                Ulasan
-              </Link>
-
-              <Link
-                href="/#footer"
-                onClick={closeMenu}
-              >
-                FAQ
-              </Link>
-            </div>
-
-            <div className={styles.mobileColumn}>
-              <h3>KONTAK</h3>
-
-              <a
-                href="https://wa.me/6281259215140"
-                target="_blank"
-                rel="noreferrer"
-              >
-                0812 - 5921 - 5140
-              </a>
-
-              <div className={styles.mobileSocials}>
-
-                <a
-                  href="https://instagram.com/itsaulia.kost"
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Instagram Kost Aulia"
-                >
-                  <Icon name="instagram" size={21} />
-                </a>
-
-                <a
-                  href="https://tiktok.com/@auliakost.gresik"
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="TikTok Kost Aulia"
-                >
-                  <Icon name="tiktok" size={21} />
-                </a>
-
-              </div>
-            </div>
-
-          </div>
-
-          {/* LOKASI */}
-
-          <div className={styles.mobileLocation}>
-            <h3>LOKASI</h3>
-
-            <p>
-              Jl. Mawar No.14
-              <br />
-              Bp.Wetan, Gresik
-            </p>
-          </div>
-
-          {/* =================================
-              AKUN MOBILE
-          ================================= */}
+          {/* =====================================
+              SIGN UP / LOGIN / PROFILE
+              POSISI PALING ATAS
+          ===================================== */}
 
           <div className={styles.mobileAccount}>
 
             {isLoggedIn ? (
               <Link
                 href="/profile"
-                className={styles.mobileAccountButton}
+                className={styles.mobileProfileButton}
                 onClick={closeMenu}
               >
                 <Icon name="user" size={19} />
@@ -412,7 +325,7 @@ export default function SiteHeader({
                 <Link
                   href="/sign-up"
                   onClick={closeMenu}
-                  className={styles.mobileAccountButton}
+                  className={styles.mobileAuthButton}
                 >
                   <Icon name="user" size={18} />
                   Sign Up
@@ -421,7 +334,7 @@ export default function SiteHeader({
                 <Link
                   href="/login"
                   onClick={closeMenu}
-                  className={styles.mobileAccountButton}
+                  className={styles.mobileAuthButton}
                 >
                   <Icon name="login" size={18} />
                   Login
@@ -432,7 +345,134 @@ export default function SiteHeader({
 
           </div>
 
+          {/* =====================================
+              NAVIGASI UTAMA MOBILE
+          ===================================== */}
+
+          <nav
+            className={styles.mobileNav}
+            aria-label="Navigasi mobile"
+          >
+
+            <Link
+              href="/#beranda"
+              onClick={handleHomeClick}
+            >
+              <span className={styles.mobileNavIcon}>
+                <Icon name="home" size={20} />
+              </span>
+              Beranda
+            </Link>
+
+            <Link
+              href="/#footer"
+              onClick={closeMenu}
+            >
+              <span className={styles.mobileNavIcon}>
+                <Icon name="phone" size={20} />
+              </span>
+              Kontak
+            </Link>
+
+            <Link
+              href="/facilities"
+              onClick={handleFacilitiesClick}
+            >
+              <span className={styles.mobileNavIcon}>
+                <Icon name="building" size={20} />
+              </span>
+              Fasilitas
+            </Link>
+
+            <Link
+              href="/ulasan"
+              onClick={closeMenu}
+            >
+              <span className={styles.mobileNavIcon}>
+                <Icon name="star" size={20} />
+              </span>
+              Ulasan
+            </Link>
+
+          </nav>
+
         </div>
+
+        {/* =====================================
+            BAGIAN BAWAH WARNA BIRU
+        ===================================== */}
+
+        <div className={styles.mobileBottom}>
+
+          {/* LOGO DAN DESKRIPSI */}
+
+          <div className={styles.mobileBottomBrand}>
+            <div className={styles.mobileBottomLogo}>
+              <Image
+                src="/image/logo-kost-aulia.png"
+                alt="Kost Aulia"
+                width={95}
+                height={60}
+              />
+            </div>
+
+            <p>
+              Kost khusus putri yang terletak di pusat
+              kota Gresik dengan fasilitas lengkap,
+              untuk hidup yang lebih tenang.
+            </p>
+          </div>
+
+          {/* KONTAK */}
+
+          <div className={styles.mobileBottomSection}>
+            <h3>KONTAK</h3>
+
+            <a
+              href="https://wa.me/6281259215140"
+              target="_blank"
+              rel="noreferrer"
+            >
+              0812 - 5921 - 5140
+            </a>
+
+            <div className={styles.mobileSocialLinks}>
+
+              <a
+                href="https://instagram.com/itsaulia.kost"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Instagram Kost Aulia"
+              >
+                <Icon name="instagram" size={20} />
+              </a>
+
+              <a
+                href="https://tiktok.com/@auliakost.gresik"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="TikTok Kost Aulia"
+              >
+                <Icon name="tiktok" size={20} />
+              </a>
+
+            </div>
+          </div>
+
+          {/* LOKASI */}
+
+          <div className={styles.mobileBottomSection}>
+            <h3>LOKASI</h3>
+
+            <p>
+              Jl. Mawar No.14
+              <br />
+              Bp.Wetan, Gresik
+            </p>
+          </div>
+
+        </div>
+
       </aside>
     </>
   );
