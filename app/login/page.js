@@ -86,7 +86,11 @@ export default function LoginPage() {
 
       setMessage("Login berhasil! Selamat datang, " + result.user.nama);
       if (result.user.role === "pemilik") {
-        router.push("/owner/invitation-codes");
+        router.push("/owner");
+        router.refresh();
+      } else if (result.user.role === "penghuni") {
+        router.push("/");
+        router.refresh();
       }
 
       // Pengalihan dashboard dapat ditambahkan
