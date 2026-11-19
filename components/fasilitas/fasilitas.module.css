@@ -1,0 +1,400 @@
+
+/* ===== DASAR ===== */
+
+.container {
+  padding: 30px;
+  max-width: 900px;
+  margin: auto;
+  font-family: Arial, sans-serif;
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.button {
+  background: #002446;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.button:hover {
+  opacity: 0.8;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== BAGIAN TIPE KAMAR ===== */
+
+.tipe {
+  background: #002446;
+  color: #fff;
+  min-height: 100vh;
+  padding: 70px 0 90px;
+}
+
+.kontainer {
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.judulBagian {
+  margin: 0 0 40px;
+  font-size: clamp(2rem, 4.2vw, 3.75rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+  color: #fff;
+}
+
+/* ===== BARIS TIPE KAMAR ===== */
+
+.barisTipe {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: 45px;
+  align-items: center;
+  margin-bottom: 70px;
+}
+
+.kartuPutih {
+  background: #fff;
+  color: #002446;
+  border-radius: 18px;
+  padding: 18px;
+  min-width: 0;
+}
+
+.fotoTipe {
+  width: 100%;
+  aspect-ratio: 635 / 393;
+  overflow: hidden;
+  border-radius: 15px;
+  background: #e9e3dc;
+}
+
+.placeholderFoto {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: #594c40;
+  background: linear-gradient(
+    135deg,
+    #e9e4dc,
+    #c8c4bd,
+    #eee8df
+  );
+}
+
+.placeholderFoto span {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.placeholderFoto small {
+  font-size: 0.9rem;
+}
+
+/* ===== BAGIAN BAWAH KARTU ===== */
+
+.kartuBawah {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.judulTipe {
+  margin: 0;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-weight: 700;
+  color: #994619;
+}
+
+.pilHarga {
+  display: inline-block;
+  margin-top: 7px;
+  padding: 3px 16px;
+  border-radius: 60px;
+  background: #bffacf;
+  color: #25560a;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.tombolPanah {
+  flex: 0 0 auto;
+  width: 85px;
+  height: 52px;
+  border-radius: 36px;
+  background: #994619;
+  color: #fff;
+  text-decoration: none;
+  font-size: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.tombolPanah:hover {
+  background: #75350f;
+  transform: translateX(3px);
+}
+
+/* ===== DAFTAR FASILITAS ===== */
+
+.infoTipe {
+  min-width: 0;
+  color: #fff;
+}
+
+.judulDaftar {
+  margin: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #949494;
+  color: #f6eade;
+  font-size: clamp(1.1rem, 2vw, 1.55rem);
+  font-weight: 700;
+}
+
+.daftar {
+  margin: 18px 0 25px;
+  padding-left: 22px;
+  font-size: clamp(0.85rem, 1.3vw, 1rem);
+  line-height: 1.7;
+}
+
+/* ===== STATUS KAMAR ===== */
+
+.pil {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 373px;
+  min-height: 48px;
+  padding: 8px 12px;
+  border-radius: 34px;
+  font-weight: 700;
+  font-size: clamp(0.9rem, 1.4vw, 1.15rem);
+  text-align: center;
+}
+
+.pilPenuh {
+  background: #ffcfcf;
+  color: #ea2b2b;
+}
+
+.pilTersedia {
+  background: #bffacf;
+  color: #25560a;
+}
+
+.pilNetral {
+  background: #e7ecf2;
+  color: #5b6b7f;
+  font-size: 0.9rem;
+}
+
+.pesanGalat {
+  color: #fff;
+  margin-top: 20px;
+}
+
+.tombolUlang {
+  margin-left: 10px;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 8px;
+  background: #c8956a;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* ===== AJAKAN WHATSAPP ===== */
+
+.ajakan {
+  background: linear-gradient(
+    180deg,
+    #002446 17.81%,
+    #1b314b 100%
+  );
+  padding: 90px 20px 130px;
+  text-align: center;
+  color: #fff;
+}
+
+.tulisan {
+  margin: 0 auto 22px;
+  max-width: 837px;
+  font-family: "Segoe Script", cursive;
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.ajakan p {
+  max-width: 850px;
+  margin: 0 auto 35px;
+  font-size: clamp(0.85rem, 1.4vw, 1rem);
+  line-height: 1.7;
+}
+
+.tombolWa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-width: 200px;
+  min-height: 50px;
+  padding: 0 24px;
+  border-radius: 60px;
+  background: #25d366;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.tombolWa:hover {
+  background: #1da851;
+}
+
+/* ===== FOOTER ===== */
+
+.footer {
+  background: #1b314b;
+  color: #fff;
+  padding: 60px 0 70px;
+}
+
+.footerIsi {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1.2fr 1.2fr;
+  gap: 35px;
+}
+
+.logoFooter {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  background: #f6eade;
+  color: #002446;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.deskripsiFooter {
+  max-width: 350px;
+  margin-top: 18px;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.kolom h3 {
+  margin: 0 0 18px;
+  font-size: 0.9rem;
+  color: #f6eade;
+}
+
+.kolom a,
+.kolom p {
+  display: block;
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #fff;
+  text-decoration: none;
+}
+
+.kolom a:hover {
+  text-decoration: underline;
+}
+
+.sosial {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 900px) {
+  .barisTipe {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    margin-bottom: 55px;
+  }
+
+  .footerIsi {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pil {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .tipe {
+    padding: 45px 0 55px;
+  }
+
+  .kontainer {
+    padding: 0 16px;
+  }
+
+  .judulBagian {
+    margin-bottom: 28px;
+  }
+
+  .kartuPutih {
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .tombolPanah {
+    width: 58px;
+    height: 44px;
+  }
+
+  .daftar {
+    line-height: 1.65;
+  }
+
+  .ajakan {
+    padding: 70px 18px 90px;
+  }
+
+  .footerIsi {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
