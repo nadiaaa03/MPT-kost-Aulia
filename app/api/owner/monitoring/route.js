@@ -12,20 +12,24 @@ import {
 // ==========================================
 
 export async function GET(request) {
-  const auth = await wajibRoleAktif(
-    request,
-    ["pemilik"]
-  );
-
-  if (auth.error) {
-    return auth.error;
-  }
-
   try {
+    // ======================================
+    // 1. VALIDASI AKSES PEMILIK
+    // ======================================
+
+    const auth = await wajibRoleAktif(
+      request,
+      ["pemilik"]
+    );
+
+    if (auth.error) {
+      return auth.error;
+    }
+
     const hariIni = tanggalWIB();
 
     // ======================================
-    // 1. RINGKASAN JUMLAH KAMAR
+    // 2. RINGKASAN KAMAR
     // ======================================
 
     const [ringkasanRows] = await db.execute(
@@ -33,30 +37,43 @@ export async function GET(request) {
       SELECT
         total_kamar,
         kamar_tersedia,
-        kamar_dipesan,
         kamar_terisi,
         keterangan
       FROM v_ringkasan_kamar
       `
     );
 
+    const ringkasan = ringkasanRows[0] || {};
+
     // ======================================
-    // 2. PROFIL PENGHUNI PER KAMAR
+    // 3. AMBIL SELURUH DATA KAMAR
     // ======================================
-    // Kamar tanpa sewa tetap ditampilkan.
-    // Identitas penghuni hanya dikirim
-    // melalui API khusus pemilik.
 
     const [kamarRows] = await db.execute(
       `
       SELECT
-        r.id AS id_kamar,
-        r.nomor_kamar,
-        r.tipe,
-        r.harga,
-        v.status,
+        id,
+        nomor_kamar,
+        tipe,
+        harga,
+        status,
+        deskripsi
+      FROM v_kamar
+      ORDER BY
+        CAST(nomor_kamar AS UNSIGNED),
+        nomor_kamar
+      `
+    );
 
+    // ======================================
+    // 4. AMBIL DATA SEWA AKTIF
+    // ======================================
+
+    const [penghuniRows] = await db.execute(
+      `
+      SELECT
         s.id_sewa,
+        s.id_kamar,
         s.id_user,
 
         DATE_FORMAT(
@@ -73,39 +90,77 @@ export async function GET(request) {
         u.gmail,
         u.no_telp
 
-      FROM rooms r
+      FROM sewa_kamar s
 
-      JOIN v_kamar v
-        ON v.id = r.id
-
-      LEFT JOIN sewa_kamar s
-        ON s.id_sewa = (
-          SELECT s2.id_sewa
-          FROM sewa_kamar s2
-          WHERE s2.id_kamar = r.id
-            AND s2.status_sewa = 'aktif'
-            AND (
-              s2.tanggal_keluar IS NULL
-              OR s2.tanggal_keluar >= ?
-            )
-          ORDER BY
-            s2.tanggal_masuk ASC,
-            s2.id_sewa ASC
-          LIMIT 1
-        )
-
-      LEFT JOIN users u
+      INNER JOIN users u
         ON u.id_user = s.id_user
 
+      WHERE s.status_sewa = 'aktif'
+        AND s.tanggal_masuk <= ?
+        AND (
+          s.tanggal_keluar IS NULL
+          OR s.tanggal_keluar >= ?
+        )
+
       ORDER BY
-        CAST(r.nomor_kamar AS UNSIGNED),
-        r.nomor_kamar
+        s.tanggal_masuk ASC,
+        s.id_sewa ASC
       `,
-      [hariIni]
+      [hariIni, hariIni]
     );
 
     // ======================================
-    // 3. TAGIHAN YANG BELUM LUNAS
+    // 5. HUBUNGKAN PENGHUNI DENGAN KAMAR
+    // ======================================
+
+    const penghuniPerKamar = new Map();
+
+    for (const penghuni of penghuniRows) {
+      const idKamar = String(penghuni.id_kamar);
+
+      // Satu kamar hanya menampilkan satu
+      // penghuni aktif pada dashboard.
+      if (!penghuniPerKamar.has(idKamar)) {
+        penghuniPerKamar.set(idKamar, penghuni);
+      }
+    }
+
+    // ======================================
+    // 6. GABUNGKAN DATA KAMAR DAN PENGHUNI
+    // ======================================
+
+    const kamar = kamarRows.map((item) => {
+      const penghuni = penghuniPerKamar.get(
+        String(item.id)
+      );
+
+      return {
+        id_kamar: item.id,
+        nomor_kamar: item.nomor_kamar,
+        tipe: item.tipe,
+        harga: Number(item.harga),
+        status: item.status,
+        deskripsi: item.deskripsi,
+
+        id_sewa: penghuni?.id_sewa ?? null,
+        id_user: penghuni?.id_user ?? null,
+
+        tanggal_masuk:
+          penghuni?.tanggal_masuk ?? null,
+
+        tanggal_keluar:
+          penghuni?.tanggal_keluar ?? null,
+
+        nama_penghuni:
+          penghuni?.nama_penghuni ?? null,
+
+        gmail: penghuni?.gmail ?? null,
+        no_telp: penghuni?.no_telp ?? null,
+      };
+    });
+
+    // ======================================
+    // 7. AMBIL TAGIHAN BELUM LUNAS
     // ======================================
 
     const [tagihanRows] = await db.execute(
@@ -143,13 +198,13 @@ export async function GET(request) {
 
       FROM tagihan t
 
-      JOIN sewa_kamar s
+      INNER JOIN sewa_kamar s
         ON s.id_sewa = t.id_sewa
 
-      JOIN rooms r
+      INNER JOIN rooms r
         ON r.id = s.id_kamar
 
-      JOIN users u
+      INNER JOIN users u
         ON u.id_user = s.id_user
 
       WHERE t.status_tagihan IN (
@@ -164,45 +219,35 @@ export async function GET(request) {
     );
 
     // ======================================
-    // 4. KONVERSI DATA NUMERIK
+    // 8. KONVERSI DATA TAGIHAN
     // ======================================
 
-    const ringkasan =
-      ringkasanRows[0] ?? {};
-
-    const kamar = kamarRows.map(
-      (item) => ({
-        ...item,
-        harga: Number(item.harga),
-      })
-    );
-
-    const tagihan = tagihanRows.map(
-      (item) => ({
-        ...item,
-        nominal: Number(item.nominal),
-      })
-    );
+    const tagihan = tagihanRows.map((item) => ({
+      ...item,
+      nominal: Number(item.nominal),
+    }));
 
     // ======================================
-    // 5. HITUNG RINGKASAN TAGIHAN
+    // 9. RINGKASAN STATUS TAGIHAN
     // ======================================
 
     const belumBayar = tagihan.filter(
       (item) =>
-        item.status_tagihan ===
-        "belum_bayar"
+        item.status_tagihan === "belum_bayar"
     );
 
-    const menungguVerifikasi =
-      tagihan.filter(
-        (item) =>
-          item.status_tagihan ===
-          "menunggu_verifikasi"
-      );
+    const menungguVerifikasi = tagihan.filter(
+      (item) =>
+        item.status_tagihan === "menunggu_verifikasi"
+    );
+
+    const totalBelumBayar = belumBayar.reduce(
+      (total, item) => total + item.nominal,
+      0
+    );
 
     // ======================================
-    // 6. RESPONSE UNTUK DASHBOARD
+    // 10. RESPONSE DASHBOARD OWNER
     // ======================================
 
     return NextResponse.json({
@@ -214,12 +259,11 @@ export async function GET(request) {
         total_kamar: Number(
           ringkasan.total_kamar ?? 0
         ),
+
         kamar_tersedia: Number(
           ringkasan.kamar_tersedia ?? 0
         ),
-        kamar_dipesan: Number(
-          ringkasan.kamar_dipesan ?? 0
-        ),
+
         kamar_terisi: Number(
           ringkasan.kamar_terisi ?? 0
         ),
@@ -230,32 +274,38 @@ export async function GET(request) {
       tagihan,
 
       ringkasan_tagihan: {
-        jumlah_belum_bayar:
-          belumBayar.length,
+        jumlah_belum_bayar: belumBayar.length,
 
         jumlah_menunggu_verifikasi:
           menungguVerifikasi.length,
 
-        total_belum_bayar:
-          belumBayar.reduce(
-            (total, item) =>
-              total + item.nominal,
-            0
-          ),
+        total_belum_bayar: totalBelumBayar,
       },
     });
 
   } catch (error) {
-    console.error(
-      "OWNER MONITORING ERROR:",
-      error
-    );
+
+    // ======================================
+    // 11. PENANGANAN ERROR
+    // ======================================
+
+    console.error("OWNER MONITORING ERROR:", {
+      message: error.message,
+      code: error.code,
+      errno: error.errno,
+      sqlState: error.sqlState,
+      sqlMessage: error.sqlMessage,
+      stack: error.stack,
+    });
 
     return NextResponse.json(
       {
         success: false,
         message:
           "Gagal mengambil data monitoring pemilik.",
+        error:
+          error.sqlMessage || error.message,
+        code: error.code || null,
       },
       { status: 500 }
     );
