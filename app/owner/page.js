@@ -8,58 +8,74 @@ import Icon from "../icons";
 import styles from "./page.module.css";
 
 const WA = "https://wa.me/6281259215140";
-const MAPS = "https://www.google.com/maps/search/?api=1&query=Jl.+Mawar+No.14+Bp.+Wetan+Gresik";
+const MAPS =
+  "https://www.google.com/maps/search/?api=1&query=Jl.+Mawar+No.14+Bp.+Wetan+Gresik";
 
 const DATA_TIPE = [
   {
     id: "standar",
     nama: "Kamar Tipe Standar",
     foto: "/image/tipe-kamar-standar.png",
-    deskripsi: "Pilihan kamar nyaman untuk kamu yang menginginkan hunian praktis dengan fasilitas yang menunjang kebutuhan sehari-hari.",
+    deskripsi:
+      "Pilihan kamar nyaman untuk kamu yang menginginkan hunian praktis dengan fasilitas yang menunjang kebutuhan sehari-hari.",
     fasilitas: [
-      "Kasur spring bed", "Free WiFi", "Kamar mandi dalam",
-      "TV Digital", "Teko listrik/kamar", "Lemari baju",
-      "Meja dan kursi di dalam kamar", "AC",
-      "Listrik (token) bulanan", "Air PDAM Umbulan Pasuruan",
-      "Satu jendela yang mengarah keluar"
+      "Kasur spring bed",
+      "Free WiFi",
+      "Kamar mandi dalam",
+      "TV Digital",
+      "Teko listrik/kamar",
+      "Lemari baju",
+      "Meja dan kursi di dalam kamar",
+      "AC",
+      "Listrik (token) bulanan",
+      "Air PDAM Umbulan Pasuruan",
+      "Satu jendela yang mengarah keluar",
     ],
   },
   {
     id: "eksklusif",
     nama: "Kamar Tipe Exclusive",
     foto: "/image/kamar-exclusive.png",
-    deskripsi: "Pilihan kamar dengan kenyamanan ekstra untuk menemani aktivitas dan waktu istirahatmu.",
+    deskripsi:
+      "Pilihan kamar dengan kenyamanan ekstra untuk menemani aktivitas dan waktu istirahatmu.",
     fasilitas: [
-      "Kasur spring bed", "Free WiFi", "Kamar mandi dalam",
-      "TV Digital", "Teko listrik/kamar", "Lemari baju",
-      "Meja dan kursi di dalam kamar", "AC",
-      "Listrik (token) bulanan", "Air PDAM Umbulan Pasuruan",
-      "Dua jendela yang mengarah keluar"
+      "Kasur spring bed",
+      "Free WiFi",
+      "Kamar mandi dalam",
+      "TV Digital",
+      "Teko listrik/kamar",
+      "Lemari baju",
+      "Meja dan kursi di dalam kamar",
+      "AC",
+      "Listrik (token) bulanan",
+      "Air PDAM Umbulan Pasuruan",
+      "Dua jendela yang mengarah keluar",
     ],
   },
 ];
 
 const GALERI = [
-  { src: "/image/tipe-kamar-standar.png", nama: "Kamar Standar" },
-  { src: "/image/kamar-exclusive.png", nama: "Kamar Exclusive" },
-  { src: "/image/dapur-bersama.png", nama: "Dapur Bersama" },
-  { src: "/image/parkiran-luas.png", nama: "Area Parkir" },
+  {
+    src: "/image/tipe-kamar-standar.png",
+    nama: "Kamar Standar",
+  },
+  {
+    src: "/image/kamar-exclusive.png",
+    nama: "Kamar Exclusive",
+  },
+  {
+    src: "/image/dapur-bersama.png",
+    nama: "Dapur Bersama",
+  },
+  {
+    src: "/image/parkiran-luas.png",
+    nama: "Area Parkir",
+  },
 ];
 
-const TAGIHAN_CONTOH = [
-  {
-    kamar: 2,
-    nama: "Penghuni Kamar 2",
-    nomor: "Belum tersedia",
-    status: "Belum Bayar",
-  },
-  {
-    kamar: 3,
-    nama: "Penghuni Kamar 3",
-    nomor: "Belum tersedia",
-    status: "Belum Bayar",
-  },
-];
+// ==========================================
+// HELPER
+// ==========================================
 
 function formatRupiah(angka) {
   if (
@@ -78,109 +94,101 @@ function formatRupiah(angka) {
 }
 
 async function ambilJson(url) {
-  const response = await fetch(url, { cache: "no-store" });
+  const response = await fetch(url, {
+    cache: "no-store",
+  });
 
   if (!response.ok) {
-    throw new Error(`Gagal mengambil data (HTTP ${response.status})`);
+    throw new Error(
+      `Gagal mengambil data (HTTP ${response.status})`
+    );
   }
 
   return response.json();
 }
 
 function salinDataTipe(tipe) {
-  return { ...tipe, fasilitas: [...tipe.fasilitas] };
+  return {
+    ...tipe,
+    fasilitas: [...tipe.fasilitas],
+  };
 }
 
-// MENCARI NOMOR KAMAR DARI BERBAGAI KEMUNGKINAN FIELD API
 function nomorKamarData(room) {
   return Number(
     room?.nomor_kamar ??
-    room?.nomor ??
-    room?.no_kamar ??
-    room?.room_number ??
-    room?.number
+      room?.nomor ??
+      room?.no_kamar ??
+      room?.room_number ??
+      room?.number
   );
 }
 
-// MEMBACA STATUS KAMAR DARI DATA API
-function statusKamarTerisi(room) {
-  if (!room) return false;
-
-  const status = String(
-    room.status ??
-    room.status_kamar ??
-    room.keterangan ??
-    room.status_penghuni ??
-    ""
-  ).toLowerCase().trim();
-
-  if (
-    ["terisi", "occupied", "ditempati", "aktif"].some((s) =>
-      status.includes(s)
-    )
-  ) {
-    return true;
-  }
-
-  if (
-    ["kosong", "tersedia", "available", "vacant"].some((s) =>
-      status.includes(s)
-    )
-  ) {
-    return false;
-  }
-
-  return Boolean(
-    room.id_penghuni ??
-    room.penghuni_id ??
-    room.id_user ??
-    room.nama_penghuni ??
-    room.nama
-  );
-}
+// ==========================================
+// DASHBOARD OWNER
+// ==========================================
 
 export default function OwnerDashboardPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [ringkasan, setRingkasan] = useState(null);
   const [daftarKamar, setDaftarKamar] = useState([]);
+  const [dataOwner, setDataOwner] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
   const [editId, setEditId] = useState(null);
   const [draft, setDraft] = useState(null);
   const [preview, setPreview] = useState({});
   const [pesan, setPesan] = useState("");
   const [fotoTambahan, setFotoTambahan] = useState([]);
   const [fotoGalat, setFotoGalat] = useState("");
+
   const [tagihanOpen, setTagihanOpen] = useState(false);
   const [hoverKamar, setHoverKamar] = useState(null);
 
-  // STATE MODAL PROFIL PENGHUNI / PINTU KAMAR
   const [profilOpen, setProfilOpen] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
 
+  // ========================================
   // AMBIL DATA DATABASE
+  // ========================================
+
   async function muatData() {
     try {
       setLoading(true);
       setError("");
 
-      const [dataRingkasan, dataKamar] = await Promise.all([
+      const [
+        dataRingkasan,
+        dataKamar,
+        monitoringOwner,
+      ] = await Promise.all([
         ambilJson("/api/rooms/ringkasan"),
         ambilJson("/api/rooms"),
+        ambilJson("/api/owner/monitoring"),
       ]);
 
       if (
         !Array.isArray(dataRingkasan?.per_tipe) ||
-        !Array.isArray(dataKamar)
+        !Array.isArray(dataKamar) ||
+        monitoringOwner?.success !== true ||
+        !Array.isArray(monitoringOwner?.kamar) ||
+        !Array.isArray(monitoringOwner?.tagihan)
       ) {
-        throw new Error("Format respons API kamar tidak sesuai.");
+        throw new Error(
+          "Format respons monitoring tidak sesuai."
+        );
       }
 
       setRingkasan(dataRingkasan);
       setDaftarKamar(dataKamar);
+      setDataOwner(monitoringOwner);
     } catch (err) {
       console.error("Owner dashboard:", err);
-      setError(err.message || "Gagal memuat data.");
+
+      setError(
+        err.message || "Gagal memuat data."
+      );
     } finally {
       setLoading(false);
     }
@@ -190,11 +198,22 @@ export default function OwnerDashboardPage() {
     muatData();
   }, []);
 
-  // KUNCI SCROLL SAAT MODAL/MENU TERBUKA
+  // ========================================
+  // KUNCI SCROLL SAAT MODAL TERBUKA
+  // ========================================
+
   useEffect(() => {
-    if (!menuOpen && !tagihanOpen && !editId && !profilOpen) return;
+    if (
+      !menuOpen &&
+      !tagihanOpen &&
+      !editId &&
+      !profilOpen
+    ) {
+      return;
+    }
 
     const old = document.body.style.overflow;
+
     document.body.style.overflow = "hidden";
 
     const onEsc = (e) => {
@@ -204,7 +223,9 @@ export default function OwnerDashboardPage() {
         setProfilOpen(false);
         setSelectedRoom(null);
 
-        if (editId) batalEdit();
+        if (editId) {
+          batalEdit();
+        }
       }
     };
 
@@ -212,25 +233,72 @@ export default function OwnerDashboardPage() {
 
     return () => {
       document.body.style.overflow = old;
-      window.removeEventListener("keydown", onEsc);
-    };
-  }, [menuOpen, tagihanOpen, editId, profilOpen]);
 
+      window.removeEventListener(
+        "keydown",
+        onEsc
+      );
+    };
+  }, [
+    menuOpen,
+    tagihanOpen,
+    editId,
+    profilOpen,
+  ]);
+
+  // ========================================
   // DATA MONITORING
-  const total = Number(ringkasan?.total_kamar ?? 0);
-  const tersedia = Number(ringkasan?.kamar_tersedia ?? 0);
-  const terisi = Number(ringkasan?.kamar_terisi ?? 0);
+  // ========================================
+
+  const total = Number(
+    ringkasan?.total_kamar ?? 0
+  );
+
+  const tersedia = Number(
+    ringkasan?.kamar_tersedia ?? 0
+  );
+
+  const terisi = Number(
+    ringkasan?.kamar_terisi ?? 0
+  );
+
+  const dipesan = Number(
+    ringkasan?.kamar_dipesan ?? 0
+  );
+
+  const tagihanBelumLunas =
+    dataOwner?.tagihan ?? [];
+
+  const jumlahBelumBayar = Number(
+    dataOwner?.ringkasan_tagihan
+      ?.jumlah_belum_bayar ?? 0
+  );
+
+  const jumlahMenunggu = Number(
+    dataOwner?.ringkasan_tagihan
+      ?.jumlah_menunggu_verifikasi ?? 0
+  );
 
   const okupansi =
     total > 0
-      ? Math.min(100, Math.max(0, Math.round((terisi / total) * 100)))
+      ? Math.min(
+          100,
+          Math.max(
+            0,
+            Math.round((terisi / total) * 100)
+          )
+        )
       : 0;
 
+  // ========================================
   // INFORMASI TIPE KAMAR
+  // ========================================
+
   function informasiTipe(id) {
-    const perTipe = ringkasan?.per_tipe?.find(
-      (item) => item.tipe === id
-    );
+    const perTipe =
+      ringkasan?.per_tipe?.find(
+        (item) => item.tipe === id
+      );
 
     const kamarSesuai = daftarKamar.filter(
       (item) => item.tipe === id
@@ -238,17 +306,34 @@ export default function OwnerDashboardPage() {
 
     const hargaList = kamarSesuai
       .map((item) => Number(item.harga))
-      .filter((harga) => Number.isFinite(harga) && harga > 0);
+      .filter(
+        (harga) =>
+          Number.isFinite(harga) && harga > 0
+      );
 
     return {
-      harga: hargaList.length ? Math.min(...hargaList) : null,
-      tersedia: perTipe ? Number(perTipe.kamar_tersedia) : null,
-      total: perTipe ? Number(perTipe.total_kamar) : null,
-      terisi: perTipe ? Number(perTipe.kamar_terisi) : null,
+      harga: hargaList.length
+        ? Math.min(...hargaList)
+        : null,
+
+      tersedia: perTipe
+        ? Number(perTipe.kamar_tersedia)
+        : null,
+
+      total: perTipe
+        ? Number(perTipe.total_kamar)
+        : null,
+
+      terisi: perTipe
+        ? Number(perTipe.kamar_terisi)
+        : null,
     };
   }
 
+  // ========================================
   // EDIT TIPE KAMAR
+  // ========================================
+
   function bukaEdit(tipe) {
     const info = informasiTipe(tipe.id);
 
@@ -256,9 +341,13 @@ export default function OwnerDashboardPage() {
       ...salinDataTipe(tipe),
       ...preview[tipe.id],
       fasilitas: [
-        ...(preview[tipe.id]?.fasilitas ?? tipe.fasilitas),
+        ...(preview[tipe.id]?.fasilitas ??
+          tipe.fasilitas),
       ],
-      harga: preview[tipe.id]?.harga ?? info.harga ?? "",
+      harga:
+        preview[tipe.id]?.harga ??
+        info.harga ??
+        "",
     });
 
     setEditId(tipe.id);
@@ -266,14 +355,21 @@ export default function OwnerDashboardPage() {
   }
 
   function ubahDraft(field, value) {
-    setDraft((old) => ({ ...old, [field]: value }));
+    setDraft((old) => ({
+      ...old,
+      [field]: value,
+    }));
   }
 
   function ubahFasilitas(index, value) {
     setDraft((old) => {
       const arr = [...old.fasilitas];
       arr[index] = value;
-      return { ...old, fasilitas: arr };
+
+      return {
+        ...old,
+        fasilitas: arr,
+      };
     });
   }
 
@@ -287,23 +383,33 @@ export default function OwnerDashboardPage() {
   function hapusFasilitas(index) {
     setDraft((old) => ({
       ...old,
-      fasilitas: old.fasilitas.filter((_, i) => i !== index),
+      fasilitas: old.fasilitas.filter(
+        (_, i) => i !== index
+      ),
     }));
   }
 
   function simpanPratinjau(e) {
     e.preventDefault();
+
     if (!draft) return;
 
     const harga = Number(draft.harga);
 
-    if (!Number.isSafeInteger(harga) || harga <= 0) {
-      setPesan("Harga harus berupa angka bulat lebih dari nol.");
+    if (
+      !Number.isSafeInteger(harga) ||
+      harga <= 0
+    ) {
+      setPesan(
+        "Harga harus berupa angka bulat lebih dari nol."
+      );
       return;
     }
 
     if (!draft.nama.trim()) {
-      setPesan("Nama tipe kamar wajib diisi.");
+      setPesan(
+        "Nama tipe kamar wajib diisi."
+      );
       return;
     }
 
@@ -317,7 +423,11 @@ export default function OwnerDashboardPage() {
         .filter(Boolean),
     };
 
-    setPreview((old) => ({ ...old, [editId]: hasil }));
+    setPreview((old) => ({
+      ...old,
+      [editId]: hasil,
+    }));
+
     setEditId(null);
     setDraft(null);
 
@@ -326,15 +436,23 @@ export default function OwnerDashboardPage() {
     );
   }
 
+  // ========================================
+  // BATAL EDIT
+  // ========================================
+
   function batalEdit() {
     setEditId(null);
     setDraft(null);
     setPesan("");
   }
 
+  // ========================================
   // PILIH FOTO KAMAR
+  // ========================================
+
   function pilihFotoKamar(e) {
     const file = e.target.files?.[0];
+
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
@@ -361,9 +479,15 @@ export default function OwnerDashboardPage() {
     e.target.value = "";
   }
 
+  // ========================================
   // TAMBAH FOTO GALERI
+  // ========================================
+
   function tambahFotoGaleri(e) {
-    const files = Array.from(e.target.files || []);
+    const files = Array.from(
+      e.target.files || []
+    );
+
     setFotoGalat("");
 
     const valid = files.filter(
@@ -386,7 +510,9 @@ export default function OwnerDashboardPage() {
           setFotoTambahan((old) => [
             ...old,
             {
-              id: Date.now().toString() + Math.random().toString(36),
+              id:
+                Date.now().toString() +
+                Math.random().toString(36),
               src: reader.result,
               nama: file.name,
             },
@@ -401,43 +527,47 @@ export default function OwnerDashboardPage() {
   }
 
   function hapusFotoTambahan(id) {
-    setFotoTambahan((old) => old.filter((item) => item.id !== id));
+    setFotoTambahan((old) =>
+      old.filter((item) => item.id !== id)
+    );
   }
 
-  // AMBIL HARGA TAGIHAN
-  function hargaTagihan(kamar) {
-    const room = daftarKamar.find(
-      (r) =>
-        Number(r.nomor_kamar ?? r.nomor ?? r.no_kamar) === kamar
-    );
+  // ========================================
+  // DATA PINTU KAMAR
+  // ========================================
 
-    const val = Number(room?.harga);
+  const dataPintuKamar = daftarKamar
+    .map((room) => {
+      const nomor = nomorKamarData(room);
 
-    return Number.isFinite(val) && val > 0 ? val : 1100000;
-  }
+      const profil = dataOwner?.kamar?.find(
+        (item) =>
+          Number(item.id_kamar) ===
+          Number(room.id)
+      );
 
-  // DATA 15 PINTU KAMAR
-  const dataPintuKamar = Array.from({ length: 15 }, (_, index) => {
-    const nomor = index + 1;
-
-    const data = daftarKamar.find(
-      (room) => nomorKamarData(room) === nomor
-    );
-
-    return {
-      nomor,
-      data,
-      terisi: statusKamarTerisi(data),
-    };
-  });
+      return {
+        nomor,
+        data: room,
+        profil,
+        status: room.status,
+        terisi: room.status === "terisi",
+        dipesan: room.status === "dipesan",
+      };
+    })
+    .sort((a, b) => a.nomor - b.nomor);
 
   const kamarDipilih = dataPintuKamar.find(
     (room) => room.nomor === selectedRoom
   );
 
-  const penghuniTerpilih = kamarDipilih?.data;
+  const penghuniTerpilih =
+    kamarDipilih?.profil;
 
+  // ========================================
   // NAVIGASI HEADER
+  // ========================================
+
   const navLinks = (
     <>
       <Link
@@ -455,11 +585,18 @@ export default function OwnerDashboardPage() {
         Kode Undangan
       </Link>
 
-      <Link href="/ulasan" onClick={() => setMenuOpen(false)}>
+      <Link
+        href="/ulasan"
+        onClick={() => setMenuOpen(false)}
+      >
         Ulasan
       </Link>
     </>
   );
+
+  // ========================================
+  // TAMPILAN DASHBOARD OWNER
+  // ========================================
 
   return (
     <div className={styles.page}>
@@ -481,10 +618,16 @@ export default function OwnerDashboardPage() {
             />
           </Link>
 
-          <nav className={styles.nav}>{navLinks}</nav>
+          <nav className={styles.nav}>
+            {navLinks}
+          </nav>
 
-          <Link href="/" className={styles.backButton}>
-            Beranda Publik <span aria-hidden="true">↗</span>
+          <Link
+            href="/"
+            className={styles.backButton}
+          >
+            Beranda Publik{" "}
+            <span aria-hidden="true">↗</span>
           </Link>
 
           <button
@@ -531,7 +674,6 @@ export default function OwnerDashboardPage() {
             <button
               type="button"
               onClick={() => setMenuOpen(false)}
-              aria-label="Tutup menu"
             >
               ×
             </button>
@@ -541,15 +683,24 @@ export default function OwnerDashboardPage() {
 
           {navLinks}
 
-          <Link href="/" onClick={() => setMenuOpen(false)}>
+          <Link
+            href="/"
+            onClick={() => setMenuOpen(false)}
+          >
             Beranda Publik
           </Link>
         </div>
 
         <div className={styles.mobileMenuBottom}>
           <strong>Kost Aulia Gresik</strong>
-          <p>Jl. Mawar No.14, Bp. Wetan, Gresik</p>
-          <a href={WA}>0812 - 5921 - 5140</a>
+
+          <p>
+            Jl. Mawar No.14, Bp. Wetan, Gresik
+          </p>
+
+          <a href={WA}>
+            0812 - 5921 - 5140
+          </a>
         </div>
       </aside>
 
@@ -569,20 +720,29 @@ export default function OwnerDashboardPage() {
 
           <div className={styles.heroContent}>
             <span className={styles.eyebrow}>
+              OWNER DASHBOARD
+              <br />
               PANEL PEMILIK · KOST AULIA GRESIK
             </span>
 
             <h1>Manajemen Kost</h1>
 
             <p className={styles.heroSubtitle}>
-              Pantau kamar, kelola informasi hunian, dan lihat ringkasan
-              operasional kost.
+              Pantau kamar, kelola informasi hunian,
+              dan lihat ringkasan operasional kost.
             </p>
 
             {error && (
-              <div className={styles.apiError} role="alert">
+              <div
+                className={styles.apiError}
+                role="alert"
+              >
                 <span>{error}</span>
-                <button type="button" onClick={muatData}>
+
+                <button
+                  type="button"
+                  onClick={muatData}
+                >
                   Coba Lagi
                 </button>
               </div>
@@ -611,38 +771,30 @@ export default function OwnerDashboardPage() {
                     <strong>
                       {loading
                         ? "Memuat..."
-                        : ringkasan
-                        ? `${terisi} / ${total} Terisi`
-                        : "—"}
+                        : `${terisi} / ${total} Terisi`}
                     </strong>
                   </div>
 
                   <div
                     className={styles.monitorProgress}
                     role="progressbar"
-                    aria-label="Okupansi kamar"
                     aria-valuemin={0}
                     aria-valuemax={100}
                     aria-valuenow={okupansi}
                   >
                     <div
                       className={styles.monitorProgressFill}
-                      style={{ width: `${okupansi}%` }}
+                      style={{
+                        width: `${okupansi}%`,
+                      }}
                     />
                   </div>
 
                   <div className={styles.monitorFooter}>
                     <span>
-                      {loading
-                        ? "Mengambil data kamar..."
-                        : ringkasan
-                        ? `${tersedia} kamar tersedia`
-                        : "Data belum tersedia"}
+                      {tersedia} tersedia · {dipesan} dipesan
                     </span>
-
-                    <span>
-                      {ringkasan ? `${okupansi}% terisi` : ""}
-                    </span>
+                    <span>{okupansi}% terisi</span>
                   </div>
                 </div>
               </article>
@@ -653,7 +805,9 @@ export default function OwnerDashboardPage() {
 
                 <div className={styles.billBox}>
                   <div className={styles.billContent}>
-                    <span>Belum Bayar</span>
+                    <span>
+                      Belum Bayar · {jumlahMenunggu} menunggu verifikasi
+                    </span>
 
                     <div className={styles.billMain}>
                       <svg
@@ -664,7 +818,11 @@ export default function OwnerDashboardPage() {
                         <path d="M6 5h20v22H6zM10 10h12M10 15h12M10 20h12" />
                       </svg>
 
-                      <strong>{TAGIHAN_CONTOH.length} Kamar</strong>
+                      <strong>
+                        {loading
+                          ? "Memuat..."
+                          : `${jumlahBelumBayar} Tagihan`}
+                      </strong>
                     </div>
                   </div>
 
@@ -674,7 +832,7 @@ export default function OwnerDashboardPage() {
                     onClick={() => setTagihanOpen(true)}
                   >
                     Lihat Detail
-                    <span aria-hidden="true">⟶</span>
+                    <span>⟶</span>
                   </button>
                 </div>
               </article>
@@ -691,7 +849,7 @@ export default function OwnerDashboardPage() {
                 }}
               >
                 Lihat Profil Penghuni
-                <span aria-hidden="true">→</span>
+                <span>→</span>
               </button>
             </div>
           </div>
@@ -700,7 +858,10 @@ export default function OwnerDashboardPage() {
         {/* INFORMASI KAMAR */}
         <section className={styles.mainSection}>
           <div className={styles.contentInner}>
-            <section id="kelola-kamar" className={styles.manageSection}>
+            <section
+              id="kelola-kamar"
+              className={styles.manageSection}
+            >
               <div className={styles.sectionHeading}>
                 <span className={styles.sectionEyebrow}>
                   INFORMASI KAMAR
@@ -709,13 +870,16 @@ export default function OwnerDashboardPage() {
                 <h2>Kelola Tipe Kamar</h2>
 
                 <p>
-                  Harga dan ketersediaan awal berasal dari API. Pengeditan
-                  di bawah merupakan pratinjau dan belum menyimpan ke database.
+                  Kelola informasi harga, deskripsi, foto,
+                  dan fasilitas kamar Kost Aulia.
                 </p>
               </div>
 
               {pesan && (
-                <div className={styles.notice} role="status">
+                <div
+                  className={styles.notice}
+                  role="status"
+                >
                   {pesan}
                 </div>
               )}
@@ -724,11 +888,19 @@ export default function OwnerDashboardPage() {
                 {DATA_TIPE.map((tipe) => {
                   const info = informasiTipe(tipe.id);
                   const perubahan = preview[tipe.id] || {};
-                  const nama = perubahan.nama || tipe.nama;
+
+                  const nama =
+                    perubahan.nama || tipe.nama;
+
                   const deskripsi =
                     perubahan.deskripsi ?? tipe.deskripsi;
-                  const foto = perubahan.foto || tipe.foto;
-                  const harga = perubahan.harga ?? info.harga;
+
+                  const foto =
+                    perubahan.foto || tipe.foto;
+
+                  const harga =
+                    perubahan.harga ?? info.harga;
+
                   const fasilitas =
                     perubahan.fasilitas ?? tipe.fasilitas;
 
@@ -761,6 +933,7 @@ export default function OwnerDashboardPage() {
                             <span className={styles.roomLabel}>
                               KOST AULIA
                             </span>
+
                             <h3>{nama}</h3>
                           </div>
 
@@ -779,10 +952,9 @@ export default function OwnerDashboardPage() {
 
                         <div className={styles.priceBox}>
                           <span>Tarif Sewa / Bulan</span>
+
                           <strong>
-                            {loading && harga === null
-                              ? "Memuat..."
-                              : formatRupiah(harga)}
+                            {formatRupiah(harga)}
                           </strong>
                         </div>
 
@@ -794,15 +966,23 @@ export default function OwnerDashboardPage() {
 
                         <div className={styles.roomMeta}>
                           <span>
-                            Tersedia: <strong>{info.tersedia ?? "—"}</strong>
+                            Tersedia:{" "}
+                            <strong>
+                              {info.tersedia ?? "—"}
+                            </strong>
                           </span>
+
                           <span>
-                            Total: <strong>{info.total ?? "—"}</strong>
+                            Total:{" "}
+                            <strong>
+                              {info.total ?? "—"}
+                            </strong>
                           </span>
                         </div>
 
                         <div className={styles.facilityBlock}>
                           <h4>Fasilitas Kamar</h4>
+
                           <ul>
                             {fasilitas.map((item, index) => (
                               <li key={`${item}-${index}`}>
@@ -819,16 +999,29 @@ export default function OwnerDashboardPage() {
             </section>
 
             {/* GALERI */}
-            <section id="galeri" className={styles.gallerySection}>
+            <section
+              id="galeri"
+              className={styles.gallerySection}
+            >
               <div className={styles.sectionHeading}>
-                <span className={styles.sectionEyebrow}>FOTO KOST</span>
+                <span className={styles.sectionEyebrow}>
+                  FOTO KOST
+                </span>
+
                 <h2>Galeri Kost Aulia</h2>
-                <p>Foto yang sudah tersedia dan pratinjau foto tambahan.</p>
+
+                <p>
+                  Dokumentasi fasilitas dan lingkungan
+                  Kost Aulia.
+                </p>
               </div>
 
               <div className={styles.galleryGrid}>
                 {GALERI.map((item) => (
-                  <div className={styles.galleryCard} key={item.src}>
+                  <div
+                    className={styles.galleryCard}
+                    key={item.src}
+                  >
                     <Image
                       src={item.src}
                       alt={item.nama}
@@ -836,12 +1029,16 @@ export default function OwnerDashboardPage() {
                       height={280}
                       className={styles.galleryImage}
                     />
+
                     <span>{item.nama}</span>
                   </div>
                 ))}
 
                 {fotoTambahan.map((item) => (
-                  <div className={styles.galleryCard} key={item.id}>
+                  <div
+                    className={styles.galleryCard}
+                    key={item.id}
+                  >
                     <img
                       src={item.src}
                       alt={item.nama}
@@ -850,9 +1047,12 @@ export default function OwnerDashboardPage() {
 
                     <div className={styles.galleryCardBottom}>
                       <span>{item.nama}</span>
+
                       <button
                         type="button"
-                        onClick={() => hapusFotoTambahan(item.id)}
+                        onClick={() =>
+                          hapusFotoTambahan(item.id)
+                        }
                       >
                         Hapus
                       </button>
@@ -879,444 +1079,534 @@ export default function OwnerDashboardPage() {
                 />
 
                 <p>
-                  Foto tambahan hanya untuk pratinjau lokal. Belum
-                  diunggah ke server.
+                  Foto tambahan masih berupa pratinjau
+                  lokal dan belum diunggah ke server.
                 </p>
 
-                {fotoGalat && <p role="alert">{fotoGalat}</p>}
+                {fotoGalat && (
+                  <p role="alert">{fotoGalat}</p>
+                )}
               </div>
             </section>
           </div>
         </section>
-      </main>
 
-      {/* FOOTER */}
-      <footer className={styles.footer}>
-        <div className={styles.footerInner}>
-          <div className={styles.footerBrand}>
-            <Link href="/owner" className={styles.footerLogoWrap}>
-              <Image
-                src="/image/logo-kost-aulia.png"
-                alt="Logo Kost Aulia"
-                width={137}
-                height={81}
-                className={styles.footerLogo}
-              />
-            </Link>
+        {/* FOOTER */}
+        <footer className={styles.footer}>
+          <div className={styles.footerInner}>
+            <div className={styles.footerBrand}>
+              <Link href="/owner">
+                <Image
+                  src="/image/logo-kost-aulia.png"
+                  alt="Logo Kost Aulia"
+                  width={137}
+                  height={81}
+                  className={styles.logo}
+                />
+              </Link>
 
-            <p>
-              Kost khusus putri yang terletak di pusat kota Gresik dengan
-              fasilitas lengkap, untuk hidup yang lebih tenang.
-            </p>
-          </div>
+              <p>
+                Kost khusus putri yang terletak di pusat kota
+                Gresik dengan fasilitas lengkap untuk hidup
+                yang lebih tenang.
+              </p>
+            </div>
 
-          <div className={styles.footerColumn}>
-            <h4>LINK</h4>
-            <Link href="/owner">Beranda Owner</Link>
-            <Link href="/owner/invitation-codes">Kode Undangan</Link>
-            <Link href="/">Beranda Publik</Link>
-            <Link href="/facilities">Fasilitas</Link>
-          </div>
+            <div className={styles.footerColumn}>
+              <h4>LINK</h4>
+              <Link href="/owner">Beranda Owner</Link>
+              <Link href="/owner/invitation-codes">
+                Kode Undangan
+              </Link>
+              <Link href="/">Beranda Publik</Link>
+              <Link href="/facilities">Fasilitas</Link>
+            </div>
 
-          <div className={styles.footerColumn}>
-            <h4>KONTAK</h4>
-            <a href={WA} target="_blank" rel="noreferrer">
-              0812 - 5921 - 5140
-            </a>
+            <div className={styles.footerColumn}>
+              <h4>KONTAK</h4>
+              <a href={WA}>0812 - 5921 - 5140</a>
 
-            <div className={styles.socialLinks}>
-              <a
-                href="https://instagram.com/itsaulia.kost"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Instagram Kost Aulia"
-              >
-                <Icon name="instagram" size={20} />
-              </a>
+              <div className={styles.socialLinks}>
+                <a
+                  href="https://instagram.com/itsaulia.kost"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Instagram Kost Aulia"
+                >
+                  <Icon name="instagram" size={20} />
+                </a>
+                <a
+                  href="https://tiktok.com/@auliakost.gresik"
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="TikTok Kost Aulia"
+                >
+                  <Icon name="tiktok" size={20} />
+                </a>
+              </div>
+            </div>
 
-              <a
-                href="https://tiktok.com/@auliakost.gresik"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="TikTok Kost Aulia"
-              >
-                <Icon name="tiktok" size={20} />
+            <div className={styles.footerColumn}>
+              <h4>LOKASI</h4>
+              <p>
+                Jl. Mawar No.14
+                <br />
+                Bp. Wetan, Gresik
+              </p>
+              <a href={MAPS} target="_blank" rel="noreferrer">
+                Lihat di Google Maps ↗
               </a>
             </div>
           </div>
 
-          <div className={styles.footerColumn}>
-            <h4>LOKASI</h4>
-            <p>
-              Jl. Mawar No.14
-              <br />
-              Bp. Wetan, Gresik
-            </p>
-            <a href={MAPS} target="_blank" rel="noreferrer">
-              Lihat di Google Maps ↗
-            </a>
+          <div className={styles.footerBottom}>
+            © Kost Aulia — Panel Pemilik
           </div>
-        </div>
+        </footer>
+      </main>
 
-        <div className={styles.footerBottom}>
-          © Kost Aulia — Panel Pemilik
-        </div>
-      </footer>
+      {/* ================================== */}
+      {/* MODAL EDIT TIPE KAMAR */}
+      {/* ================================== */}
 
-  {/* MODAL TAGIHAN */}
-  {tagihanOpen && (
-    <div
-      className={styles.billModalOverlay}
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) {
-          setTagihanOpen(false);
-          setHoverKamar(null);
-        }
-      }}
-    >
-      <div
-        className={styles.billModal}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Daftar kamar yang belum bayar"
-      >
-        <button
-          type="button"
-          className={styles.billModalClose}
-          onClick={() => {
-            setTagihanOpen(false);
-            setHoverKamar(null);
+      {editId && draft && (
+        <div
+          className={styles.modalOverlay}
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) {
+              batalEdit();
+            }
           }}
-          aria-label="Tutup pop-up"
         >
-          ×
-        </button>
-
-        <div className={styles.unpaidList}>
-          {TAGIHAN_CONTOH.map((item) => (
-            <div
-              className={`${styles.unpaidRoom} ${
-                hoverKamar === item.kamar ? styles.unpaidRoomActive : ""
-              }`}
-              key={item.kamar}
-              onMouseEnter={() => setHoverKamar(item.kamar)}
-              onMouseLeave={() => setHoverKamar(null)}
-              onClick={() =>
-                setHoverKamar(
-                  hoverKamar === item.kamar ? null : item.kamar
-                )
-              }
-            >
-              <div className={styles.unpaidRoomInfo}>
-                <h3>Kamar {item.kamar}</h3>
-                <span>{item.status}</span>
+          <section
+            className={styles.modal}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="edit-title"
+          >
+            <div className={styles.modalHeader}>
+              <div>
+                <span className={styles.sectionEyebrow}>
+                  PENGELOLAAN KAMAR
+                </span>
+                <h2 id="edit-title">
+                  Edit {draft.nama}
+                </h2>
               </div>
 
               <button
                 type="button"
-                className={styles.roomArrow}
-                title="Detail kamar akan tersedia pada tahap berikutnya"
-                aria-label={`Detail kamar ${item.kamar}`}
-                onClick={(e) => e.stopPropagation()}
+                onClick={batalEdit}
+                aria-label="Tutup"
               >
-                →
+                ×
               </button>
+            </div>
 
-              {hoverKamar === item.kamar && (
-                <div className={styles.tenantTooltip} role="tooltip">
+            <form
+              onSubmit={simpanPratinjau}
+              className={styles.editForm}
+            >
+              <label>
+                Nama Tipe Kamar
+                <input
+                  type="text"
+                  value={draft.nama}
+                  onChange={(e) =>
+                    ubahDraft("nama", e.target.value)
+                  }
+                  maxLength={100}
+                  required
+                />
+              </label>
+
+              <label>
+                Harga Sewa per Bulan
+                <input
+                  type="number"
+                  min="1"
+                  step="1"
+                  value={draft.harga}
+                  onChange={(e) =>
+                    ubahDraft("harga", e.target.value)
+                  }
+                  required
+                />
+              </label>
+
+              <label>
+                Deskripsi
+                <textarea
+                  rows={4}
+                  value={draft.deskripsi}
+                  onChange={(e) =>
+                    ubahDraft("deskripsi", e.target.value)
+                  }
+                />
+              </label>
+
+              <div className={styles.editPhoto}>
+                <span>Foto Tipe Kamar</span>
+
+                {draft.foto?.startsWith("data:") ? (
+                  <img
+                    src={draft.foto}
+                    alt="Pratinjau foto kamar"
+                    className={styles.editPreviewImage}
+                  />
+                ) : (
+                  <Image
+                    src={draft.foto}
+                    alt="Foto kamar"
+                    width={400}
+                    height={250}
+                    className={styles.editPreviewImage}
+                  />
+                )}
+
+                <label className={styles.uploadButton}>
+                  Ganti Foto
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={pilihFotoKamar}
+                    className={styles.hiddenInput}
+                  />
+                </label>
+              </div>
+
+              <div className={styles.editFacilities}>
+                <div className={styles.facilityEditHeader}>
+                  <strong>Daftar Fasilitas</strong>
+
                   <button
                     type="button"
-                    className={styles.tooltipClose}
-                    onClick={() => setHoverKamar(null)}
-                    aria-label="Tutup detail"
+                    onClick={tambahFasilitas}
                   >
-                    ×
+                    + Tambah Fasilitas
                   </button>
-
-                  <h4>Total Tagihan</h4>
-                  <strong className={styles.tooltipAmount}>
-                    {formatRupiah(hargaTagihan(item.kamar))}
-                  </strong>
-
-                  <div className={styles.tooltipDivider} />
-
-                  <p>Nama : {item.nama}</p>
-                  <p>No. telp : {item.nomor}</p>
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  )}
 
-  {/* MODAL PROFIL PENGHUNI / PINTU KAMAR */}
-  {profilOpen && (
-    <div
-      className={styles.doorModalOverlay}
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) {
-          setProfilOpen(false);
-          setSelectedRoom(null);
-        }
-      }}
-    >
-      <div
-        className={styles.doorModal}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Profil penghuni dan status kamar"
-      >
-        <button
-          type="button"
-          className={styles.doorModalClose}
-          onClick={() => {
-            setProfilOpen(false);
-            setSelectedRoom(null);
-          }}
-          aria-label="Tutup pop-up"
-        >
-          ×
-        </button>
+                {draft.fasilitas.map((item, index) => (
+                  <div
+                    className={styles.facilityEditRow}
+                    key={index}
+                  >
+                    <input
+                      type="text"
+                      value={item}
+                      onChange={(e) =>
+                        ubahFasilitas(index, e.target.value)
+                      }
+                      placeholder="Nama fasilitas"
+                    />
 
-        <h2 className={styles.doorTitle}>
-          Klik pintu kamar untuk melihat profil penghuni
-        </h2>
+                    <button
+                      type="button"
+                      onClick={() => hapusFasilitas(index)}
+                      aria-label="Hapus fasilitas"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
 
-        <div className={styles.doorLegend}>
-          <span>
-            <i className={styles.emptyDoorIcon} />
-            Kamar Kosong
-          </span>
-          <span>
-            <i className={styles.filledDoorIcon} />
-            Kamar Terisi
-          </span>
-        </div>
-
-        <div className={styles.doorGrid}>
-          {dataPintuKamar.map((room) => (
-            <button
-              type="button"
-              key={room.nomor}
-              className={`${styles.doorItem} ${
-                room.terisi ? styles.doorOccupied : styles.doorEmpty
-              } ${
-                selectedRoom === room.nomor ? styles.doorSelected : ""
-              }`}
-              onClick={() =>
-                setSelectedRoom(
-                  selectedRoom === room.nomor ? null : room.nomor
-                )
-              }
-            >
-              <span className={styles.door}>
-                <span className={styles.doorKnob} />
-              </span>
-              <span className={styles.doorBase} />
-              <span className={styles.doorNumber}>
-                Kamar {room.nomor}
-              </span>
-            </button>
-          ))}
-        </div>
-
-        {selectedRoom !== null && (
-          <div className={styles.selectedRoomInfo}>
-            <button
-              type="button"
-              className={styles.selectedRoomClose}
-              onClick={() => setSelectedRoom(null)}
-              aria-label="Tutup detail kamar"
-            >
-              ×
-            </button>
-
-            <h3>Kamar {selectedRoom}</h3>
-
-            <span
-              className={
-                kamarDipilih?.terisi
-                  ? styles.occupiedStatus
-                  : styles.emptyStatus
-              }
-            >
-              {kamarDipilih?.terisi
-                ? "Kamar Terisi"
-                : "Kamar Kosong"}
-            </span>
-
-            {kamarDipilih?.terisi && penghuniTerpilih ? (
-              <div className={styles.selectedRoomDetails}>
-                <p>
-                  Nama penghuni:{" "}
-                  <strong>
-                    {penghuniTerpilih.nama_penghuni ??
-                      penghuniTerpilih.nama ??
-                      penghuniTerpilih.name ??
-                      "Data nama belum tersedia"}
-                  </strong>
+              {pesan && (
+                <p className={styles.formMessage} role="alert">
+                  {pesan}
                 </p>
+              )}
 
+              <div className={styles.modalFooter}>
+                <button
+                  type="button"
+                  onClick={batalEdit}
+                >
+                  Batal
+                </button>
+
+                <button type="submit">
+                  Simpan Pratinjau
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
+
+      {/* ================================== */}
+      {/* MODAL TAGIHAN */}
+      {/* ================================== */}
+
+      {tagihanOpen && (
+        <div
+          className={styles.modalOverlay}
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) {
+              setTagihanOpen(false);
+            }
+          }}
+        >
+          <section
+            className={styles.modal}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="tagihan-title"
+          >
+            <div className={styles.modalHeader}>
+              <div>
+                <span className={styles.sectionEyebrow}>
+                  KEUANGAN
+                </span>
+                <h2 id="tagihan-title">
+                  Daftar Tagihan
+                </h2>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setTagihanOpen(false)}
+                aria-label="Tutup"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className={styles.billSummary}>
+              <div>
+                <span>Belum Bayar</span>
+                <strong>{jumlahBelumBayar}</strong>
+              </div>
+
+              <div>
+                <span>Menunggu Verifikasi</span>
+                <strong>{jumlahMenunggu}</strong>
+              </div>
+            </div>
+
+            {loading ? (
+              <p>Memuat data tagihan...</p>
+            ) : tagihanBelumLunas.length === 0 ? (
+              <div className={styles.emptyState}>
+                <h3>Tidak ada tagihan tertunda</h3>
                 <p>
-                  Nomor telepon:{" "}
-                  <strong>
-                    {penghuniTerpilih.no_telp ??
-                      penghuniTerpilih.nomor_telepon ??
-                      penghuniTerpilih.telepon ??
-                      penghuniTerpilih.phone ??
-                      "Data nomor belum tersedia"}
-                  </strong>
+                  Semua tagihan yang tercatat sudah tidak
+                  memiliki status tertunda.
                 </p>
               </div>
             ) : (
-              <p className={styles.selectedRoomMessage}>
-                {kamarDipilih?.terisi
-                  ? "Informasi penghuni belum tersedia."
-                  : "Kamar ini sedang kosong."}
-              </p>
+              <div className={styles.billList}>
+                {tagihanBelumLunas.map((item) => (
+                  <article
+                    key={item.id_tagihan}
+                    className={styles.billItem}
+                  >
+                    <div>
+                      <strong>{item.nama_penghuni}</strong>
+
+                      <span>
+                        Kamar {item.nomor_kamar}
+                      </span>
+
+                      <span>
+                        Jatuh tempo: {item.tanggal_jatuh_tempo}
+                      </span>
+
+                      <span>
+                        Periode: {item.periode_mulai} –{" "}
+                        {item.periode_selesai}
+                      </span>
+                    </div>
+
+                    <div className={styles.billItemRight}>
+                      <strong>
+                        {formatRupiah(item.nominal)}
+                      </strong>
+
+                      <span
+                        className={
+                          item.status_tagihan ===
+                          "menunggu_verifikasi"
+                            ? styles.statusWaiting
+                            : styles.statusUnpaid
+                        }
+                      >
+                        {item.status_tagihan ===
+                        "menunggu_verifikasi"
+                          ? "Menunggu Verifikasi"
+                          : "Belum Bayar"}
+                      </span>
+                    </div>
+                  </article>
+                ))}
+              </div>
             )}
-          </div>
-        )}
-      </div>
-    </div>
-  )}
 
-  {/* MODAL EDIT TIPE KAMAR */}
-  {editId && draft && (
-    <div
-      className={styles.modalOverlay}
-      role="presentation"
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) batalEdit();
-      }}
-    >
-      <div
-        className={styles.modal}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modal-edit-title"
-      >
-        <div className={styles.modalHeader}>
-          <div>
-            <span className={styles.sectionEyebrow}>
-              EDIT INFORMASI
-            </span>
-            <h2 id="modal-edit-title">Edit Tipe Kamar</h2>
-          </div>
-
-          <button
-            type="button"
-            className={styles.modalClose}
-            onClick={batalEdit}
-            aria-label="Tutup editor"
-          >
-            ×
-          </button>
-        </div>
-
-        <form onSubmit={simpanPratinjau} className={styles.editForm}>
-          <div className={styles.formGroup}>
-            <label htmlFor="nama-tipe">Nama Tipe Kamar</label>
-            <input
-              id="nama-tipe"
-              value={draft.nama}
-              onChange={(e) => ubahDraft("nama", e.target.value)}
-              required
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="harga-kamar">Harga Sewa Bulanan (Rp)</label>
-            <input
-              id="harga-kamar"
-              type="number"
-              min="1"
-              step="1"
-              value={draft.harga}
-              onChange={(e) => ubahDraft("harga", e.target.value)}
-              required
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="deskripsi-kamar">Deskripsi Kamar</label>
-            <textarea
-              id="deskripsi-kamar"
-              rows={4}
-              value={draft.deskripsi}
-              onChange={(e) => ubahDraft("deskripsi", e.target.value)}
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="foto-kamar">Ganti Foto Kamar</label>
-            <input
-              id="foto-kamar"
-              type="file"
-              accept="image/*"
-              onChange={pilihFotoKamar}
-            />
-            <p>Foto pilihan hanya digunakan sebagai pratinjau.</p>
-          </div>
-
-          <div className={styles.formGroup}>
-            <div className={styles.facilityEditorHeader}>
-              <label>Fasilitas Kamar</label>
+            <div className={styles.modalFooter}>
               <button
                 type="button"
-                onClick={tambahFasilitas}
-                className={styles.addFacilityButton}
+                onClick={() => setTagihanOpen(false)}
               >
-                + Tambah Fasilitas
+                Tutup
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
+
+      {/* ================================== */}
+      {/* MODAL PROFIL PENGHUNI */}
+      {/* ================================== */}
+
+      {profilOpen && (
+        <div
+          className={styles.modalOverlay}
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) {
+              setProfilOpen(false);
+              setSelectedRoom(null);
+            }
+          }}
+        >
+          <section
+            className={styles.modal}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="profil-title"
+          >
+            <div className={styles.modalHeader}>
+              <div>
+                <span className={styles.sectionEyebrow}>
+                  DATA PENGHUNI
+                </span>
+                <h2 id="profil-title">
+                  Profil Penghuni
+                </h2>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setProfilOpen(false);
+                  setSelectedRoom(null);
+                }}
+                aria-label="Tutup"
+              >
+                ×
               </button>
             </div>
 
-            <div className={styles.facilityInputs}>
-              {draft.fasilitas.map((item, index) => (
-                <div className={styles.facilityInputRow} key={index}>
-                  <input
-                    value={item}
-                    placeholder={`Fasilitas ${index + 1}`}
-                    aria-label={`Fasilitas ${index + 1}`}
-                    onChange={(e) =>
-                      ubahFasilitas(index, e.target.value)
-                    }
-                  />
-                  <button
-                    type="button"
-                    onClick={() => hapusFasilitas(index)}
-                    aria-label={`Hapus fasilitas ${index + 1}`}
-                  >
-                    Hapus
-                  </button>
-                </div>
+            <p className={styles.modalDescription}>
+              Pilih nomor kamar untuk melihat informasi
+              penempatan dan penghuni.
+            </p>
+
+            <div className={styles.roomDoorGrid}>
+              {dataPintuKamar.map((room) => (
+                <button
+                  key={room.data.id}
+                  type="button"
+                  className={`${styles.roomDoor} ${
+                    room.status === "terisi"
+                      ? styles.roomDoorOccupied
+                      : room.status === "dipesan"
+                      ? styles.roomDoorReserved
+                      : styles.roomDoorEmpty
+                  } ${
+                    selectedRoom === room.nomor
+                      ? styles.roomDoorSelected
+                      : ""
+                  }`}
+                  onClick={() =>
+                    setSelectedRoom(room.nomor)
+                  }
+                >
+                  <span>KAMAR</span>
+                  <strong>{room.nomor}</strong>
+
+                  <small>
+                    {room.status === "terisi"
+                      ? "Terisi"
+                      : room.status === "dipesan"
+                      ? "Dipesan"
+                      : "Kosong"}
+                  </small>
+                </button>
               ))}
             </div>
-          </div>
 
-          <div className={styles.formNotice}>
-            Perubahan yang diterapkan hanya ditampilkan sementara.
-            Data MySQL dan beranda publik belum diperbarui.
-          </div>
+            {selectedRoom !== null && (
+              <div className={styles.occupantDetail}>
+                <h3>
+                  Detail Kamar {selectedRoom}
+                </h3>
 
-          <div className={styles.modalActions}>
-            <button
-              type="button"
-              className={styles.cancelButton}
-              onClick={batalEdit}
-            >
-              Batal
-            </button>
-            <button type="submit" className={styles.saveButton}>
-              Terapkan Pratinjau
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  )}
+                {penghuniTerpilih?.nama_penghuni ? (
+                  <>
+                    <div className={styles.occupantRow}>
+                      <span>Nama Penghuni</span>
+                      <strong>
+                        {penghuniTerpilih.nama_penghuni}
+                      </strong>
+                    </div>
+
+                    <div className={styles.occupantRow}>
+                      <span>Email</span>
+                      <strong>
+                        {penghuniTerpilih.gmail || "—"}
+                      </strong>
+                    </div>
+
+                    <div className={styles.occupantRow}>
+                      <span>Nomor Telepon</span>
+                      <strong>
+                        {penghuniTerpilih.no_telp || "—"}
+                      </strong>
+                    </div>
+
+                    <div className={styles.occupantRow}>
+                      <span>Tanggal Masuk</span>
+                      <strong>
+                        {penghuniTerpilih.tanggal_masuk || "—"}
+                      </strong>
+                    </div>
+
+                    <div className={styles.occupantRow}>
+                      <span>Tanggal Keluar</span>
+                      <strong>
+                        {penghuniTerpilih.tanggal_keluar ||
+                          "Belum ditentukan"}
+                      </strong>
+                    </div>
+                  </>
+                ) : kamarDipilih?.dipesan ? (
+                  <p>
+                    Kamar ini sudah dipesan, tetapi penghuni
+                    belum memasuki tanggal mulai sewa.
+                  </p>
+                ) : (
+                  <p>
+                    Kamar ini belum memiliki penghuni.
+                  </p>
+                )}
+              </div>
+            )}
+
+            <div className={styles.modalFooter}>
+              <button
+                type="button"
+                onClick={() => {
+                  setProfilOpen(false);
+                  setSelectedRoom(null);
+                }}
+              >
+                Tutup
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,50 +1,65 @@
 
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
 import { randomBytes } from "crypto";
 import db from "@/lib/db";
+import { wajibRoleAktif, tanggalWIB } from "@/lib/auth";
 
-function verifyOwner(request) {
-  const token = request.cookies.get("token")?.value;
 
-  if (!token || !process.env.JWT_SECRET) {
-    return null;
-  }
-
-  try {
-    const user = jwt.verify(token, process.env.JWT_SECRET);
-
-    if (user.role !== "pemilik" || !user.id_user) {
-      return null;
-    }
-
-    return user;
-  } catch {
-    return null;
-  }
-}
+// =====================================
+// GENERATE KODE UNDANGAN
+// =====================================
 
 function generateCode() {
-  return "AUL-" + randomBytes(5).toString("hex").toUpperCase();
+  return (
+    "AUL-" +
+    randomBytes(8).toString("hex").toUpperCase()
+  );
 }
 
-// GET: Mengambil daftar kode milik pemilik yang sedang login
+// =====================================
+// VALIDASI TANGGAL YYYY-MM-DD
+// =====================================
+
+function tanggalValid(value) {
+  if (
+    typeof value !== "string" ||
+    !/^\d{4}-\d{2}-\d{2}$/.test(value)
+  ) {
+    return false;
+  }
+
+  const [tahun, bulan, hari] =
+    value.split("-").map(Number);
+
+  const hasil = new Date(
+    Date.UTC(tahun, bulan - 1, hari)
+  );
+
+  return (
+    hasil.getUTCFullYear() === tahun &&
+    hasil.getUTCMonth() + 1 === bulan &&
+    hasil.getUTCDate() === hari
+  );
+}
+
+// =====================================
+// GET - DAFTAR KODE UNDANGAN OWNER
+// =====================================
+
 export async function GET(request) {
+  const auth = await wajibRoleAktif(
+    request,
+    ["pemilik"]
+  );
+
+  if (auth.error) {
+    return auth.error;
+  }
+
   try {
-    const owner = verifyOwner(request);
-
-    if (!owner) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Akses ditolak. Silakan login sebagai pemilik.",
-        },
-        { status: 401 }
-      );
-    }
-
     const [rows] = await db.execute(
-      `SELECT
+      `
+      SELECT
         id_kode,
         kode_unik,
         nama_penghuni,
@@ -57,203 +72,338 @@ export async function GET(request) {
         used_at
       FROM kode_undangan
       WHERE id_pemilik = ?
-      AND status = 'aktif'
-      ORDER BY created_at DESC`,
-      [owner.id_user]
+        AND status = 'aktif'
+        AND digunakan_oleh IS NULL
+        AND used_at IS NULL
+      ORDER BY created_at DESC, id_kode DESC
+      `,
+      [auth.user.id_user]
     );
 
     return NextResponse.json({
       success: true,
       data: rows,
     });
+
   } catch (error) {
-    console.error("GET INVITATION CODE ERROR:", error);
+    console.error(
+      "GET INVITATION CODE ERROR:",
+      error
+    );
 
     return NextResponse.json(
       {
         success: false,
-        message: "Gagal mengambil daftar kode.",
+        message:
+          "Gagal mengambil daftar kode undangan.",
       },
       { status: 500 }
     );
   }
 }
 
-// POST: Membuat kode undangan baru
-export async function POST(request) {
-  try {
-    const owner = verifyOwner(request);
+// =====================================
+// POST - BUAT KODE UNDANGAN
+// =====================================
 
-    if (!owner) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Akses ditolak. Silakan login sebagai pemilik.",
-        },
-        { status: 401 }
-      );
-    }
+export async function POST(request) {
+  const auth = await wajibRoleAktif(
+    request,
+    ["pemilik"]
+  );
+
+  if (auth.error) {
+    return auth.error;
+  }
+
+  try {
+    // =================================
+    // 1. AMBIL INPUT
+    // =================================
 
     const body = await request.json();
 
-    const {
-      metode,
-      kode_unik,
-      nama_penghuni,
-      nomor_kamar,
-      tanggal_masuk,
-    } = body;
+    const metode = body.metode;
 
-    // Validasi metode pembuatan
-    if (!["manual", "otomatis"].includes(metode)) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Metode pembuatan kode tidak valid.",
-        },
-        { status: 400 }
-      );
-    }
+    const namaPenghuni =
+      typeof body.nama_penghuni === "string"
+        ? body.nama_penghuni.trim()
+        : "";
 
-    // Validasi data penghuni
+    const nomorKamar =
+      body.nomor_kamar === null ||
+      body.nomor_kamar === undefined
+        ? ""
+        : String(body.nomor_kamar).trim();
+
+    const tanggalMasuk =
+      typeof body.tanggal_masuk === "string"
+        ? body.tanggal_masuk.trim()
+        : "";
+
+    let kodeUnik =
+      typeof body.kode_unik === "string"
+        ? body.kode_unik.trim().toUpperCase()
+        : "";
+
+    // =================================
+    // 2. VALIDASI METODE
+    // =================================
+
     if (
-      !nama_penghuni?.trim() ||
-      nomor_kamar === undefined ||
-      nomor_kamar === null ||
-      String(nomor_kamar).trim() === "" ||
-      !tanggal_masuk
+      metode !== "manual" &&
+      metode !== "otomatis"
     ) {
       return NextResponse.json(
         {
           success: false,
           message:
-            "Nama penghuni, nomor kamar, dan tanggal masuk wajib diisi.",
+            "Metode pembuatan kode tidak valid.",
         },
         { status: 400 }
       );
     }
 
-    // Validasi nomor kamar 1 sampai 15
-    const roomNumber = Number(nomor_kamar);
+    // =================================
+    // 3. VALIDASI NAMA
+    // =================================
 
     if (
-      !Number.isInteger(roomNumber) ||
-      roomNumber < 1 ||
-      roomNumber > 15
+      !namaPenghuni ||
+      namaPenghuni.length > 100
     ) {
       return NextResponse.json(
         {
           success: false,
-          message: "Nomor kamar harus berupa angka dari 1 sampai 15.",
+          message:
+            "Nama penghuni wajib diisi dan maksimal 100 karakter.",
         },
         { status: 400 }
       );
     }
 
-    // Validasi tanggal masuk
+    // =================================
+    // 4. VALIDASI NOMOR KAMAR
+    // =================================
+
     if (
-      !/^\d{4}-\d{2}-\d{2}$/.test(tanggal_masuk)
+      !/^[0-9]{1,10}$/.test(nomorKamar)
     ) {
       return NextResponse.json(
         {
           success: false,
-          message: "Format tanggal masuk tidak valid.",
+          message:
+            "Nomor kamar tidak valid.",
         },
         { status: 400 }
       );
     }
 
-    const datePattern = /^\d{4}-\d{2}-\d{2}$/;
-    const isDateFormatValid = datePattern.test(tanggal_masuk);
+    // =================================
+    // 5. VALIDASI TANGGAL MASUK
+    // =================================
 
-    let parsedDate = null;
-
-    if (isDateFormatValid) {
-      const [year, month, day] = tanggal_masuk.split("-").map(Number);
-
-      parsedDate = new Date(year, month - 1, day);
-    }
-
-    if (
-      !isDateFormatValid ||
-      !parsedDate ||
-      parsedDate.getFullYear() !== Number(tanggal_masuk.split("-")[0]) ||
-      parsedDate.getMonth() + 1 !== Number(tanggal_masuk.split("-")[1]) ||
-      parsedDate.getDate() !== Number(tanggal_masuk.split("-")[2])
-    ) {
-      return Response.json(
-        { message: "Tanggal masuk tidak valid." },
+    if (!tanggalValid(tanggalMasuk)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Tanggal masuk tidak valid.",
+        },
         { status: 400 }
       );
     }
 
-    // Menentukan kode undangan
-    let kodeUnik = String(kode_unik || "")
-      .trim()
-      .toUpperCase();
+    if (tanggalMasuk < tanggalWIB()) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Tanggal masuk tidak boleh di masa lalu.",
+        },
+        { status: 400 }
+      );
+    }
 
-    if (metode === "otomatis" && !kodeUnik) {
+    // =================================
+    // 6. VALIDASI KODE
+    // =================================
+
+    if (metode === "otomatis") {
       kodeUnik = generateCode();
     }
 
-    if (!/^[A-Z0-9-]{4,20}$/.test(kodeUnik)) {
+    if (
+      !/^[A-Z0-9-]{4,20}$/.test(kodeUnik)
+    ) {
       return NextResponse.json(
         {
           success: false,
           message:
-            "Kode harus 4–20 karakter dan hanya menggunakan huruf, angka, atau tanda hubung.",
+            "Kode harus 4–20 karakter, menggunakan huruf, angka, atau tanda hubung.",
         },
         { status: 400 }
       );
     }
 
-    // Menyimpan kode dan data penghuni
+    // =================================
+    // 7. CARI KAMAR DI DATABASE
+    // =================================
+
+    const [rooms] = await db.execute(
+      `
+      SELECT
+        id,
+        nomor_kamar,
+        tipe,
+        harga
+      FROM rooms
+      WHERE nomor_kamar = ?
+      LIMIT 1
+      `,
+      [nomorKamar]
+    );
+
+    if (rooms.length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Kamar tidak ditemukan dalam database.",
+        },
+        { status: 404 }
+      );
+    }
+
+    const kamar = rooms[0];
+
+    // =================================
+    // 8. PERIKSA PENYEWAAN AKTIF
+    // =================================
+
+    const [sewaAktif] = await db.execute(
+      `
+      SELECT id_sewa
+      FROM sewa_kamar
+      WHERE id_kamar = ?
+        AND status_sewa = 'aktif'
+        AND (
+          tanggal_keluar IS NULL
+          OR tanggal_keluar >= ?
+        )
+      LIMIT 1
+      `,
+      [
+        kamar.id,
+        tanggalMasuk,
+      ]
+    );
+
+    if (sewaAktif.length > 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Kamar masih memiliki penyewaan aktif. Pilih kamar lain atau selesaikan masa sewa sebelumnya.",
+        },
+        { status: 409 }
+      );
+    }
+
+    // =================================
+    // 9. PERIKSA KODE AKTIF KAMAR
+    // =================================
+
+    const [kodeAktif] = await db.execute(
+      `
+      SELECT id_kode
+      FROM kode_undangan
+      WHERE nomor_kamar = ?
+        AND status = 'aktif'
+        AND digunakan_oleh IS NULL
+        AND used_at IS NULL
+      LIMIT 1
+      `,
+      [kamar.nomor_kamar]
+    );
+
+    if (kodeAktif.length > 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Kamar ini sudah memiliki kode undangan aktif. Gunakan kode tersebut atau nonaktifkan terlebih dahulu.",
+        },
+        { status: 409 }
+      );
+    }
+
+    // =================================
+    // 10. SIMPAN KODE UNDANGAN
+    // =================================
+
     const [result] = await db.execute(
-      `INSERT INTO kode_undangan
-       (
-         kode_unik,
-         id_pemilik,
-         nama_penghuni,
-         nomor_kamar,
-         tanggal_masuk,
-         metode,
-         status
-       )
-       VALUES (?, ?, ?, ?, ?, ?, 'aktif')`,
+      `
+      INSERT INTO kode_undangan (
+        kode_unik,
+        id_pemilik,
+        nama_penghuni,
+        nomor_kamar,
+        tanggal_masuk,
+        metode,
+        status
+      )
+      VALUES (
+        ?, ?, ?, ?, ?, ?, 'aktif'
+      )
+      `,
       [
         kodeUnik,
-        owner.id_user,
-        nama_penghuni.trim(),
-        roomNumber,
-        tanggal_masuk,
+        auth.user.id_user,
+        namaPenghuni,
+        kamar.nomor_kamar,
+        tanggalMasuk,
         metode,
       ]
     );
 
+    // =================================
+    // 11. RESPONSE BERHASIL
+    // =================================
+
     return NextResponse.json(
       {
         success: true,
-        message: "Kode undangan berhasil dibuat.",
+        message:
+          "Kode undangan berhasil dibuat.",
         data: {
           id_kode: result.insertId,
           kode_unik: kodeUnik,
-          nama_penghuni: nama_penghuni.trim(),
-          nomor_kamar: roomNumber,
-          tanggal_masuk,
+          nama_penghuni: namaPenghuni,
+          nomor_kamar: kamar.nomor_kamar,
+          tanggal_masuk: tanggalMasuk,
           metode,
           status: "aktif",
         },
       },
       { status: 201 }
     );
-  } catch (error) {
-    console.error("CREATE INVITATION CODE ERROR:", error);
 
-    if (error.code === "ER_DUP_ENTRY") {
+  } catch (error) {
+    console.error(
+      "CREATE INVITATION CODE ERROR:",
+      error
+    );
+
+    if (
+      error.code === "ER_DUP_ENTRY" ||
+      error.errno === 1062
+    ) {
       return NextResponse.json(
         {
           success: false,
-          message: "Kode sudah digunakan. Silakan generate kode lain.",
+          message:
+            "Kode undangan sudah ada. Silakan gunakan kode lain.",
         },
         { status: 409 }
       );
@@ -262,7 +412,8 @@ export async function POST(request) {
     return NextResponse.json(
       {
         success: false,
-        message: "Gagal membuat kode undangan.",
+        message:
+          "Gagal membuat kode undangan.",
       },
       { status: 500 }
     );

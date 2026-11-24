@@ -4,14 +4,59 @@ import bcrypt from "bcryptjs";
 import { randomBytes } from "crypto";
 import db from "@/lib/db";
 
+// ==========================================
+// VALIDASI TANGGAL YYYY-MM-DD
+// ==========================================
+
+function tanggalValid(value) {
+  if (
+    typeof value !== "string" ||
+    !/^\d{4}-\d{2}-\d{2}$/.test(value)
+  ) {
+    return false;
+  }
+
+  const [tahun, bulan, hari] = value
+    .split("-")
+    .map(Number);
+
+  const tanggal = new Date(
+    Date.UTC(tahun, bulan - 1, hari)
+  );
+
+  return (
+    tanggal.getUTCFullYear() === tahun &&
+    tanggal.getUTCMonth() + 1 === bulan &&
+    tanggal.getUTCDate() === hari
+  );
+}
+
+// ==========================================
+// HELPER RESPONSE ERROR
+// ==========================================
+
+function gagal(message, status = 400) {
+  return NextResponse.json(
+    {
+      success: false,
+      message,
+    },
+    { status }
+  );
+}
+
+// ==========================================
+// POST - REGISTRASI PENGHUNI
+// ==========================================
+
 export async function POST(request) {
   let connection;
   let transactionStarted = false;
 
   try {
-    // =====================================
-    // 1. AMBIL DATA FORM REGISTRASI
-    // =====================================
+    // ======================================
+    // 1. AMBIL DATA REGISTRASI
+    // ======================================
 
     const body = await request.json();
 
@@ -25,7 +70,7 @@ export async function POST(request) {
         ? body.gmail.trim().toLowerCase()
         : "";
 
-    const no_telp =
+    const noTelp =
       typeof body.no_telp === "string"
         ? body.no_telp.trim()
         : "";
@@ -37,164 +82,282 @@ export async function POST(request) {
         ? body.kode_unik.trim().toUpperCase()
         : "";
 
-    // =====================================
-    // 2. VALIDASI INPUT WAJIB
-    // =====================================
+    // ======================================
+    // 2. VALIDASI DATA WAJIB
+    // ======================================
 
     if (
       !nama ||
       !gmail ||
-      !no_telp ||
+      !noTelp ||
       !password ||
       !kodeUnik
     ) {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "Semua kolom wajib diisi, termasuk kode undangan.",
-        },
-        { status: 400 }
+      return gagal(
+        "Semua kolom wajib diisi, termasuk kode undangan."
       );
     }
 
-    // =====================================
-    // 3. VALIDASI GMAIL
-    // =====================================
+    // ======================================
+    // 3. VALIDASI NAMA
+    // ======================================
 
-    if (!/^[^\s@]+@gmail\.com$/i.test(gmail)) {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "Gunakan alamat email Gmail yang valid.",
-        },
-        { status: 400 }
+    if (nama.length > 100) {
+      return gagal(
+        "Nama maksimal 100 karakter."
       );
     }
 
-    if (gmail.length > 100) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Email maksimal 100 karakter.",
-        },
-        { status: 400 }
+    // ======================================
+    // 4. VALIDASI GMAIL
+    // ======================================
+
+    if (
+      gmail.length > 100 ||
+      !/^[^\s@]+@gmail\.com$/i.test(gmail)
+    ) {
+      return gagal(
+        "Gunakan alamat Gmail yang valid."
       );
     }
 
-    // =====================================
-    // 4. VALIDASI PASSWORD
-    // =====================================
+    // ======================================
+    // 5. VALIDASI NOMOR TELEPON
+    // ======================================
+
+    if (!/^\+?[0-9]{10,15}$/.test(noTelp)) {
+      return gagal(
+        "Nomor telepon harus berisi 10–15 digit, dengan tanda + opsional di awal."
+      );
+    }
+
+    // ======================================
+    // 6. VALIDASI PASSWORD
+    // ======================================
 
     if (
       typeof password !== "string" ||
       password.length < 8 ||
+      Buffer.byteLength(password, "utf8") > 72 ||
       !/[A-Z]/.test(password) ||
       !/[a-z]/.test(password) ||
       !/[0-9]/.test(password) ||
       !/[^A-Za-z0-9\s]/.test(password)
     ) {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "Password belum memenuhi semua persyaratan.",
-        },
-        { status: 400 }
+      return gagal(
+        "Password minimal 8 karakter, mengandung huruf besar, huruf kecil, angka, dan simbol, serta maksimal 72 byte."
       );
     }
 
-    // =====================================
-    // 5. VALIDASI NOMOR TELEPON
-    // =====================================
+    // ======================================
+    // 7. VALIDASI FORMAT KODE UNDANGAN
+    // ======================================
 
-    if (!/^[0-9+]{10,15}$/.test(no_telp)) {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "Nomor telepon harus terdiri dari 10–15 karakter angka atau tanda +.",
-        },
-        { status: 400 }
+    if (
+      !/^[A-Z0-9-]{4,20}$/.test(kodeUnik)
+    ) {
+      return gagal(
+        "Format kode undangan tidak valid."
       );
     }
 
-    // =====================================
-    // 6. VALIDASI PANJANG DATA
-    // =====================================
-
-    if (nama.length > 100) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Nama maksimal 100 karakter.",
-        },
-        { status: 400 }
-      );
-    }
-
-    if (kodeUnik.length > 20) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Kode undangan maksimal 20 karakter.",
-        },
-        { status: 400 }
-      );
-    }
-
-    // =====================================
-    // 7. HASH PASSWORD
-    // =====================================
+    // ======================================
+    // 8. HASH PASSWORD
+    // ======================================
 
     const passwordHash = await bcrypt.hash(
       password,
       12
     );
 
-    // =====================================
-    // 8. MULAI TRANSAKSI DATABASE
-    // =====================================
+    // ======================================
+    // 9. MULAI TRANSAKSI DATABASE
+    // ======================================
 
     connection = await db.getConnection();
 
     await connection.beginTransaction();
     transactionStarted = true;
 
-    // =====================================
-    // 9. VALIDASI KODE UNDANGAN
-    // =====================================
+    // ======================================
+    // 10. AMBIL DAN KUNCI KODE UNDANGAN
+    // ======================================
 
     const [codes] = await connection.execute(
-      `SELECT
-          id_kode,
-          kode_unik,
-          id_pemilik
-       FROM kode_undangan
-       WHERE kode_unik = ?
-         AND status = 'aktif'
-       FOR UPDATE`,
+      `
+      SELECT
+        id_kode,
+        kode_unik,
+        id_pemilik,
+        nama_penghuni,
+        nomor_kamar,
+        DATE_FORMAT(
+          tanggal_masuk, '%Y-%m-%d'
+        ) AS tanggal_masuk
+      FROM kode_undangan
+      WHERE kode_unik = ?
+        AND status = 'aktif'
+        AND digunakan_oleh IS NULL
+        AND used_at IS NULL
+      FOR UPDATE
+      `,
       [kodeUnik]
     );
 
-    if (codes.length === 0) {
+    if (codes.length !== 1) {
       await connection.rollback();
       transactionStarted = false;
 
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "Kode undangan tidak valid, tidak aktif, atau sudah digunakan.",
-        },
-        { status: 400 }
+      return gagal(
+        "Kode undangan tidak valid, sudah digunakan, atau tidak aktif."
       );
     }
 
-    // =====================================
-    // 10. BUAT ID PENGHUNI
-    // =====================================
+    const kode = codes[0];
+
+    // ======================================
+    // 11. VALIDASI PEMILIK KODE
+    // ======================================
+
+    const [pemilik] = await connection.execute(
+      `
+      SELECT id_user
+      FROM users
+      WHERE id_user = ?
+        AND role = 'pemilik'
+      LIMIT 1
+      `,
+      [kode.id_pemilik]
+    );
+
+    if (pemilik.length !== 1) {
+      throw new Error(
+        "Pemilik kode undangan tidak valid."
+      );
+    }
+
+    // ======================================
+    // 12. VALIDASI TANGGAL MASUK
+    // ======================================
+
+    if (!tanggalValid(kode.tanggal_masuk)) {
+      await connection.rollback();
+      transactionStarted = false;
+
+      return gagal(
+        "Tanggal masuk pada kode undangan tidak valid."
+      );
+    }
+
+    // ======================================
+    // 13. VALIDASI EMAIL DAN TELEPON
+    // ======================================
+
+    const [akunAda] = await connection.execute(
+      `
+      SELECT id_user
+      FROM users
+      WHERE gmail = ?
+         OR no_telp = ?
+      LIMIT 1
+      `,
+      [gmail, noTelp]
+    );
+
+    if (akunAda.length > 0) {
+      await connection.rollback();
+      transactionStarted = false;
+
+      return gagal(
+        "Gmail atau nomor telepon sudah terdaftar.",
+        409
+      );
+    }
+
+    // ======================================
+    // 14. AMBIL DAN KUNCI DATA KAMAR
+    // ======================================
+
+    const [rooms] = await connection.execute(
+      `
+      SELECT
+        id,
+        nomor_kamar,
+        tipe,
+        harga
+      FROM rooms
+      WHERE nomor_kamar = ?
+      FOR UPDATE
+      `,
+      [String(kode.nomor_kamar)]
+    );
+
+    if (rooms.length !== 1) {
+      await connection.rollback();
+      transactionStarted = false;
+
+      return gagal(
+        "Nomor kamar pada kode undangan tidak ditemukan.",
+        404
+      );
+    }
+
+    const kamar = rooms[0];
+
+    // ======================================
+    // 15. CEK KETERSEDIAAN KAMAR
+    // ======================================
+    // Tolak bila masih ada sewa aktif
+    // yang berlangsung pada atau setelah
+    // tanggal masuk calon penghuni.
+
+    const [sewaBentrok] =
+      await connection.execute(
+        `
+        SELECT id_sewa
+        FROM sewa_kamar
+        WHERE id_kamar = ?
+          AND status_sewa = 'aktif'
+          AND (
+            tanggal_keluar IS NULL
+            OR tanggal_keluar >= ?
+          )
+        LIMIT 1
+        `,
+        [
+          kamar.id,
+          kode.tanggal_masuk,
+        ]
+      );
+
+    if (sewaBentrok.length > 0) {
+      await connection.rollback();
+      transactionStarted = false;
+
+      return gagal(
+        "Kamar sudah memiliki penyewaan yang bentrok dengan tanggal masuk. Hubungi pemilik kost.",
+        409
+      );
+    }
+
+    // ======================================
+    // 16. VALIDASI HARGA KAMAR
+    // ======================================
+
+    const hargaSewa = Number(kamar.harga);
+
+    if (
+      !Number.isSafeInteger(hargaSewa) ||
+      hargaSewa <= 0
+    ) {
+      throw new Error(
+        "Harga kamar tidak valid."
+      );
+    }
+
+    // ======================================
+    // 17. GENERATE ID PENGHUNI
+    // ======================================
 
     const idUser =
       "PNG-" +
@@ -202,84 +365,183 @@ export async function POST(request) {
         .toString("hex")
         .toUpperCase();
 
-    // =====================================
-    // 11. SIMPAN AKUN KE TABEL USERS
-    // =====================================
+    // ======================================
+    // 18. BUAT AKUN PENGHUNI
+    // ======================================
+    // is_active = 1 berarti akun valid.
+    // Bukan berarti penghuni sudah
+    // menempati kamar secara fisik.
 
     await connection.execute(
-      `INSERT INTO users (
-          id_user,
-          kode_unik,
-          nama,
-          gmail,
-          no_telp,
-          password_hash,
-          role,
-          is_active
-       )
-       VALUES (?, ?, ?, ?, ?, ?, 'penghuni', 1)`,
+      `
+      INSERT INTO users (
+        id_user,
+        kode_unik,
+        nama,
+        gmail,
+        no_telp,
+        password_hash,
+        role,
+        is_active
+      )
+      VALUES (
+        ?, ?, ?, ?, ?, ?, 'penghuni', 1
+      )
+      `,
       [
         idUser,
         kodeUnik,
         nama,
         gmail,
-        no_telp,
+        noTelp,
         passwordHash,
       ]
     );
 
-    // =====================================
-    // 12. UPDATE STATUS KODE UNDANGAN
-    // =====================================
+    // ======================================
+    // 19. BUAT DATA PENYEWAAN
+    // ======================================
+    // Data sewa dicatat sejak Sign Up.
+    // Okupansi aktual dihitung dari
+    // tanggal masuk dan tanggal keluar.
 
-    const [updateResult] = await connection.execute(
-      `UPDATE kode_undangan
-       SET
+    const [hasilSewa] =
+      await connection.execute(
+        `
+        INSERT INTO sewa_kamar (
+          id_user,
+          id_kamar,
+          id_kode,
+          tanggal_masuk,
+          tanggal_keluar,
+          harga_sewa,
+          status_sewa
+        )
+        VALUES (
+          ?, ?, ?, ?, NULL, ?, 'aktif'
+        )
+        `,
+        [
+          idUser,
+          kamar.id,
+          kode.id_kode,
+          kode.tanggal_masuk,
+          hargaSewa,
+        ]
+      );
+
+    const idSewa = hasilSewa.insertId;
+
+    // ======================================
+    // 20. BUAT TAGIHAN PERTAMA
+    // ======================================
+    // Periode pertama dimulai
+    // pada tanggal masuk.
+    // Jatuh tempo = tanggal masuk.
+    // periode_ke = 0 sesuai data kita.
+
+    const [hasilTagihan] =
+      await connection.execute(
+        `
+        INSERT INTO tagihan (
+          id_sewa,
+          periode_ke,
+          periode_mulai,
+          periode_selesai,
+          tanggal_jatuh_tempo,
+          nominal,
+          status_tagihan
+        )
+        VALUES (
+          ?,
+          0,
+          ?,
+          DATE_SUB(
+            DATE_ADD(
+              ?, INTERVAL 1 MONTH
+            ),
+            INTERVAL 1 DAY
+          ),
+          ?,
+          ?,
+          'belum_bayar'
+        )
+        `,
+        [
+          idSewa,
+          kode.tanggal_masuk,
+          kode.tanggal_masuk,
+          kode.tanggal_masuk,
+          hargaSewa,
+        ]
+      );
+
+    // ======================================
+    // 21. TANDAI KODE SUDAH DIGUNAKAN
+    // ======================================
+
+    const [hasilKode] =
+      await connection.execute(
+        `
+        UPDATE kode_undangan
+        SET
           status = 'digunakan',
           digunakan_oleh = ?,
           used_at = CURRENT_TIMESTAMP
-       WHERE id_kode = ?
-         AND status = 'aktif'`,
-      [idUser, codes[0].id_kode]
-    );
+        WHERE id_kode = ?
+          AND status = 'aktif'
+          AND digunakan_oleh IS NULL
+          AND used_at IS NULL
+        `,
+        [
+          idUser,
+          kode.id_kode,
+        ]
+      );
 
-    if (updateResult.affectedRows !== 1) {
+    if (hasilKode.affectedRows !== 1) {
       throw new Error(
-        "Gagal memperbarui status kode undangan."
+        "Gagal mengubah status kode undangan."
       );
     }
 
-    // =====================================
-    // 13. COMMIT TRANSAKSI
-    // =====================================
+    // ======================================
+    // 22. SIMPAN SEMUA PERUBAHAN
+    // ======================================
 
     await connection.commit();
     transactionStarted = false;
 
-    // =====================================
-    // 14. RESPONSE BERHASIL
-    // =====================================
+    // ======================================
+    // 23. RESPONSE REGISTRASI BERHASIL
+    // ======================================
 
     return NextResponse.json(
       {
         success: true,
         message:
-          "Registrasi berhasil! Silakan login.",
+          "Registrasi berhasil! Akun dan data sewa telah dibuat. Silakan login.",
         data: {
           id_user: idUser,
           nama,
           gmail,
           role: "penghuni",
+          nomor_kamar: kamar.nomor_kamar,
+          tanggal_masuk: kode.tanggal_masuk,
+          id_sewa: idSewa,
+          id_tagihan:
+            hasilTagihan.insertId,
+          nominal_tagihan: hargaSewa,
+          status_tagihan: "belum_bayar",
         },
       },
       { status: 201 }
     );
 
   } catch (error) {
-
-    // =====================================
-    // ROLLBACK JIKA TERJADI ERROR
-    // =====================================
+    // ======================================
+    // 24. ROLLBACK JIKA GAGAL
+    // ======================================
 
     if (connection && transactionStarted) {
       try {
@@ -287,57 +549,36 @@ export async function POST(request) {
       } catch (rollbackError) {
         console.error(
           "SIGN UP ROLLBACK ERROR:",
-          rollbackError.code,
-          rollbackError.message
+          rollbackError
         );
       }
     }
 
-    // =====================================
-    // LOG ERROR BACKEND
-    // =====================================
+    console.error(
+      "SIGN UP API ERROR:",
+      {
+        code: error.code,
+        message: error.message,
+      }
+    );
 
-    console.error("SIGN UP API ERROR:", {
-      code: error.code,
-      errno: error.errno,
-      sqlState: error.sqlState,
-      sqlMessage: error.sqlMessage,
-      message: error.message,
-    });
-
-    // =====================================
-    // DUPLICATE ACCOUNT
-    // =====================================
-
-    if (error.code === "ER_DUP_ENTRY") {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "Gmail, nomor telepon, atau kode undangan sudah digunakan.",
-        },
-        { status: 409 }
+    if (
+      error.code === "ER_DUP_ENTRY" ||
+      error.errno === 1062
+    ) {
+      return gagal(
+        "Gmail, nomor telepon, ID, atau kode undangan sudah digunakan.",
+        409
       );
     }
 
-    // =====================================
-    // ERROR SERVER
-    // =====================================
-
-    return NextResponse.json(
-      {
-        success: false,
-        message:
-          "Registrasi gagal karena terjadi kesalahan server.",
-      },
-      { status: 500 }
+    return gagal(
+      "Registrasi gagal karena terjadi kesalahan server.",
+      500
     );
-
   } finally {
-
     if (connection) {
       connection.release();
     }
-
   }
 }
