@@ -1,76 +1,87 @@
+
+/* OWNER DASHBOARD - KOST AULIA */
+
 .page {
+  --navy: #002446;
+  --cream: #f6eade;
+  --brown: #994619;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at top left, rgba(255, 255, 255, 0.08), transparent 22%),
-    radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.08), transparent 25%),
-    linear-gradient(180deg, #49525e 0%, #173b63 55%, #0a2d4e 100%);
-  color: #ffffff;
+  background: #f9f4ee;
+  color: var(--navy);
+  font-family: var(--font-poppins), Arial, sans-serif;
+}
+
+.page * {
+  box-sizing: border-box;
+}
+
+.page a {
+  text-decoration: none;
 }
 
 /* HEADER */
+
 .header {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 100;
-  background: #f6eade;
+  background: var(--cream);
   box-shadow: 0 4px 18px rgba(0, 36, 70, 0.08);
 }
 
 .headerInner {
-  width: min(1180px, calc(100% - 48px));
-  margin: 0 auto;
+  width: min(1140px, calc(100% - 48px));
   min-height: 88px;
-  display: flex;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   gap: 20px;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  flex-shrink: 0;
+  width: fit-content;
 }
 
 .logo {
   width: 90px;
   height: 54px;
+  display: block;
   object-fit: contain;
 }
 
 .nav {
   display: flex;
   align-items: center;
-  gap: 34px;
+  justify-content: center;
+  gap: 30px;
+  white-space: nowrap;
 }
 
 .nav a {
-  color: #002446;
-  text-decoration: none;
+  color: var(--navy);
   font-size: 13px;
   font-weight: 700;
 }
 
-.nav a:hover {
-  opacity: 0.75;
-}
-
-.headerActions {
-  display: flex;
-  align-items: center;
+.nav a:hover,
+.nav a[aria-current="page"] {
+  color: var(--brown);
 }
 
 .backButton {
-  height: 42px;
+  justify-self: end;
+  min-height: 43px;
   padding: 0 18px;
-  border-radius: 10px;
-  background: #002446;
-  color: #ffffff;
-  text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
+  gap: 12px;
+  background: var(--navy);
+  color: white;
+  border-radius: 11px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -78,550 +89,1946 @@
   opacity: 0.88;
 }
 
+.menuButton,
+.menuOverlay,
+.mobileMenu {
+  display: none;
+}
+
 /* HERO */
+
 .hero {
   position: relative;
-  min-height: 430px;
+  isolation: isolate;
+  background: var(--navy);
   overflow: hidden;
 }
 
 .heroBg {
+  z-index: -2;
   object-fit: cover;
   object-position: center;
-  z-index: 0;
 }
 
 .heroOverlay {
   position: absolute;
+  z-index: -1;
   inset: 0;
-  background:
-    linear-gradient(180deg, rgba(9, 30, 52, 0.72) 0%, rgba(18, 46, 74, 0.82) 100%),
-    radial-gradient(circle at right top, rgba(255,255,255,0.10), transparent 28%);
-  z-index: 1;
+  background: linear-gradient(
+    105deg,
+    rgba(0, 36, 70, 0.89),
+    rgba(0, 36, 70, 0.76)
+  );
 }
 
 .heroContent {
-  position: relative;
-  z-index: 2;
-  width: min(1180px, calc(100% - 48px));
+  width: min(1140px, calc(100% - 48px));
   margin: 0 auto;
-  padding: 62px 0 56px;
+  padding: 65px 0 70px;
+}
+
+.eyebrow {
+  color: #e9bd9a;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
 }
 
 .heroContent h1 {
-  margin: 0 0 34px;
-  font-size: 58px;
-  line-height: 1.08;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-
-.summaryGrid {
-  display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr;
-  gap: 22px;
-}
-
-.summaryCard {
-  background: rgba(255, 255, 255, 0.20);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.16);
-  border-radius: 18px;
-  padding: 22px;
-  color: #ffffff;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-}
-
-.summaryCard h3 {
-  margin: 0 0 16px;
-  font-size: 28px;
+  margin: 15px 0 12px;
+  color: white;
+  font-size: clamp(38px, 5vw, 60px);
   font-weight: 700;
 }
 
+.heroSubtitle {
+  margin: 0 0 37px;
+  color: rgba(255, 255, 255, 0.87);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.apiError {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 15px;
+  margin-bottom: 20px;
+  background: #fff0ee;
+  border-radius: 10px;
+  color: #9d3328;
+  font-size: 13px;
+}
+
+.apiError button {
+  padding: 9px 15px;
+  border: none;
+  border-radius: 8px;
+  background: var(--navy);
+  color: white;
+  cursor: pointer;
+}
+
+/* DASHBOARD CARDS */
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 26px;
+  align-items: stretch;
+}
+
+.summaryCard {
+  min-width: 0;
+  min-height: 210px;
+  padding: 24px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: white;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
+  color: var(--navy);
+  box-shadow: 0 8px 25px rgba(0, 15, 35, 0.08);
+}
+
+.summaryCard h2 {
+  margin: 0;
+  color: var(--navy);
+  font-size: clamp(22px, 2.5vw, 29px);
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+/* BOX DALAM */
+
 .monitorBox,
-.billBox,
-.quickActions {
-  background: rgba(255,255,255,0.92);
-  border-radius: 14px;
-  padding: 18px;
-  color: #002446;
+.billBox {
+  flex: 1;
+  min-width: 0;
+  padding: 22px 24px;
+  background: #f6eade;
+  border: none;
+  border-radius: 12px;
+  color: var(--navy);
+}
+
+/* MONITORING KAMAR */
+
+.monitorBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
 }
 
 .monitorHeader {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
-  margin-bottom: 12px;
-  font-size: 14px;
+  font-size: 13px;
+}
+
+.monitorHeader > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--navy);
+}
+
+.lineIcon {
+  width: 25px;
+  height: 25px;
+  display: block;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .monitorHeader strong {
-  font-size: 16px;
+  color: var(--navy);
+  font-size: 19px;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
-.progressBar {
+.monitorProgress {
   width: 100%;
-  height: 16px;
-  border-radius: 999px;
-  background: #eff2f5;
+  height: 23px;
+  border: 2px solid var(--navy);
+  background: #e9edf1;
+  border-radius: 99px;
   overflow: hidden;
-  border: 1px solid #b0bcc8;
 }
 
-.progressFill {
+.monitorProgressFill {
   height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #1a5f14 0%, #3a8b2c 100%);
+  background: #245e14;
+  border-radius: 99px;
+  transition: width 0.3s ease;
 }
 
-.smallInfo {
-  margin: 10px 0 0;
+.monitorFooter {
+  display: none;
+}
+
+/* TAGIHAN */
+
+.billBox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.billContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.billContent > span {
+  color: var(--navy);
   font-size: 13px;
-  color: #50667a;
 }
 
-.billLabel {
-  display: inline-block;
-  margin-bottom: 10px;
-  font-size: 13px;
-  color: #5e6b77;
+.billMain {
+  display: flex;
+  align-items: center;
+  gap: 13px;
 }
 
-.billBox h4 {
-  margin: 0 0 16px;
-  font-size: 30px;
-  color: #002446;
+.billLineIcon {
+  width: 34px;
+  height: 34px;
 }
 
-.detailButton {
+.billContent strong {
+  color: var(--navy);
+  font-size: clamp(23px, 2.5vw, 29px);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.billButton {
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 36px;
-  padding: 0 14px;
-  border-radius: 999px;
-  background: #002446;
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.quickActions {
-  display: flex;
-  flex-direction: column;
   gap: 12px;
+  min-height: 42px;
+  padding: 0 17px;
+  background: var(--navy);
+  border: none;
+  border-radius: 30px;
+  color: white;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.25s, background 0.25s;
 }
 
-.quickAction {
-  min-height: 44px;
-  display: flex;
+.billButton span {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.billButton:hover {
+  background: #123b60;
+  transform: translateY(-2px);
+}
+
+/* BUTTON PROFIL PENGHUNI */
+
+.heroActions {
+  margin-top: 30px;
+}
+
+.heroButton {
+  display: inline-flex;
   align-items: center;
-  padding: 0 14px;
-  border-radius: 10px;
-  background: #eef2f5;
-  color: #002446;
-  text-decoration: none;
+  justify-content: center;
+  gap: 18px;
+  min-height: 48px;
+  padding: 10px 24px;
+  background: #c8956a;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-family: inherit;
   font-size: 13px;
   font-weight: 700;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.25s, box-shadow 0.25s;
 }
 
-.quickAction:hover {
-  background: #e4eaef;
+.heroButton:hover {
+  background: #b88359;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
 }
 
-/* CONTENT */
-.contentSection {
-  position: relative;
-  padding: 44px 0 70px;
+.heroButton span {
+  transition: transform 0.25s;
+}
+
+.heroButton:hover span {
+  transform: translateX(4px);
+}
+
+/* INFORMASI KAMAR */
+
+.mainSection {
+  padding: 20px 0 105px;
+  background: #f9f4ee;
 }
 
 .contentInner {
-  width: min(1180px, calc(100% - 48px));
+  width: min(1140px, calc(100% - 48px));
   margin: 0 auto;
 }
 
-.sectionTitle {
-  margin: 0 0 26px;
-  text-align: center;
-  font-size: 34px;
-  font-weight: 800;
-  color: #ffffff;
-  letter-spacing: 0.02em;
+.sectionHeading {
+  margin-bottom: 30px;
 }
 
-.roomList {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
+.sectionEyebrow {
+  color: #aa724e;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.sectionHeading h2 {
+  margin: 11px 0;
+  color: var(--navy);
+  font-size: clamp(25px, 3vw, 35px);
+}
+
+.sectionHeading p {
+  max-width: 750px;
+  margin: 0;
+  color: #76685e;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.manageSection,
+.gallerySection {
+  margin-top: 50px;
+  scroll-margin-top: 105px;
+}
+
+.notice {
+  padding: 15px 18px;
+  margin-bottom: 23px;
+  border-radius: 10px;
+  background: #fff0db;
+  color: #8c541d;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* KARTU KAMAR */
+
+.roomGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 25px;
 }
 
 .roomCard {
-  width: min(860px, 100%);
-  margin: 0 auto;
-  background: #f4eadf;
-  border-radius: 12px;
-  padding: 18px 18px 22px;
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.14);
-}
-
-.roomTop {
   display: flex;
-  gap: 18px;
-  align-items: flex-start;
+  flex-direction: column;
+  min-width: 0;
+  background: white;
+  border: 1px solid #eaded3;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(0, 36, 70, 0.07);
 }
 
-.roomPreview {
-  width: 160px;
-  flex-shrink: 0;
+.roomImageWrap {
+  width: 100%;
+  height: 255px;
+  background: #e5d9cd;
+  overflow: hidden;
 }
 
 .roomImage {
+  display: block;
   width: 100%;
-  height: 110px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #d7cabd;
 }
 
-.roomMain {
+.roomBody {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 26px;
 }
 
 .roomHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.roomLabel {
+  color: #b37c56;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
 }
 
 .roomHeader h3 {
-  margin: 0;
-  color: #a3552a;
-  font-size: 24px;
+  margin: 7px 0 0;
+  color: var(--navy);
+  font-size: 23px;
+  line-height: 1.4;
+}
+
+.editButton {
+  flex-shrink: 0;
+  padding: 10px 15px;
+  border: 1px solid #e1cec1;
+  border-radius: 9px;
+  background: var(--cream);
+  color: var(--navy);
+  font-size: 12px;
   font-weight: 700;
-}
-
-.editLink {
-  border: none;
-  background: transparent;
-  color: #333333;
-  font-size: 13px;
   cursor: pointer;
-  font-weight: 600;
+  transition: background 0.2s, transform 0.2s;
 }
 
-.editLink:hover {
-  text-decoration: underline;
+.editButton:hover {
+  background: #e8d6c5;
+  transform: translateY(-2px);
+}
+
+.roomDescription {
+  min-height: 70px;
+  margin: 0 0 20px;
+  color: #76685e;
+  font-size: 13px;
+  line-height: 1.8;
 }
 
 .priceBox {
-  background: #9a5f3b;
-  border-radius: 10px;
-  padding: 12px 14px;
-  color: #ffffff;
-}
-
-.priceLabel {
-  display: block;
-  font-size: 12px;
-  margin-bottom: 8px;
-}
-
-.priceRow {
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 14px;
-  background: #ffffff;
-  color: #002446;
-  border-radius: 8px;
-  padding: 10px 12px;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 20px;
+  background: #f8eee5;
+  border-radius: 12px;
 }
 
-.priceRow strong {
-  font-size: 26px;
-  font-weight: 800;
+.priceBox span {
+  color: #725d4c;
+  font-size: 12px;
 }
 
-.priceRow span {
-  font-size: 13px;
-  color: #8a8a8a;
+.priceBox strong {
+  color: var(--brown);
+  font-size: clamp(23px, 2.5vw, 31px);
+  line-height: 1.35;
+}
+
+.previewBadge {
+  display: inline-block;
+  align-self: flex-start;
+  margin-top: 12px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #fff0d6;
+  color: #8c541d;
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .roomMeta {
   display: flex;
-  gap: 20px;
   flex-wrap: wrap;
-  margin-top: 12px;
-  color: #5e4c40;
-  font-size: 13px;
-  font-weight: 600;
+  gap: 10px;
+  margin-top: 17px;
+}
+
+.roomMeta span {
+  padding: 9px 13px;
+  border-radius: 20px;
+  background: #e9f3ea;
+  color: #285b36;
+  font-size: 12px;
 }
 
 .facilityBlock {
-  margin-top: 18px;
+  flex: 1;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #eee4dc;
 }
 
 .facilityBlock h4 {
-  margin: 0 0 12px;
-  color: #c4682a;
-  font-size: 20px;
-  font-weight: 700;
+  margin: 0 0 14px;
+  color: var(--brown);
+  font-size: 17px;
 }
 
-.facilityList {
-  margin: 0;
-  padding-left: 22px;
-  color: #283848;
-  column-count: 2;
-  column-gap: 34px;
-}
-
-.facilityList li {
-  margin-bottom: 8px;
-  break-inside: avoid;
-  font-size: 14px;
-  line-height: 1.45;
-}
-
-/* PUBLIC CONTROL */
-.publicSyncSection {
-  margin-top: 42px;
-  padding: 28px;
-  border-radius: 18px;
-  background: rgba(255,255,255,0.10);
-  border: 1px solid rgba(255,255,255,0.12);
-  backdrop-filter: blur(8px);
-}
-
-.publicSyncHeader {
-  display: flex;
-  justify-content: space-between;
-  gap: 24px;
-  align-items: flex-start;
-  margin-bottom: 22px;
-}
-
-.publicSyncHeader h2 {
-  margin: 0 0 10px;
-  font-size: 30px;
-  color: #ffffff;
-}
-
-.publicSyncHeader p {
-  margin: 0;
-  max-width: 760px;
-  color: rgba(255,255,255,0.88);
-  line-height: 1.7;
-  font-size: 14px;
-}
-
-.primaryButton,
-.secondaryButton {
-  border: none;
-  cursor: pointer;
-  font-weight: 700;
-  border-radius: 12px;
-}
-
-.primaryButton {
-  min-height: 46px;
-  padding: 0 18px;
-  background: #f6eade;
-  color: #002446;
-  white-space: nowrap;
-}
-
-.secondaryButton {
-  margin-top: 16px;
-  min-height: 44px;
-  padding: 0 18px;
-  background: #002446;
-  color: #ffffff;
-}
-
-.publicGrid {
+.facilityBlock ul {
   display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-  gap: 22px;
-}
-
-.publicCard {
-  background: rgba(255,255,255,0.92);
-  border-radius: 16px;
-  padding: 22px;
-  color: #002446;
-}
-
-.publicCard h3 {
-  margin: 0 0 16px;
-  font-size: 24px;
-}
-
-.publicInfoList {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 22px;
   margin: 0;
   padding-left: 20px;
 }
 
-.publicInfoList li {
-  margin-bottom: 10px;
-  font-size: 14px;
-  line-height: 1.5;
+.facilityBlock li {
+  color: #384757;
+  font-size: 12px;
+  line-height: 1.6;
 }
+
+/* GALERI */
 
 .galleryGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
 }
 
-.galleryItem {
+.galleryCard {
+  min-width: 0;
   overflow: hidden;
-  border-radius: 10px;
+  background: white;
+  border: 1px solid #eaded3;
+  border-radius: 15px;
 }
 
 .galleryImage {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
   display: block;
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+}
+
+.galleryCard > span,
+.galleryCardBottom {
+  display: block;
+  padding: 13px 15px;
+  color: var(--navy);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.galleryCardBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.galleryCardBottom span {
+  overflow-wrap: anywhere;
+}
+
+.galleryCardBottom button {
+  padding: 5px 8px;
+  background: #fff0ee;
+  border: none;
+  border-radius: 6px;
+  color: #a83329;
+  cursor: pointer;
+}
+
+.galleryActions {
+  margin-top: 24px;
+}
+
+.uploadButton {
+  display: inline-flex;
+  align-items: center;
+  min-height: 45px;
+  padding: 10px 22px;
+  background: var(--navy);
+  border-radius: 10px;
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.hiddenInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.galleryActions p {
+  color: #76685e;
+  font-size: 12px;
+  line-height: 1.7;
 }
 
 /* FOOTER */
+
 .footer {
-  background: rgba(7, 34, 61, 0.92);
-  padding: 34px 0 42px;
+  background: var(--navy);
+  color: white;
 }
 
 .footerInner {
-  width: min(1180px, calc(100% - 48px));
+  width: min(1140px, calc(100% - 80px));
   margin: 0 auto;
+  padding: 60px 0 55px;
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1fr;
-  gap: 28px;
+  grid-template-columns: 1.6fr 0.8fr 1fr 1fr;
+  gap: 42px;
   align-items: start;
 }
 
-.footerBrand p,
-.footerColumn p,
-.footerColumn a {
-  color: rgba(255,255,255,0.85);
+.footerBrand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.footerLogoWrap {
+  width: 94px;
+  height: 94px;
+  display: grid;
+  place-items: center;
+  background: var(--cream);
+  border-radius: 50%;
+}
+
+.footerLogo {
+  width: 73px;
+  height: 54px;
+  display: block;
+  object-fit: contain;
+}
+
+.footerBrand p {
+  max-width: 310px;
+  margin: 0;
+  color: #e4eaf0;
   font-size: 13px;
-  line-height: 1.8;
-  text-decoration: none;
+  line-height: 1.85;
 }
 
 .footerColumn {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: flex-start;
+  gap: 15px;
+  min-width: 0;
 }
 
 .footerColumn h4 {
-  margin: 0 0 8px;
+  margin: 0 0 7px;
+  color: var(--cream);
+  font-size: 13px;
+}
+
+.footerColumn > a,
+.footerColumn p {
+  margin: 0;
+  color: #e4eaf0;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.footerColumn > a:hover {
+  color: #e9bd9a;
+}
+
+.socialLinks {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 5px;
+}
+
+.socialLinks a {
+  width: 41px;
+  height: 41px;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid white;
+  border-radius: 50%;
+  color: white;
+}
+
+.socialLinks a:hover {
+  background: rgba(255, 255, 255, 0.13);
+}
+
+.footerBottom {
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: #adbdcb;
+  text-align: center;
+  font-size: 11px;
+}
+
+/* MODAL EDIT */
+
+.modalOverlay {
+  position: fixed;
+  z-index: 2000;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  background: rgba(0, 20, 39, 0.74);
+}
+
+.modal {
+  width: min(720px, 100%);
+  max-height: min(90vh, 850px);
+  overflow-y: auto;
+  padding: 30px;
+  border-radius: 18px;
+  background: white;
+  color: var(--navy);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ebe0d7;
+}
+
+.modalHeader h2 {
+  margin: 8px 0 0;
+  font-size: 27px;
+}
+
+.modalClose {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 9px;
+  background: var(--cream);
+  color: var(--navy);
+  font-size: 27px;
+  cursor: pointer;
+}
+
+.editForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 22px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.formGroup > label,
+.facilityEditorHeader label {
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.formGroup > input,
+.formGroup textarea,
+.facilityInputRow input {
+  width: 100%;
+  min-height: 43px;
+  padding: 10px 13px;
+  border: 1px solid #c8cbd0;
+  border-radius: 9px;
+  background: white;
+  color: var(--navy);
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.formGroup p {
+  margin: 0;
+  color: #77695f;
+  font-size: 11px;
+}
+
+.facilityEditorHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.addFacilityButton {
+  padding: 9px 13px;
+  border: 0;
+  border-radius: 8px;
+  background: #e9f4ea;
+  color: #285b36;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.facilityInputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.facilityInputRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.facilityInputRow input {
+  flex: 1;
+  min-width: 0;
+}
+
+.facilityInputRow button {
+  flex-shrink: 0;
+  padding: 10px 13px;
+  border: none;
+  border-radius: 8px;
+  background: #fff0ee;
+  color: #a83329;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.formNotice {
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: #fff0d9;
+  color: #87531a;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.cancelButton,
+.saveButton {
+  min-height: 44px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cancelButton {
+  background: #e7e8eb;
+  color: var(--navy);
+}
+
+.saveButton {
+  background: var(--navy);
+  color: white;
+}
+
+/* POP-UP TAGIHAN */
+
+.billModalOverlay {
+  position: fixed;
+  z-index: 2100;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(0, 20, 39, 0.62);
+  backdrop-filter: blur(5px);
+  animation: overlayFadeIn 0.22s ease both;
+}
+
+.billModal {
+  position: relative;
+  width: min(460px, 92vw);
+  padding: 46px 20px 24px;
+  background: #f6eade;
+  border-radius: 26px;
+  box-shadow: 0 24px 65px rgba(0, 0, 0, 0.27);
+  animation: modalPop 0.38s cubic-bezier(0.2, 0.85, 0.25, 1.15) both;
+}
+
+.billModalClose {
+  position: absolute;
+  top: 15px;
+  right: 16px;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #9a928b;
+  color: white;
+  font-size: 23px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.25s;
+}
+
+.billModalClose:hover {
+  background: #736b64;
+  transform: rotate(90deg);
+}
+
+.unpaidList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 12px;
+}
+
+.unpaidRoom {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 17px 17px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 36, 70, 0.06);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.28s ease, box-shadow 0.28s ease,
+    background 0.28s ease, border-color 0.28s ease;
+}
+
+.unpaidRoom:hover,
+.unpaidRoomActive {
+  transform: translateY(-4px) scale(1.025);
+  background: #fffaf5;
+  border-color: rgba(0, 36, 70, 0.12);
+  box-shadow: 0 12px 24px rgba(0, 36, 70, 0.12);
+}
+
+.unpaidRoomInfo h3 {
+  margin: 0 0 5px;
+  color: var(--navy);
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.unpaidRoomInfo span {
+  color: #e63939;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.roomArrow {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #efe0d2;
+  color: var(--navy);
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.25s, background 0.25s;
+}
+
+.unpaidRoom:hover .roomArrow {
+  transform: translateX(3px);
+  background: #e4cbb7;
+}
+
+/* MINI DETAIL TAGIHAN */
+
+.tenantTooltip {
+  position: absolute;
+  z-index: 5;
+  left: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(270px, 65vw);
+  padding: 23px 22px 18px;
+  background: white;
+  border-radius: 19px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.19);
+  color: var(--navy);
+  cursor: default;
+  animation: tooltipPop 0.25s ease both;
+}
+
+.tenantTooltip h4 {
+  margin: 0 0 4px;
   font-size: 14px;
-  color: #ffffff;
+  font-weight: 700;
 }
 
-.footerLogo {
-  width: 90px;
-  height: 54px;
-  object-fit: contain;
-  margin-bottom: 12px;
+.tooltipAmount {
+  display: block;
+  margin: 0;
+  color: #e63939;
+  font-size: 21px;
+  font-weight: 700;
 }
 
-/* RESPONSIVE */
-@media (max-width: 1100px) {
-  .summaryGrid {
-    grid-template-columns: 1fr;
-  }
+.tooltipDivider {
+  height: 1px;
+  margin: 11px 0 12px;
+  background: #bcbcbc;
+}
 
-  .publicGrid {
-    grid-template-columns: 1fr;
-  }
+.tenantTooltip p {
+  margin: 5px 0;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
 
-  .footerInner {
-    grid-template-columns: 1fr 1fr;
+.tooltipClose {
+  display: none;
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  border: 0;
+  background: #aaa;
+  color: white;
+  border-radius: 50%;
+  width: 27px;
+  height: 27px;
+  font-size: 19px;
+  cursor: pointer;
+}
+
+/* MODAL PINTU KAMAR / PROFIL PENGHUNI */
+
+.doorModalOverlay {
+  position: fixed;
+  z-index: 2200;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(28, 27, 25, 0.72);
+  backdrop-filter: blur(4px);
+  animation: overlayFadeIn 0.25s ease both;
+}
+
+.doorModal {
+  position: relative;
+  width: min(900px, 95vw);
+  max-height: 92vh;
+  overflow-y: auto;
+  padding: 35px 38px 30px;
+  background: #f6eade;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 27px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.3);
+  animation: modalPop 0.42s cubic-bezier(0.2, 0.85, 0.25, 1.15) both;
+}
+
+.doorModalClose {
+  position: absolute;
+  top: 15px;
+  right: 16px;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: #9b938c;
+  color: white;
+  font-size: 27px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.25s;
+}
+
+.doorModalClose:hover {
+  background: #6f6861;
+  transform: rotate(90deg);
+}
+
+.doorTitle {
+  margin: 5px 42px 23px;
+  color: var(--navy);
+  text-align: center;
+  font-size: 17px;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.doorLegend {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin: 0 auto 30px;
+}
+
+.doorLegend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #51392a;
+  font-size: 13px;
+}
+
+.emptyDoorIcon,
+.filledDoorIcon {
+  position: relative;
+  display: inline-block;
+  width: 13px;
+  height: 20px;
+  border-radius: 3px 3px 0 0;
+}
+
+.emptyDoorIcon {
+  background: #ef292b;
+}
+
+.filledDoorIcon {
+  background: #20cb68;
+}
+
+.doorGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 27px 22px;
+  padding: 8px 10px 5px;
+}
+
+.doorItem {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 5px 3px 0;
+  border: none;
+  background: transparent;
+  color: var(--navy);
+  cursor: pointer;
+  border-radius: 10px;
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.doorItem:hover {
+  transform: translateY(-6px);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.doorSelected {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.door {
+  position: relative;
+  display: block;
+  width: min(58px, 72%);
+  height: 94px;
+  border-radius: 5px 5px 0 0;
+  transition: height 0.25s ease, box-shadow 0.25s ease;
+}
+
+.doorItem:hover .door {
+  height: 100px;
+  box-shadow: 0 10px 18px rgba(0, 36, 70, 0.13);
+}
+
+.doorEmpty .door {
+  background: #ef292b;
+}
+
+.doorOccupied .door {
+  background: #20cb68;
+}
+
+.doorKnob {
+  position: absolute;
+  right: 9px;
+  top: 55%;
+  width: 9px;
+  height: 9px;
+  background: #58392e;
+  border-radius: 50%;
+}
+
+.doorBase {
+  display: block;
+  width: calc(min(58px, 72%) + 10px);
+  height: 3px;
+  margin-top: 0;
+}
+
+.doorEmpty .doorBase {
+  background: #ef292b;
+}
+
+.doorOccupied .doorBase {
+  background: #20cb68;
+}
+
+.doorNumber {
+  display: block;
+  margin-top: 8px;
+  color: var(--navy);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* DETAIL KAMAR YANG DIPILIH */
+
+.selectedRoomInfo {
+  position: relative;
+  margin: 25px auto 0;
+  width: min(500px, 100%);
+  padding: 20px 23px;
+  background: #fffaf5;
+  border: 1px solid rgba(0, 36, 70, 0.1);
+  border-radius: 17px;
+  box-shadow: 0 9px 24px rgba(0, 36, 70, 0.09);
+  animation: tooltipPop 0.25s ease both;
+}
+
+.selectedRoomInfo h3 {
+  margin: 0 0 9px;
+  color: var(--navy);
+  font-size: 20px;
+}
+
+.selectedRoomClose {
+  position: absolute;
+  top: 10px;
+  right: 11px;
+  width: 29px;
+  height: 29px;
+  border: none;
+  border-radius: 50%;
+  background: #e9dfd6;
+  color: #63564c;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.occupiedStatus,
+.emptyStatus {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.occupiedStatus {
+  background: #e2f6e8;
+  color: #168444;
+}
+
+.emptyStatus {
+  background: #fde5e4;
+  color: #d32d2d;
+}
+
+.selectedRoomDetails {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #e9dfd6;
+}
+
+.selectedRoomDetails p {
+  margin: 7px 0;
+  color: #5d5148;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.selectedRoomDetails strong {
+  color: var(--navy);
+}
+
+.selectedRoomMessage {
+  margin: 13px 0 0;
+  color: #76685e;
+  font-size: 13px;
+}
+
+/* ANIMASI MODAL */
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.93);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
-@media (max-width: 900px) {
+@keyframes tooltipPop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* TABLET */
+
+@media (max-width: 1000px) {
   .headerInner {
-    width: calc(100% - 30px);
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 16px 0;
-  }
-
-  .heroContent,
-  .contentInner,
-  .footerInner {
-    width: calc(100% - 30px);
-  }
-
-  .heroContent h1 {
-    font-size: 42px;
-  }
-
-  .roomTop {
-    flex-direction: column;
-  }
-
-  .roomPreview {
-    width: 100%;
-  }
-
-  .roomImage {
-    height: 210px;
-  }
-
-  .facilityList {
-    column-count: 1;
-  }
-
-  .publicSyncHeader {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 640px) {
-  .heroContent h1 {
-    font-size: 34px;
-  }
-
-  .summaryCard h3 {
-    font-size: 24px;
-  }
-
-  .sectionTitle {
-    font-size: 28px;
-  }
-
-  .roomHeader h3,
-  .publicCard h3,
-  .publicSyncHeader h2 {
-    font-size: 22px;
-  }
-
-  .priceRow strong,
-  .billBox h4 {
-    font-size: 22px;
-  }
-
-  .galleryGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .footerInner {
-    grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .nav {
-    gap: 16px;
-    flex-wrap: wrap;
+    gap: 17px;
+  }
+
+  .nav a {
+    font-size: 12px;
+  }
+
+  .footerInner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tenantTooltip {
+    left: auto;
+    right: 0;
+    top: calc(100% + 8px);
+    transform: none;
+  }
+
+  .doorModal {
+    width: min(760px, 95vw);
+    padding: 32px 28px;
+  }
+
+  .doorGrid {
+    gap: 24px 14px;
+  }
+}
+
+/* MOBILE MENU */
+
+@media (max-width: 760px) {
+  .headerInner {
+    display: flex;
+    min-height: 72px;
+    gap: 10px;
+  }
+
+  .brand {
+    margin-right: auto;
+  }
+
+  .nav,
+  .backButton {
+    display: none;
+  }
+
+  .menuButton {
+    display: flex;
+    flex-direction: column;
     justify-content: center;
+    gap: 5px;
+    width: 42px;
+    height: 42px;
+    margin-left: auto;
+    padding: 10px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .menuButton span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--navy);
+    border-radius: 3px;
+  }
+
+  .menuOverlay {
+    position: fixed;
+    z-index: 1001;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .mobileMenu {
+    position: fixed;
+    z-index: 1002;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    width: min(90vw, 380px);
+    height: 100dvh;
+    background: white;
+    overflow-y: auto;
+    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.2);
+    visibility: hidden;
+    transform: translateX(-105%);
+    transition: transform 0.3s, visibility 0.3s;
+  }
+
+  .mobileMenuOpen {
+    visibility: visible;
+    transform: translateX(0);
+  }
+
+  .mobileMenuTop {
+    padding: 24px;
+  }
+
+  .mobileMenuHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .mobileMenuHead button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+    background: var(--cream);
+    color: var(--navy);
+    font-size: 26px;
+    cursor: pointer;
+  }
+
+  .mobileMenuTop h2 {
+    margin: 26px 0 17px;
+    font-size: 24px;
+  }
+
+  .mobileMenuTop > a {
+    display: block;
+    padding: 17px 10px;
+    border-top: 1px solid #e7e0d9;
+    color: var(--navy);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .mobileMenuBottom {
+    flex: 1;
+    padding: 30px 24px;
+    background: var(--navy);
+    color: white;
+  }
+
+  .mobileMenuBottom p,
+  .mobileMenuBottom a {
+    color: white;
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  .summaryGrid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .summaryCard {
+    min-height: 190px;
+  }
+
+  .roomGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .galleryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* MODAL PINTU DI TABLET / HP */
+  .doorModalOverlay {
+    padding: 14px;
+  }
+
+  .doorModal {
+    width: 100%;
+    max-height: 94dvh;
+    padding: 35px 18px 24px;
+    border-radius: 22px;
+  }
+
+  .doorTitle {
+    font-size: 15px;
+    margin: 4px 34px 20px;
+  }
+
+  .doorLegend {
+    gap: 17px;
+    margin-bottom: 23px;
+  }
+
+  .doorLegend span {
+    font-size: 11px;
+  }
+
+  .doorGrid {
+    gap: 22px 8px;
+    padding: 5px 0;
+  }
+
+  .door {
+    width: min(49px, 72%);
+    height: 75px;
+  }
+
+  .doorItem:hover .door {
+    height: 80px;
+  }
+
+  .doorBase {
+    width: calc(min(49px, 72%) + 8px);
+  }
+
+  .doorNumber {
+    font-size: 12px;
+    margin-top: 7px;
+  }
+
+  /* TAGIHAN MOBILE */
+  .billModalOverlay {
+    align-items: center;
+    padding: 10px;
+  }
+
+  .billModal {
+    width: min(450px, 95vw);
+    padding: 43px 12px 18px;
+    border-radius: 23px;
+  }
+
+  .billModalClose {
+    right: 13px;
+    top: 12px;
+  }
+
+  .unpaidList {
+    padding: 5px 8px;
+    gap: 10px;
+  }
+
+  .unpaidRoomInfo h3 {
+    font-size: 18px;
+  }
+
+  .roomArrow {
+    font-size: 26px;
+  }
+
+  .tenantTooltip {
+    position: fixed;
+    z-index: 2200;
+    left: 50%;
+    right: auto;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(300px, calc(100vw - 36px));
+    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.35);
+  }
+
+  .tooltipClose {
+    display: block;
+  }
+}
+
+/* HP */
+
+@media (max-width: 520px) {
+  .headerInner,
+  .heroContent,
+  .contentInner {
+    width: calc(100% - 32px);
+  }
+
+  .heroContent {
+    padding: 52px 0 60px;
+  }
+
+  .heroContent h1 {
+    font-size: 36px;
+  }
+
+  .heroSubtitle {
+    font-size: 13px;
+  }
+
+  .summaryCard {
+    padding: 17px;
+    min-height: 175px;
+  }
+
+  .summaryCard h2 {
+    font-size: 23px;
+  }
+
+  .monitorBox,
+  .billBox {
+    padding: 16px;
+  }
+
+  .monitorHeader {
+    flex-wrap: wrap;
+  }
+
+  .monitorHeader strong {
+    font-size: 13px;
+  }
+
+  .billBox {
+    gap: 10px;
+    padding: 16px;
+  }
+
+  .billContent strong {
+    font-size: 22px;
+  }
+
+  .billButton {
+    padding: 0 12px;
+    min-height: 39px;
+    font-size: 10px;
+    gap: 7px;
+  }
+
+  .mainSection {
+    padding: 32px 0 75px;
+  }
+
+  .manageSection,
+  .gallerySection {
+    margin-top: 45px;
+  }
+
+  .roomImageWrap {
+    height: 210px;
+  }
+
+  .roomBody {
+    padding: 19px;
+  }
+
+  .roomHeader h3 {
+    font-size: 19px;
+  }
+
+  .editButton {
+    padding: 9px 11px;
+  }
+
+  .roomDescription {
+    min-height: auto;
+  }
+
+  .facilityBlock ul {
+    grid-template-columns: 1fr;
+  }
+
+  .galleryGrid {
+    gap: 10px;
+  }
+
+  .galleryImage {
+    height: 125px;
+  }
+
+  .footerInner {
+    width: calc(100% - 36px);
+    padding: 45px 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px 18px;
+  }
+
+  .footerBrand {
+    grid-column: 1 / -1;
+  }
+
+  .footerBrand p,
+  .footerColumn > a,
+  .footerColumn p {
+    font-size: 12px;
+  }
+
+  .modalOverlay {
+    padding: 12px;
+  }
+
+  .modal {
+    padding: 20px;
+    max-height: 94dvh;
+  }
+
+  .modalHeader h2 {
+    font-size: 23px;
+  }
+
+  .modalActions {
+    justify-content: stretch;
+  }
+
+  .cancelButton,
+  .saveButton {
+    flex: 1;
+  }
+
+  /* MODAL PINTU KAMAR DI HP */
+  .doorModal {
+    padding: 31px 11px 18px;
+    border-radius: 19px;
+  }
+
+  .doorModalClose {
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    font-size: 23px;
+  }
+
+  .doorTitle {
+    margin: 7px 32px 17px;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .doorLegend {
+    gap: 12px;
+    margin-bottom: 17px;
+  }
+
+  .doorLegend span {
+    font-size: 10px;
+    gap: 6px;
+  }
+
+  .emptyDoorIcon,
+  .filledDoorIcon {
+    width: 10px;
+    height: 16px;
+  }
+
+  .doorGrid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px 3px;
+  }
+
+  .door {
+    width: min(38px, 75%);
+    height: 62px;
+  }
+
+  .doorItem:hover .door {
+    height: 66px;
+  }
+
+  .doorKnob {
+    right: 6px;
+    width: 7px;
+    height: 7px;
+  }
+
+  .doorBase {
+    width: calc(min(38px, 75%) + 6px);
+    height: 3px;
+  }
+
+  .doorNumber {
+    font-size: 10px;
+    margin-top: 6px;
+  }
+
+  .selectedRoomInfo {
+    padding: 17px 16px;
+    margin-top: 18px;
+    border-radius: 14px;
+  }
+
+  .selectedRoomInfo h3 {
+    font-size: 17px;
+  }
+
+  .selectedRoomDetails p,
+  .selectedRoomMessage {
+    font-size: 11px;
+  }
+
+  /* TAGIHAN HP */
+  .billModalOverlay {
+    align-items: center;
+    padding: 10px;
+  }
+
+  .billModal {
+    padding: 42px 5px 13px;
+    width: 100%;
+  }
+
+  .billModalClose {
+    right: 7px;
+    top: 7px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .unpaidList {
+    padding: 8px 13px;
+    border-radius: 19px;
+    width: 100%;
+  }
+
+  .unpaidRoom {
+    padding: 14px 12px;
+    border-radius: 13px;
+  }
+
+  .unpaidRoomInfo h3 {
+    font-size: 17px;
+  }
+
+  .unpaidRoomInfo span {
+    font-size: 12px;
+  }
+
+  .roomArrow {
+    width: 32px;
+    height: 32px;
+    font-size: 24px;
+  }
+
+  .tenantTooltip {
+    position: fixed;
+    z-index: 2200;
+    left: 50%;
+    right: auto;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(300px, calc(100vw - 36px));
+    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.35);
+  }
+
+  .tooltipClose {
+    display: block;
+  }
+}
+
+/* LAYAR SANGAT KECIL */
+
+@media (max-width: 350px) {
+  .footerInner {
+    grid-template-columns: 1fr;
+  }
+
+  .footerBrand {
+    grid-column: auto;
+  }
+
+  .roomHeader {
+    flex-wrap: wrap;
+  }
+
+  .doorNumber {
+    font-size: 9px;
+  }
+
+  .door {
+    width: 31px;
+    height: 55px;
+  }
+
+  .doorItem:hover .door {
+    height: 59px;
+  }
+
+  .doorBase {
+    width: 36px;
+  }
+}
+
+/* AKSESIBILITAS ANIMASI */
+
+@media (prefers-reduced-motion: reduce) {
+  .monitorProgressFill,
+  .mobileMenu,
+  .billButton,
+  .heroButton,
+  .unpaidRoom,
+  .roomArrow,
+  .doorItem,
+  .door,
+  .billModal,
+  .doorModal,
+  .tenantTooltip,
+  .selectedRoomInfo {
+    transition: none !important;
+    animation: none !important;
   }
 }

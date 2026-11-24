@@ -1,0 +1,519 @@
+
+/* =========================================
+   KOST AULIA - HALAMAN ULASAN
+========================================= */
+
+.page {
+  --cream: #f6ebde;
+  --cream-light: #f8ede1;
+  --navy: #002446;
+  --navy-light: #1b314b;
+  --brown: #51392a;
+  --badge: #a94f1f;
+  --blue: #afc7ec;
+  --white: #ffffff;
+  --accent: #d1a589;
+
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  background: var(--white);
+  color: var(--brown);
+}
+
+.page * {
+  box-sizing: border-box;
+}
+
+.page a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* =========================================
+   REVIEW SECTION + BACKGROUND
+========================================= */
+
+.reviewSection {
+  width: 100%;
+  min-height: 100vh;
+  padding: 125px 24px 70px;
+  position: relative;
+  background-image:
+    radial-gradient(
+      ellipse at center,
+      rgba(0, 36, 70, 0.82) 0%,
+      rgba(0, 36, 70, 0.72) 38%,
+      rgba(0, 36, 70, 0.52) 72%,
+      rgba(0, 36, 70, 0.42) 100%
+    ),
+    url("/image/kost-tampak-dalam.png");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+.reviewHeading {
+  width: min(100%, 1100px);
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.reviewHeading h1 {
+  margin: 0 0 18px;
+  color: #ffffff;
+  font-size: clamp(36px, 5vw, 58px);
+  font-weight: 700;
+  line-height: 1.18;
+}
+
+.reviewHeading h1 span {
+  color: #e6bd9d;
+  font-size: 1.12em;
+  font-weight: 600;
+}
+
+.reviewDescription {
+  max-width: none;
+  margin: 0 auto;
+  color: #ffffff;
+  font-size: 15px;
+  line-height: 1.7;
+  white-space: nowrap;
+}
+
+/* =========================================
+   CAROUSEL
+========================================= */
+
+.carousel {
+  width: min(1200px, 100%);
+  margin: 45px auto 0;
+  position: relative;
+  z-index: 1;
+}
+
+.cardStage {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  overflow: visible;
+  perspective: 1000px;
+}
+
+.reviewCard {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(460px, 72vw);
+  min-height: 310px;
+  padding: 42px 40px 34px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 2px solid var(--navy);
+  border-radius: 24px;
+  background: var(--cream-light);
+  color: var(--brown);
+  box-shadow: 0 12px 32px rgba(0, 36, 70, 0.12);
+  cursor: pointer;
+  transition:
+    transform 650ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 500ms ease,
+    box-shadow 500ms ease,
+    background-color 500ms ease,
+    color 500ms ease;
+  will-change: transform, opacity;
+}
+
+/* KARTU TERPILIH */
+.centerCard {
+  background: var(--blue);
+  color: var(--navy);
+  border-color: var(--blue);
+  box-shadow: 0 22px 48px rgba(0, 36, 70, 0.3);
+  cursor: default;
+}
+
+.centerCard .reviewText {
+  color: var(--navy);
+}
+
+.centerCard .quoteMark {
+  color: var(--navy);
+}
+
+.centerCard .cardLabel {
+  color: var(--navy);
+  opacity: 0.75;
+}
+
+.centerCard .cardAccent {
+  background: var(--navy);
+}
+
+/* KARTU SAMPING */
+.sideCard:hover {
+  box-shadow: 0 16px 36px rgba(0, 36, 70, 0.16);
+}
+
+.hiddenCard {
+  visibility: hidden;
+}
+
+/* QUOTE */
+.quoteMark {
+  height: 65px;
+  color: #c28c67;
+  font-family: Georgia, serif;
+  font-size: 100px;
+  line-height: 0.95;
+  opacity: 0.95;
+}
+
+.reviewText {
+  margin: 20px 0 30px;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.8;
+}
+
+/* CARD BOTTOM */
+.cardBottom {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-top: auto;
+}
+
+.cardAccent {
+  width: 36px;
+  height: 3px;
+  background: #c28c67;
+  border-radius: 10px;
+}
+
+.cardLabel {
+  color: currentColor;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  opacity: 0.7;
+}
+
+/* =========================================
+   CAROUSEL CONTROLS
+========================================= */
+
+.carouselControls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  margin-top: 12px;
+}
+
+.arrowButton {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--navy);
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--navy);
+  font-size: 22px;
+  cursor: pointer;
+  transition:
+    background 200ms ease,
+    color 200ms ease,
+    transform 200ms ease;
+}
+
+.arrowButton:hover {
+  background: var(--navy);
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #c8b9aa;
+  cursor: pointer;
+  transition: width 250ms ease, background 250ms ease;
+}
+
+.activeDot {
+  width: 25px;
+  border-radius: 20px;
+  background: var(--blue);
+}
+
+.reviewDisclaimer {
+  margin: 35px auto 0;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.footer {
+  width: 100%;
+  background: #002446;
+  color: var(--white);
+}
+
+.footerInner {
+  width: min(1140px, calc(100% - 80px));
+  min-height: 300px;
+  margin: 0 auto;
+  padding: 55px 0 45px;
+  display: grid;
+  grid-template-columns: 1.6fr 0.8fr 1fr 0.9fr;
+  column-gap: 55px;
+  align-items: start;
+}
+
+.footerBrand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 25px;
+  max-width: 290px;
+}
+
+.footerLogo {
+  width: 90px;
+  height: 90px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--cream);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.logo {
+  width: 70px;
+  height: 55px;
+  object-fit: contain;
+  display: block;
+}
+
+.footerBrand p,
+.footerColumn p {
+  margin: 0;
+  color: var(--white);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.footerColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  min-width: 0;
+}
+
+.footerColumn h3 {
+  margin: 0 0 8px;
+  color: #f6eade;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.footerColumn > a {
+  color: var(--white);
+  font-size: 14px;
+}
+
+.footerColumn a:hover {
+  opacity: 0.7;
+}
+
+.socialLinks {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 5px;
+}
+
+.socialLinks a {
+  width: 42px;
+  height: 42px;
+  border: 1.5px solid var(--white);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--white);
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+  .reviewSection {
+    padding: 105px 20px 60px;
+  }
+
+  .cardStage {
+    height: 440px;
+  }
+
+  .reviewCard {
+    width: min(440px, 78vw);
+  }
+
+  .footerInner {
+    grid-template-columns: 1.5fr 1fr;
+    gap: 45px;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+  .reviewSection {
+    padding: 85px 14px 45px;
+    background-position: 55% top;
+  }
+
+  .reviewHeading h1 {
+    font-size: clamp(32px, 9vw, 43px);
+    margin-bottom: 16px;
+  }
+
+  .reviewDescription {
+    max-width: 350px;
+    white-space: normal;
+    font-size: 13px;
+  }
+
+  .carousel {
+    margin-top: 20px;
+  }
+
+  .cardStage {
+    height: 410px;
+  }
+
+  .reviewCard {
+    width: min(340px, 86vw);
+    min-height: 280px;
+    padding: 30px 26px 25px;
+    border-radius: 20px;
+  }
+
+  /* Pada mobile, hanya kartu tengah ditampilkan */
+  .sideCard {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .quoteMark {
+    height: 50px;
+    font-size: 78px;
+  }
+
+  .reviewText {
+    margin: 15px 0 24px;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .carouselControls {
+    gap: 18px;
+    margin-top: 0;
+  }
+
+  .arrowButton {
+    width: 42px;
+    height: 42px;
+    font-size: 20px;
+  }
+
+  .dots {
+    gap: 7px;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+  }
+
+  .activeDot {
+    width: 20px;
+  }
+
+  .reviewDisclaimer {
+    max-width: 320px;
+    margin-top: 25px;
+    font-size: 10px;
+  }
+
+  .footerInner {
+    width: calc(100% - 36px);
+    padding: 45px 0;
+    grid-template-columns: 1fr 1fr;
+    gap: 35px 20px;
+  }
+
+  .footerBrand {
+    grid-column: 1 / -1;
+  }
+
+  .footerBrand p,
+  .footerColumn p,
+  .footerColumn > a {
+    font-size: 12px;
+  }
+
+  .footerColumn h3 {
+    font-size: 12px;
+  }
+
+  .socialLinks a {
+    width: 34px;
+    height: 34px;
+  }
+}
+
+/* =========================================
+   ACCESSIBILITY
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .reviewCard,
+  .arrowButton,
+  .dot {
+    transition-duration: 0.01ms !important;
+  }
+}
