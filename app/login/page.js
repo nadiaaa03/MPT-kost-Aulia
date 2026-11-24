@@ -89,7 +89,7 @@ export default function LoginPage() {
         router.push("/owner");
         router.refresh();
       } else if (result.user.role === "penghuni") {
-        router.push("/");
+        router.push("/penghuni");
         router.refresh();
       }
 

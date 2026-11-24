@@ -4,8 +4,6 @@ import jwt from "jsonwebtoken";
 import db from "@/lib/db";
 import { NextResponse } from "next/server";
 
-export const runtime = "nodejs";
-
 // =====================================
 // TANGGAL HARI INI BERDASARKAN WIB
 // =====================================
