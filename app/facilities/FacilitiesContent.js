@@ -1,8 +1,8 @@
 
 "use client";
 
-import TipeKamar from "@/components/fasilitas/TipeKamar";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { ambilInfoTipeKamar } from "@/lib/kamar-api";
 import Image from "next/image";
 import Link from "next/link";
 import SiteHeader from "../site-header";
@@ -72,6 +72,21 @@ const roomTypes = [
     ],
     imageLabels: ["Tampilan kamar", "Sudut kamar lainnya", "Kamar mandi"],
   },
+];
+
+// Fasilitas kamar
+// Untuk sementara, daftar fasilitas masih statis di frontend.
+const roomFacilities = [
+  "Kasur spring bed",
+  "Kamar mandi dalam",
+  "Teko listrik",
+  "Meja dan kursi",
+  "Listrik token",
+  "Free WiFi",
+  "TV Digital",
+  "Lemari baju",
+  "AC",
+  "Air PDAM",
 ];
 
 function ArrowIcon({ direction = "right" }) {
@@ -218,7 +233,43 @@ function RoomGallery({ room, onPreview }) {
   );
 }
 
-function RoomCard({ room, onPreview }) {
+// Format angka menjadi Rupiah
+function formatRupiah(angka) {
+  if (angka === null || angka === undefined || angka === "") {
+    return "Harga belum tersedia";
+  }
+
+  return Number(angka).toLocaleString("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  });
+}
+
+// Card kamar publik: hanya untuk melihat informasi
+function RoomCard({ room, info, loading, onPreview }) {
+  const isFull =
+    info?.penuh === true ||
+    (info?.tersedia !== undefined && Number(info.tersedia) <= 0);
+
+  let statusText = "Informasi belum tersedia";
+  let statusBackground = "#E9EDF2";
+  let statusColor = "#657386";
+
+  if (loading) {
+    statusText = "Memuat ketersediaan...";
+  } else if (info?.ada) {
+    if (isFull) {
+      statusText = "Kamar sudah penuh";
+      statusBackground = "#FBE1E1";
+      statusColor = "#A83232";
+    } else {
+      statusText = `${info.tersedia} kamar tersedia`;
+      statusBackground = "#DDF3E3";
+      statusColor = "#367347";
+    }
+  }
+
   return (
     <article className={styles.roomCard}>
       <RoomGallery room={room} onPreview={onPreview} />
@@ -227,6 +278,110 @@ function RoomCard({ room, onPreview }) {
         <span className={styles.roomLabel}>KOST AULIA</span>
         <h3>{room.title}</h3>
         <p className={styles.roomDescription}>{room.description}</p>
+
+        {/* HARGA DAN KETERSEDIAAN DIGABUNG DALAM CARD */}
+        <div
+          style={{
+            marginTop: "20px",
+            padding: "18px",
+            background: "#f6eade",
+            borderRadius: "14px",
+          }}
+        >
+          <span
+            style={{
+              display: "block",
+              fontSize: "12px",
+              fontWeight: 600,
+              color: "#88684d",
+              marginBottom: "6px",
+            }}
+          >
+            HARGA SEWA PER BULAN
+          </span>
+
+          <div
+            style={{
+              fontSize: "clamp(22px, 3vw, 30px)",
+              fontWeight: 700,
+              color: "#002446",
+              lineHeight: 1.4,
+              overflowWrap: "anywhere",
+            }}
+          >
+            {formatRupiah(info?.harga)}
+          </div>
+
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: "12px",
+              padding: "8px 14px",
+              borderRadius: "30px",
+              background: statusBackground,
+              color: statusColor,
+              fontSize: "12px",
+              fontWeight: 700,
+              lineHeight: 1.5,
+            }}
+          >
+            {statusText}
+          </div>
+        </div>
+
+        {/* FASILITAS KAMAR */}
+        <div
+          style={{
+            marginTop: "24px",
+            width: "100%",
+          }}
+        >
+          <h4
+            style={{
+              margin: "0 0 14px",
+              fontSize: "16px",
+              fontWeight: 700,
+              color: "#994619",
+            }}
+          >
+            Fasilitas Kamar
+          </h4>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+              gap: "12px 10px",
+            }}
+          >
+            {roomFacilities.map((facility) => (
+              <div
+                key={facility}
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: "8px",
+                  fontSize: "13px",
+                  lineHeight: 1.6,
+                  color: "#594636",
+                }}
+              >
+                <span
+                  style={{
+                    color: "#a66a3e",
+                    fontWeight: 700,
+                    flexShrink: 0,
+                  }}
+                >
+                  ✓
+                </span>
+                <span>{facility}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </article>
   );
@@ -234,6 +389,35 @@ function RoomCard({ room, onPreview }) {
 
 export default function FacilitiesPage() {
   const [preview, setPreview] = useState(null);
+  const [roomData, setRoomData] = useState(null);
+  const [roomLoading, setRoomLoading] = useState(true);
+  const [roomError, setRoomError] = useState("");
+
+  // Mengambil harga dan ketersediaan kamar dari API
+  const muatDataKamar = useCallback(async () => {
+    try {
+      setRoomError("");
+
+      const hasil = await ambilInfoTipeKamar();
+      setRoomData(hasil);
+    } catch (err) {
+      console.error("Gagal mengambil informasi kamar:", err);
+      setRoomError(err.message || "Gagal memuat informasi kamar.");
+    } finally {
+      setRoomLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    muatDataKamar();
+
+    // Refresh data secara otomatis setiap 60 detik
+    const interval = setInterval(() => {
+      muatDataKamar();
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, [muatDataKamar]);
 
   useEffect(() => {
     if (window.location.hash === "#tipe-kamar") {
@@ -325,16 +509,49 @@ export default function FacilitiesPage() {
             </p>
           </div>
 
+          {/* PESAN ERROR API */}
+          {roomError && (
+            <div
+              style={{
+                marginBottom: "20px",
+                padding: "14px 18px",
+                borderRadius: "12px",
+                background: "#fff0ee",
+                color: "#ad332b",
+                fontSize: "13px",
+              }}
+            >
+              Informasi harga dan ketersediaan belum dapat dimuat.
+              Silakan coba muat ulang halaman.
+              <button
+                type="button"
+                onClick={muatDataKamar}
+                style={{
+                  marginLeft: "10px",
+                  padding: "7px 12px",
+                  border: "none",
+                  borderRadius: "8px",
+                  background: "#002446",
+                  color: "#fff",
+                  cursor: "pointer",
+                }}
+              >
+                Coba Lagi
+              </button>
+            </div>
+          )}
+
           <div className={styles.roomsGrid}>
             {roomTypes.map((room) => (
               <RoomCard
                 key={room.id}
                 room={room}
+                info={roomData?.[room.apiKey]}
+                loading={roomLoading}
                 onPreview={setPreview}
               />
             ))}
           </div>
-          <TipeKamar rooms={roomTypes} />
         </section>
 
         {/* CTA */}
